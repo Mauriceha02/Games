@@ -151,4 +151,11 @@
 .bot-setting { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #cfd8ca; }
 .bot-setting select { min-height: 44px; border: 1px solid #faf5e945; border-radius: 7px; padding: 7px 10px; background: #193e35; color: var(--paper); font: inherit; font-size: 16px; }
 .bot-badge { display: block; margin-top: 5px; font-size: 10px; font-weight: 400; color: var(--gold); }
+.app-tools { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; margin-top: 8px; }
+.offline-status { margin: 0; color: var(--gold); font-size: 12px; line-height: 1.7; flex: 1 1 210px; }
+.install-guide { max-width: 470px; color: #cfd8ca; font-size: 12px; line-height: 1.7; }
+.install-guide summary { min-height: 44px; padding-block: 12px; cursor: pointer; color: var(--paper); }
+.install-guide p { margin: 8px 0; }
+.install-guide ol { padding-left: 20px; margin: 8px 0; }
+.install-guide li { margin-bottom: 8px; padding-left: 4px; }
 @media (max-width: 700px) { .bot-setting { order: 3; width: 100%; } }

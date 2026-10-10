@@ -2,6 +2,7 @@
 node_modules/
 dist/
 public/app/
+sw.js
 coverage/
 .vite/
 .cache/

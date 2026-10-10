@@ -4,6 +4,9 @@ import { playBasicTurnStep } from './ai/basic-turn.js';
 import { loadGame, saveGame, type StorageAccess } from './storage/local-game.js';
 import { renderGameTable, type TableActions } from './ui/game-table.js';
 import type { GameState } from './game/types.js';
+import { setupOfflineApp } from './ui/offline-app.js';
+
+setupOfflineApp();
 
 async function start(): Promise<void> {
   const root = document.getElementById('game-root');

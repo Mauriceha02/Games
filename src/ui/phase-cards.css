@@ -17,6 +17,7 @@ body {
   background-color: var(--felt);
   background-image: radial-gradient(ellipse at 20% 0, #2c594433, transparent 60%), radial-gradient(#f9f4e908 .7px, transparent .7px);
   background-size: auto, 5px 5px;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 }
 a { color: inherit; text-underline-offset: 5px; }
 a:focus-visible, summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-radius: 3px; }

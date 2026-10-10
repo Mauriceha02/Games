@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Phase10",
+  "short_name": "Phase10",
+  "description": "Dein Kartenspiel gegen Computer – mit lokalem Spielstand und Offlinebetrieb.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#173e34",
+  "theme_color": "#173e34",
+  "icons": [
+    { "src": "./public/assets/app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./public/assets/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

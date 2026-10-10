@@ -117,10 +117,14 @@ await writeFile(new URL('index.html', root), `<!doctype html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#173e34">
-  <meta name="description" content="Das klassische Phase-10-Deck mit 108 Spielkarten und den zehn Phasen als übersichtliche Karten mit Beispielen.">
-  <title>Die Karten · Phase10</title>
+  <meta name="description" content="Phase10 gegen Computer spielen. Deine Partie bleibt auf diesem Gerät – auch offline.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Phase10">
+  <title>Phase10 · Dein Spiel</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./public/assets/app-icon-180.png">
   <link rel="icon" href="./public/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./src/ui/phase-cards.css">
   <link rel="stylesheet" href="./src/ui/game-table.css">
@@ -137,6 +141,15 @@ await writeFile(new URL('index.html', root), `<!doctype html>
       <div class="section-heading"><div><p class="eyebrow">DEIN SPIELTISCH</p><h1 id="game-title">Dein Spiel. Dein Zug.</h1></div></div>
       <div class="game-table" id="game-root"><p>Der Spieltisch wird geladen.</p></div>
       <p class="storage-status" id="storage-status" role="status"></p>
+      <div class="app-tools">
+        <p class="offline-status" id="offline-status" role="status">Offlinebetrieb wird vorbereitet …</p>
+        <details class="install-guide" id="install-guide">
+          <summary>Als App installieren</summary>
+          <p>Auf dem iPhone:</p>
+          <ol><li>Diese Seite in Safari öffnen und auf „Teilen“ tippen.</li><li>„Zum Home-Bildschirm“ wählen. Falls angezeigt, „Als Web-App öffnen“ einschalten und auf „Hinzufügen“ tippen.</li><li>Phase10 über das neue Symbol öffnen und einmal online warten, bis „Offline bereit“ erscheint. Danach kannst du ohne Internet spielen.</li></ol>
+          <p>Auf anderen Geräten findest du „App installieren“ im Browsermenü, sofern unterstützt.</p>
+        </details>
+      </div>
       <p class="visually-hidden" id="game-announcement" role="status"></p>
       <noscript><p>Bitte aktiviere JavaScript, um das Spiel zu starten.</p></noscript>
     </section>

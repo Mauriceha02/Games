@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Phase10 App-Symbol</title>
+  <rect width="512" height="512" fill="#173e34"/>
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#d9b579" stroke-opacity=".18"/>
+  <rect x="161" y="132" width="174" height="252" rx="23" fill="#d9b579" transform="rotate(-13 248 258)"/>
+  <g transform="rotate(7 265 256)">
+    <rect x="179" y="122" width="174" height="252" rx="23" fill="#081f19" opacity=".25" transform="translate(0 9)"/>
+    <rect x="179" y="122" width="174" height="252" rx="23" fill="#faf5e9"/>
+    <rect x="192" y="135" width="148" height="226" rx="13" fill="none" stroke="#d6cfb8"/>
+    <path d="M209 161h36" stroke="#b98b4e" stroke-width="4" stroke-linecap="round"/>
+    <text x="264" y="285" font-family="Georgia,serif" font-size="96" letter-spacing="-6" text-anchor="middle" fill="#193e35">10</text>
+    <circle cx="244" cy="326" r="4" fill="#ac4745"/>
+    <circle cx="257" cy="326" r="4" fill="#286396"/>
+    <circle cx="270" cy="326" r="4" fill="#2e7359"/>
+    <circle cx="283" cy="326" r="4" fill="#b98b4e"/>
+  </g>
+</svg>
