@@ -9,7 +9,7 @@ Umgesetzt:
 - Ohne Anmeldung, Werbung oder Tracking.
 - Zehn Phasen, Karten anlegen, Hand ordnen und zwei Bot-Stärken.
 
-Technik: TypeScript und HTML/CSS, installierbare PWA. WLAN-Mehrspieler und Hosting folgen.
+Technik: TypeScript und HTML/CSS, installierbare PWA. WLAN-Mehrspieler folgt.
 
 Ordner:
 
@@ -28,6 +28,10 @@ Handy testen: `npm run dev:lan`, dann im gleichen WLAN `http://<IP-des-Macs>:517
 Installieren: Über HTTPS in Safari öffnen → Teilen → Zum Home-Bildschirm. Falls angezeigt, „Als Web-App öffnen“ einschalten. Die App danach einmal online öffnen, bis „Offline bereit“ erscheint. Jetzt lässt sie sich ohne Internet öffnen und weiterspielen. Spielstände bleiben auf diesem Gerät; Updates wechseln erst, wenn alle App-Fenster geschlossen wurden.
 
 Prüfen: `npm test`. Bauen: `npm run build` erzeugt `dist/` mit allen Dateien fürs statische Hosting, auch unter einem Unterpfad wie `/Phase10/`. Lokal lässt sich Offlinebetrieb über `localhost` testen.
+
+Hosting: Der Workflow `.github/workflows/pages.yml` prüft jeden Push und Pull Request. Nach bestandenen Tests veröffentlicht er den Branch `Dev` auf GitHub Pages; andere Branches werden nur geprüft. Pages verwendet **Settings → Pages → Source → GitHub Actions**. Updates durch einen Push auf `Dev`; den HTTPS-Link zeigt der erfolgreiche Deploy-Schritt an.
+
+GitHub Pages ist mit GitHub Free für öffentliche Repositories kostenlos; Code und Website sind dann öffentlich. Spielstände werden nicht hochgeladen. [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages).
 
 Deck: 108 Spielkarten – Zahlen 1–12 je 2× pro Farbe, 8 Joker, 4 Aussetzen. Spezifikation und vollständiges Deck liegen in `src/game/`.
 
