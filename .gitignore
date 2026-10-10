@@ -1,0 +1,18 @@
+# Dependencies and generated files
+node_modules/
+dist/
+coverage/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# Local configuration and logs
+.env
+.env.*
+!.env.example
+*.log
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.idea/
