@@ -9,7 +9,7 @@ Geplant:
 - Ohne Anmeldung, Werbung oder Tracking.
 - Später gemeinsam im WLAN spielen.
 
-Technik: TypeScript, HTML/CSS und eine PWA. Hosting über GitHub Pages vorgesehen.
+Technik: TypeScript und HTML/CSS. PWA und Hosting über GitHub Pages folgen.
 
 Ordner:
 
@@ -21,7 +21,9 @@ src/storage/    Lokale Spielstände
 public/assets/ Bilder, Schriften und Sounds
 ```
 
-Designvorschau: `index.html` im Browser öffnen. Phasen- und Spielkarten liegen als SVG in `public/assets/`.
+Start: `npm install`, danach `npm run dev`. Im Browser: http://localhost:5173.
+
+Prüfen: `npm test`. Bauen: `npm run build`. Phasen- und Spielkarten liegen als SVG in `public/assets/`.
 
 Deck: 108 Spielkarten – Zahlen 1–12 je 2× pro Farbe, 8 Joker, 4 Aussetzen. Spezifikation und vollständiges Deck liegen in `src/game/`.
 
@@ -29,4 +31,4 @@ Phasenquelle: [Mattel-Spielanleitung (klassische Ausgabe)](https://service.matte
 
 Design neu erzeugen: `node scripts/render-design.mjs`.
 
-Status: Phasen- und Spielkarten gestaltet; Spiellogik und Offline-Installation folgen.
+Status: Mischen, Austeilen, Ziehen/Abwerfen, Aussetzen und lokales Fortsetzen sind umgesetzt. Computer führen einfache Grundzüge aus. Phasen auslegen, Taktik und Offline-Installation folgen.

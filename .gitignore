@@ -1,6 +1,7 @@
 # Dependencies and generated files
 node_modules/
 dist/
+public/app/
 coverage/
 .vite/
 .cache/

@@ -9,15 +9,24 @@
   <title>Die Karten · Phase10</title>
   <link rel="icon" href="./public/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./src/ui/phase-cards.css">
+  <link rel="stylesheet" href="./src/ui/game-table.css">
+  <script type="module" src="./public/app/main.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#overview">Zum Inhalt</a>
+  <a class="skip-link" href="#game">Zum Inhalt</a>
   <header class="site-header">
     <a class="wordmark" href="#" aria-label="Phase10, nach oben">PHASE<span>10</span><i aria-hidden="true"></i></a>
-    <nav aria-label="Seitennavigation"><a href="#overview">Phasen</a><a href="#deck">Spielkarten</a><a href="#cards">Einzelkarten <span aria-hidden="true">↗</span></a></nav>
+    <nav aria-label="Seitennavigation"><a href="#game">Spielen</a><a href="#overview">Phasen</a><a href="#deck">Spielkarten</a></nav>
   </header>
   <main>
-    <section class="intro" aria-labelledby="page-title">
+    <section class="game-section" id="game" aria-labelledby="game-title">
+      <div class="section-heading"><div><p class="eyebrow">DEIN SPIELTISCH</p><h1 id="game-title">Dein Spiel. Dein Zug.</h1></div></div>
+      <div class="game-table" id="game-root"><p>Der Spieltisch wird geladen.</p></div>
+      <p class="storage-status" id="storage-status" role="status"></p>
+      <p class="visually-hidden" id="game-announcement" role="status"></p>
+      <noscript><p>Bitte aktiviere JavaScript, um das Spiel zu starten.</p></noscript>
+    </section>
+    <section class="intro reference-intro" aria-labelledby="page-title">
       <p class="eyebrow"><span aria-hidden="true">✦</span> DAS KLASSISCHE KARTENSPIEL</p>
       <h1 id="page-title">Deine Phasen.<br><em>Auf einen Blick.</em></h1>
       <p class="intro-copy">Zehn kleine Ziele für den nächsten Spieleabend.</p>

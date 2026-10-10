@@ -1,0 +1,14 @@
+{
+  "name": "phase10",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=16.20.0" },
+  "scripts": {
+    "build": "node scripts/render-design.mjs && tsc",
+    "check": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "dev": "npm run build && python3 -m http.server 5173 --bind 127.0.0.1"
+  },
+  "devDependencies": { "typescript": "5.9.3" }
+}
