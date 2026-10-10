@@ -1,0 +1,758 @@
+[
+  {
+    "id": "red-1-1",
+    "type": "number",
+    "color": "red",
+    "value": 1,
+    "asset": "public/assets/card-red-01.svg"
+  },
+  {
+    "id": "red-1-2",
+    "type": "number",
+    "color": "red",
+    "value": 1,
+    "asset": "public/assets/card-red-01.svg"
+  },
+  {
+    "id": "red-2-1",
+    "type": "number",
+    "color": "red",
+    "value": 2,
+    "asset": "public/assets/card-red-02.svg"
+  },
+  {
+    "id": "red-2-2",
+    "type": "number",
+    "color": "red",
+    "value": 2,
+    "asset": "public/assets/card-red-02.svg"
+  },
+  {
+    "id": "red-3-1",
+    "type": "number",
+    "color": "red",
+    "value": 3,
+    "asset": "public/assets/card-red-03.svg"
+  },
+  {
+    "id": "red-3-2",
+    "type": "number",
+    "color": "red",
+    "value": 3,
+    "asset": "public/assets/card-red-03.svg"
+  },
+  {
+    "id": "red-4-1",
+    "type": "number",
+    "color": "red",
+    "value": 4,
+    "asset": "public/assets/card-red-04.svg"
+  },
+  {
+    "id": "red-4-2",
+    "type": "number",
+    "color": "red",
+    "value": 4,
+    "asset": "public/assets/card-red-04.svg"
+  },
+  {
+    "id": "red-5-1",
+    "type": "number",
+    "color": "red",
+    "value": 5,
+    "asset": "public/assets/card-red-05.svg"
+  },
+  {
+    "id": "red-5-2",
+    "type": "number",
+    "color": "red",
+    "value": 5,
+    "asset": "public/assets/card-red-05.svg"
+  },
+  {
+    "id": "red-6-1",
+    "type": "number",
+    "color": "red",
+    "value": 6,
+    "asset": "public/assets/card-red-06.svg"
+  },
+  {
+    "id": "red-6-2",
+    "type": "number",
+    "color": "red",
+    "value": 6,
+    "asset": "public/assets/card-red-06.svg"
+  },
+  {
+    "id": "red-7-1",
+    "type": "number",
+    "color": "red",
+    "value": 7,
+    "asset": "public/assets/card-red-07.svg"
+  },
+  {
+    "id": "red-7-2",
+    "type": "number",
+    "color": "red",
+    "value": 7,
+    "asset": "public/assets/card-red-07.svg"
+  },
+  {
+    "id": "red-8-1",
+    "type": "number",
+    "color": "red",
+    "value": 8,
+    "asset": "public/assets/card-red-08.svg"
+  },
+  {
+    "id": "red-8-2",
+    "type": "number",
+    "color": "red",
+    "value": 8,
+    "asset": "public/assets/card-red-08.svg"
+  },
+  {
+    "id": "red-9-1",
+    "type": "number",
+    "color": "red",
+    "value": 9,
+    "asset": "public/assets/card-red-09.svg"
+  },
+  {
+    "id": "red-9-2",
+    "type": "number",
+    "color": "red",
+    "value": 9,
+    "asset": "public/assets/card-red-09.svg"
+  },
+  {
+    "id": "red-10-1",
+    "type": "number",
+    "color": "red",
+    "value": 10,
+    "asset": "public/assets/card-red-10.svg"
+  },
+  {
+    "id": "red-10-2",
+    "type": "number",
+    "color": "red",
+    "value": 10,
+    "asset": "public/assets/card-red-10.svg"
+  },
+  {
+    "id": "red-11-1",
+    "type": "number",
+    "color": "red",
+    "value": 11,
+    "asset": "public/assets/card-red-11.svg"
+  },
+  {
+    "id": "red-11-2",
+    "type": "number",
+    "color": "red",
+    "value": 11,
+    "asset": "public/assets/card-red-11.svg"
+  },
+  {
+    "id": "red-12-1",
+    "type": "number",
+    "color": "red",
+    "value": 12,
+    "asset": "public/assets/card-red-12.svg"
+  },
+  {
+    "id": "red-12-2",
+    "type": "number",
+    "color": "red",
+    "value": 12,
+    "asset": "public/assets/card-red-12.svg"
+  },
+  {
+    "id": "blue-1-1",
+    "type": "number",
+    "color": "blue",
+    "value": 1,
+    "asset": "public/assets/card-blue-01.svg"
+  },
+  {
+    "id": "blue-1-2",
+    "type": "number",
+    "color": "blue",
+    "value": 1,
+    "asset": "public/assets/card-blue-01.svg"
+  },
+  {
+    "id": "blue-2-1",
+    "type": "number",
+    "color": "blue",
+    "value": 2,
+    "asset": "public/assets/card-blue-02.svg"
+  },
+  {
+    "id": "blue-2-2",
+    "type": "number",
+    "color": "blue",
+    "value": 2,
+    "asset": "public/assets/card-blue-02.svg"
+  },
+  {
+    "id": "blue-3-1",
+    "type": "number",
+    "color": "blue",
+    "value": 3,
+    "asset": "public/assets/card-blue-03.svg"
+  },
+  {
+    "id": "blue-3-2",
+    "type": "number",
+    "color": "blue",
+    "value": 3,
+    "asset": "public/assets/card-blue-03.svg"
+  },
+  {
+    "id": "blue-4-1",
+    "type": "number",
+    "color": "blue",
+    "value": 4,
+    "asset": "public/assets/card-blue-04.svg"
+  },
+  {
+    "id": "blue-4-2",
+    "type": "number",
+    "color": "blue",
+    "value": 4,
+    "asset": "public/assets/card-blue-04.svg"
+  },
+  {
+    "id": "blue-5-1",
+    "type": "number",
+    "color": "blue",
+    "value": 5,
+    "asset": "public/assets/card-blue-05.svg"
+  },
+  {
+    "id": "blue-5-2",
+    "type": "number",
+    "color": "blue",
+    "value": 5,
+    "asset": "public/assets/card-blue-05.svg"
+  },
+  {
+    "id": "blue-6-1",
+    "type": "number",
+    "color": "blue",
+    "value": 6,
+    "asset": "public/assets/card-blue-06.svg"
+  },
+  {
+    "id": "blue-6-2",
+    "type": "number",
+    "color": "blue",
+    "value": 6,
+    "asset": "public/assets/card-blue-06.svg"
+  },
+  {
+    "id": "blue-7-1",
+    "type": "number",
+    "color": "blue",
+    "value": 7,
+    "asset": "public/assets/card-blue-07.svg"
+  },
+  {
+    "id": "blue-7-2",
+    "type": "number",
+    "color": "blue",
+    "value": 7,
+    "asset": "public/assets/card-blue-07.svg"
+  },
+  {
+    "id": "blue-8-1",
+    "type": "number",
+    "color": "blue",
+    "value": 8,
+    "asset": "public/assets/card-blue-08.svg"
+  },
+  {
+    "id": "blue-8-2",
+    "type": "number",
+    "color": "blue",
+    "value": 8,
+    "asset": "public/assets/card-blue-08.svg"
+  },
+  {
+    "id": "blue-9-1",
+    "type": "number",
+    "color": "blue",
+    "value": 9,
+    "asset": "public/assets/card-blue-09.svg"
+  },
+  {
+    "id": "blue-9-2",
+    "type": "number",
+    "color": "blue",
+    "value": 9,
+    "asset": "public/assets/card-blue-09.svg"
+  },
+  {
+    "id": "blue-10-1",
+    "type": "number",
+    "color": "blue",
+    "value": 10,
+    "asset": "public/assets/card-blue-10.svg"
+  },
+  {
+    "id": "blue-10-2",
+    "type": "number",
+    "color": "blue",
+    "value": 10,
+    "asset": "public/assets/card-blue-10.svg"
+  },
+  {
+    "id": "blue-11-1",
+    "type": "number",
+    "color": "blue",
+    "value": 11,
+    "asset": "public/assets/card-blue-11.svg"
+  },
+  {
+    "id": "blue-11-2",
+    "type": "number",
+    "color": "blue",
+    "value": 11,
+    "asset": "public/assets/card-blue-11.svg"
+  },
+  {
+    "id": "blue-12-1",
+    "type": "number",
+    "color": "blue",
+    "value": 12,
+    "asset": "public/assets/card-blue-12.svg"
+  },
+  {
+    "id": "blue-12-2",
+    "type": "number",
+    "color": "blue",
+    "value": 12,
+    "asset": "public/assets/card-blue-12.svg"
+  },
+  {
+    "id": "green-1-1",
+    "type": "number",
+    "color": "green",
+    "value": 1,
+    "asset": "public/assets/card-green-01.svg"
+  },
+  {
+    "id": "green-1-2",
+    "type": "number",
+    "color": "green",
+    "value": 1,
+    "asset": "public/assets/card-green-01.svg"
+  },
+  {
+    "id": "green-2-1",
+    "type": "number",
+    "color": "green",
+    "value": 2,
+    "asset": "public/assets/card-green-02.svg"
+  },
+  {
+    "id": "green-2-2",
+    "type": "number",
+    "color": "green",
+    "value": 2,
+    "asset": "public/assets/card-green-02.svg"
+  },
+  {
+    "id": "green-3-1",
+    "type": "number",
+    "color": "green",
+    "value": 3,
+    "asset": "public/assets/card-green-03.svg"
+  },
+  {
+    "id": "green-3-2",
+    "type": "number",
+    "color": "green",
+    "value": 3,
+    "asset": "public/assets/card-green-03.svg"
+  },
+  {
+    "id": "green-4-1",
+    "type": "number",
+    "color": "green",
+    "value": 4,
+    "asset": "public/assets/card-green-04.svg"
+  },
+  {
+    "id": "green-4-2",
+    "type": "number",
+    "color": "green",
+    "value": 4,
+    "asset": "public/assets/card-green-04.svg"
+  },
+  {
+    "id": "green-5-1",
+    "type": "number",
+    "color": "green",
+    "value": 5,
+    "asset": "public/assets/card-green-05.svg"
+  },
+  {
+    "id": "green-5-2",
+    "type": "number",
+    "color": "green",
+    "value": 5,
+    "asset": "public/assets/card-green-05.svg"
+  },
+  {
+    "id": "green-6-1",
+    "type": "number",
+    "color": "green",
+    "value": 6,
+    "asset": "public/assets/card-green-06.svg"
+  },
+  {
+    "id": "green-6-2",
+    "type": "number",
+    "color": "green",
+    "value": 6,
+    "asset": "public/assets/card-green-06.svg"
+  },
+  {
+    "id": "green-7-1",
+    "type": "number",
+    "color": "green",
+    "value": 7,
+    "asset": "public/assets/card-green-07.svg"
+  },
+  {
+    "id": "green-7-2",
+    "type": "number",
+    "color": "green",
+    "value": 7,
+    "asset": "public/assets/card-green-07.svg"
+  },
+  {
+    "id": "green-8-1",
+    "type": "number",
+    "color": "green",
+    "value": 8,
+    "asset": "public/assets/card-green-08.svg"
+  },
+  {
+    "id": "green-8-2",
+    "type": "number",
+    "color": "green",
+    "value": 8,
+    "asset": "public/assets/card-green-08.svg"
+  },
+  {
+    "id": "green-9-1",
+    "type": "number",
+    "color": "green",
+    "value": 9,
+    "asset": "public/assets/card-green-09.svg"
+  },
+  {
+    "id": "green-9-2",
+    "type": "number",
+    "color": "green",
+    "value": 9,
+    "asset": "public/assets/card-green-09.svg"
+  },
+  {
+    "id": "green-10-1",
+    "type": "number",
+    "color": "green",
+    "value": 10,
+    "asset": "public/assets/card-green-10.svg"
+  },
+  {
+    "id": "green-10-2",
+    "type": "number",
+    "color": "green",
+    "value": 10,
+    "asset": "public/assets/card-green-10.svg"
+  },
+  {
+    "id": "green-11-1",
+    "type": "number",
+    "color": "green",
+    "value": 11,
+    "asset": "public/assets/card-green-11.svg"
+  },
+  {
+    "id": "green-11-2",
+    "type": "number",
+    "color": "green",
+    "value": 11,
+    "asset": "public/assets/card-green-11.svg"
+  },
+  {
+    "id": "green-12-1",
+    "type": "number",
+    "color": "green",
+    "value": 12,
+    "asset": "public/assets/card-green-12.svg"
+  },
+  {
+    "id": "green-12-2",
+    "type": "number",
+    "color": "green",
+    "value": 12,
+    "asset": "public/assets/card-green-12.svg"
+  },
+  {
+    "id": "yellow-1-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 1,
+    "asset": "public/assets/card-yellow-01.svg"
+  },
+  {
+    "id": "yellow-1-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 1,
+    "asset": "public/assets/card-yellow-01.svg"
+  },
+  {
+    "id": "yellow-2-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 2,
+    "asset": "public/assets/card-yellow-02.svg"
+  },
+  {
+    "id": "yellow-2-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 2,
+    "asset": "public/assets/card-yellow-02.svg"
+  },
+  {
+    "id": "yellow-3-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 3,
+    "asset": "public/assets/card-yellow-03.svg"
+  },
+  {
+    "id": "yellow-3-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 3,
+    "asset": "public/assets/card-yellow-03.svg"
+  },
+  {
+    "id": "yellow-4-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 4,
+    "asset": "public/assets/card-yellow-04.svg"
+  },
+  {
+    "id": "yellow-4-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 4,
+    "asset": "public/assets/card-yellow-04.svg"
+  },
+  {
+    "id": "yellow-5-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 5,
+    "asset": "public/assets/card-yellow-05.svg"
+  },
+  {
+    "id": "yellow-5-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 5,
+    "asset": "public/assets/card-yellow-05.svg"
+  },
+  {
+    "id": "yellow-6-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 6,
+    "asset": "public/assets/card-yellow-06.svg"
+  },
+  {
+    "id": "yellow-6-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 6,
+    "asset": "public/assets/card-yellow-06.svg"
+  },
+  {
+    "id": "yellow-7-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 7,
+    "asset": "public/assets/card-yellow-07.svg"
+  },
+  {
+    "id": "yellow-7-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 7,
+    "asset": "public/assets/card-yellow-07.svg"
+  },
+  {
+    "id": "yellow-8-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 8,
+    "asset": "public/assets/card-yellow-08.svg"
+  },
+  {
+    "id": "yellow-8-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 8,
+    "asset": "public/assets/card-yellow-08.svg"
+  },
+  {
+    "id": "yellow-9-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 9,
+    "asset": "public/assets/card-yellow-09.svg"
+  },
+  {
+    "id": "yellow-9-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 9,
+    "asset": "public/assets/card-yellow-09.svg"
+  },
+  {
+    "id": "yellow-10-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 10,
+    "asset": "public/assets/card-yellow-10.svg"
+  },
+  {
+    "id": "yellow-10-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 10,
+    "asset": "public/assets/card-yellow-10.svg"
+  },
+  {
+    "id": "yellow-11-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 11,
+    "asset": "public/assets/card-yellow-11.svg"
+  },
+  {
+    "id": "yellow-11-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 11,
+    "asset": "public/assets/card-yellow-11.svg"
+  },
+  {
+    "id": "yellow-12-1",
+    "type": "number",
+    "color": "yellow",
+    "value": 12,
+    "asset": "public/assets/card-yellow-12.svg"
+  },
+  {
+    "id": "yellow-12-2",
+    "type": "number",
+    "color": "yellow",
+    "value": 12,
+    "asset": "public/assets/card-yellow-12.svg"
+  },
+  {
+    "id": "wild-1",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "wild-2",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "wild-3",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "wild-4",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "wild-5",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "wild-6",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "wild-7",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "wild-8",
+    "type": "wild",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-wild.svg"
+  },
+  {
+    "id": "skip-1",
+    "type": "skip",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-skip.svg"
+  },
+  {
+    "id": "skip-2",
+    "type": "skip",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-skip.svg"
+  },
+  {
+    "id": "skip-3",
+    "type": "skip",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-skip.svg"
+  },
+  {
+    "id": "skip-4",
+    "type": "skip",
+    "color": null,
+    "value": null,
+    "asset": "public/assets/card-skip.svg"
+  }
+]

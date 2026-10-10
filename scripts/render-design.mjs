@@ -1,9 +1,11 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { renderPlayingCards } from './render-playing-cards.mjs';
 
 const root = new URL('../', import.meta.url);
 const phases = JSON.parse(await readFile(new URL('src/game/phases.json', root), 'utf8'));
+const specification = JSON.parse(await readFile(new URL('src/game/deck-spec.json', root), 'utf8'));
 const source = 'https://service.mattel.com/instruction-sheets/files/FFY05%20Phase%2010%20%5BEnglish_French_German_Italian_Dutch%5D%20%5B5LD%5D.PDF';
-const colors = ['#a94035', '#286396', '#2e7359', '#8b650b'];
+const colors = specification.colors.map(color => color.hex);
 const paper = '#faf5e9';
 const ink = '#193e35';
 const muted = '#637368';
@@ -11,9 +13,9 @@ const escape = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&
 const count = (phase) => phase.groups.reduce((total, group) => total + group.size, 0);
 const number = (phase) => String(phase.id).padStart(2, '0');
 
-function svgShell(width, height, title, content) {
+function svgShell(width, height, title, content, description = 'Phasenkarte für das klassische Phase-10-Kartenspiel.') {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">
-<title id="title">${escape(title)}</title><desc id="desc">Phasenkarte für das klassische Phase-10-Kartenspiel.</desc>
+<title id="title">${escape(title)}</title><desc id="desc">${escape(description)}</desc>
 <defs><pattern id="paper" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".5" fill="#756549" opacity=".07"/></pattern></defs>
 <rect x="1" y="1" width="${width - 2}" height="${height - 2}" rx="22" fill="${paper}"/>
 <rect x="1" y="1" width="${width - 2}" height="${height - 2}" rx="22" fill="url(#paper)"/>
@@ -50,7 +52,7 @@ function example(phase) {
     group.example.forEach((value, i) => {
       const colorIndex = group.kind === 'color' ? 2 : cardIndex++ % colors.length;
       const color = colors[colorIndex];
-      const mark = ['●', '■', '▲', '◆'][colorIndex];
+      const mark = specification.colors[colorIndex].symbol;
       cards += `<g><rect x="${x}" y="${y + 2}" width="${width}" height="${height}" rx="5" fill="#193e35" opacity=".09"/>
 <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
 <rect x="${x + 3}" y="${y + 3}" width="${width - 6}" height="3" rx="1" fill="${color}"/>
@@ -108,6 +110,7 @@ const cards = phases.map((phase) => `<article class="phase-item" id="phase-${pha
   <a class="card-download" href="./public/assets/phase-${number(phase)}.svg" download="phase-${number(phase)}.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
 </article>`).join('\n');
 const rows = phases.map((phase) => `<li><a href="#phase-${phase.id}"><span class="phase-number">${number(phase)}</span><span>${escape(phase.title)}</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>`).join('\n');
+const deckSection = await renderPlayingCards({ root, specification, svgShell, escape, paper, ink, muted });
 
 await writeFile(new URL('index.html', root), `<!doctype html>
 <!-- Generated with node scripts/render-design.mjs. Phase definitions: src/game/phases.json. -->
@@ -116,8 +119,8 @@ await writeFile(new URL('index.html', root), `<!doctype html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#173e34">
-  <meta name="description" content="Die zehn klassischen Phase-10-Phasen als übersichtliche Karten mit Beispielen.">
-  <title>Die Phasenkarten · Phase10</title>
+  <meta name="description" content="Das klassische Phase-10-Deck mit 108 Spielkarten und den zehn Phasen als übersichtliche Karten mit Beispielen.">
+  <title>Die Karten · Phase10</title>
   <link rel="icon" href="./public/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./src/ui/phase-cards.css">
 </head>
@@ -125,7 +128,7 @@ await writeFile(new URL('index.html', root), `<!doctype html>
   <a class="skip-link" href="#overview">Zum Inhalt</a>
   <header class="site-header">
     <a class="wordmark" href="#" aria-label="Phase10, nach oben">PHASE<span>10</span><i aria-hidden="true"></i></a>
-    <nav aria-label="Seitennavigation"><a href="#overview">Übersicht</a><a href="#cards">Einzelkarten <span aria-hidden="true">↗</span></a></nav>
+    <nav aria-label="Seitennavigation"><a href="#overview">Phasen</a><a href="#deck">Spielkarten</a><a href="#cards">Einzelkarten <span aria-hidden="true">↗</span></a></nav>
   </header>
   <main>
     <section class="intro" aria-labelledby="page-title">
@@ -154,6 +157,7 @@ await writeFile(new URL('index.html', root), `<!doctype html>
         <a class="download-link" href="./public/assets/phases-overview.svg" download="phasen-uebersicht.svg">Übersicht als Karte herunterladen <span aria-hidden="true">↓</span></a>
       </aside>
     </section>
+    ${deckSection}
     <section class="cards-section" id="cards" aria-labelledby="cards-title">
       <div class="section-heading"><div><p class="eyebrow">DIE EINZELKARTEN</p><h2 id="cards-title">Für jede Phase eine Karte.</h2></div><span>01 — 10</span></div>
       <p class="section-copy">Die Zahlen auf den Karten sind Beispiele. Du kannst jede passende Kombination bilden.</p>
@@ -164,4 +168,4 @@ await writeFile(new URL('index.html', root), `<!doctype html>
 </body>
 </html>
 `);
-console.log('Created the design preview, ten phase cards and the overview card.');
+console.log('Created the preview, phase cards, 50 playing-card faces, the card back and a deck of 108 cards.');

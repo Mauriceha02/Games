@@ -20,8 +20,8 @@ body {
 }
 a { color: inherit; text-underline-offset: 5px; }
 a:focus-visible, summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-radius: 3px; }
-.skip-link { position: fixed; top: -80px; left: 16px; z-index: 2; padding: 12px 20px; background: var(--paper); color: var(--ink); }
-.skip-link:focus { top: 12px; }
+.skip-link { position: fixed; top: -80px; left: 16px; z-index: 2; padding: 12px 20px; background: var(--paper); color: var(--ink); clip-path: inset(50%); }
+.skip-link:focus { top: 12px; clip-path: none; }
 .site-header, main, footer { max-width: 1152px; margin: 0 auto; padding-inline: 40px; }
 .site-header { min-height: 102px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #faf5e91c; }
 .wordmark { display: inline-flex; gap: 5px; align-items: center; text-decoration: none; font-size: 20px; font-weight: 700; letter-spacing: -1px; }
@@ -95,10 +95,45 @@ dd { margin: 0; color: #cfd8ca; font-size: 14px; line-height: 1.6; }
 .phase-item:target .phase-card { outline: 3px solid var(--gold); outline-offset: 5px; border-radius: 22px; }
 .card-download { display: flex; justify-content: space-between; align-items: center; min-height: 44px; padding: 8px 8px 0; color: #cfd8ca; font-size: 12px; text-decoration: none; }
 .card-download:hover { color: var(--gold); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.deck-summary { max-width: 700px; margin-bottom: 35px; }
+.deck-summary table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+.deck-summary th, .deck-summary td { padding: 12px 10px; border-bottom: 1px solid #faf5e921; text-align: left; }
+.deck-summary th:first-child { padding-left: 0; }
+.deck-summary th { font-weight: 500; }
+.deck-summary thead { font-size: 11px; letter-spacing: 1px; color: var(--gold); }
+.deck-summary tbody td { color: #cfd8ca; }
+.deck-summary td:last-child, .deck-summary th:last-child { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
+.deck-summary tfoot { font-weight: 600; }
+.deck-summary tfoot th, .deck-summary tfoot td { border-bottom: 0; padding-top: 17px; }
+.deck-summary p { color: #cfd8ca; font-size: 13px; line-height: 1.7; }
+.deck-color-picker { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; max-width: 100%; min-width: 0; margin: 0; padding: 0; border: 0; }
+.color-choice { display: flex; justify-content: center; align-items: center; gap: 9px; padding: 13px 12px; min-height: 48px; border: 1px solid #faf5e93b; border-radius: 6px; font-size: 14px; cursor: pointer; transition: background .15s, color .15s; }
+.color-choice:hover { background: #faf5e912; }
+.deck-color-picker input:checked + .color-choice { color: var(--ink); background: var(--paper); border-color: var(--paper); }
+.deck-color-picker input:focus-visible + .color-choice { outline: 3px solid var(--gold); outline-offset: 4px; }
+.deck-color-panels { grid-column: 1 / -1; margin-top: 12px; }
+.deck-color-panel { display: none; }
+#color-red:checked ~ .deck-color-panels .deck-color-red,
+#color-blue:checked ~ .deck-color-panels .deck-color-blue,
+#color-green:checked ~ .deck-color-panels .deck-color-green,
+#color-yellow:checked ~ .deck-color-panels .deck-color-yellow { display: block; }
+.deck-color-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+.deck-color-heading h3 { margin: 0; font-family: Georgia, serif; font-weight: 400; font-size: 26px; }
+.deck-color-heading > span { font-size: 12px; color: #cfd8ca; }
+.number-card-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+.playing-face { display: block; min-width: 0; border-radius: 14px; }
+.playing-face img { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 12px #081b2530); transition: transform .2s; }
+.special-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; max-width: 780px; margin: 44px auto 0; }
+.special-card { margin: 0; min-width: 0; }
+.special-card figcaption { display: grid; gap: 7px; padding: 15px 4px 0; }
+.special-card figcaption strong { font-size: 15px; font-weight: 500; }
+.special-card figcaption span { font-size: 13px; line-height: 1.6; color: #cfd8ca; }
+.deck-download-note { margin: 28px 0 0; font-size: 13px; line-height: 1.6; color: #cfd8ca; }
 footer { display: flex; justify-content: space-between; gap: 24px; align-items: center; margin-top: 68px; min-height: 110px; font-size: 12px; color: #cfd8ca; }
 footer a { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; text-decoration: none; }
 
-@media (hover: hover) { .phase-item:hover .phase-card { transform: translateY(-4px); } }
+@media (hover: hover) { .phase-item:hover .phase-card, .playing-face:hover img { transform: translateY(-4px); } }
 @media (max-width: 1000px) {
   .overview-section { gap: 42px; }
   .overview-card { padding-inline: 25px; }
@@ -107,8 +142,8 @@ footer a { display: inline-flex; align-items: center; gap: 12px; min-height: 44p
 }
 @media (max-width: 700px) {
   .site-header, main, footer { padding-inline: 22px; }
-  .site-header { min-height: 80px; }
-  nav { gap: 18px; }
+  .site-header { min-height: 80px; flex-wrap: wrap; column-gap: 12px; }
+  nav { gap: 14px; }
   nav a { font-size: 12px; gap: 5px; }
   .wordmark { font-size: 17px; }
   .wordmark span { font-size: 24px; }
@@ -127,11 +162,18 @@ footer a { display: inline-flex; align-items: center; gap: 12px; min-height: 44p
   .section-heading h2 { font-size: 30px; }
   .section-heading > span { display: none; }
   .card-grid { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; gap: 28px; }
+  .deck-summary table { font-size: 12px; }
+  .deck-summary th, .deck-summary td { padding-inline: 5px; }
+  .deck-summary thead { font-size: 10px; letter-spacing: .4px; }
+  .color-choice { padding-inline: 6px; gap: 5px; font-size: 13px; }
+  .number-card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .special-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 30px; }
+  .special-card:last-child { grid-column: 1 / -1; width: calc((100% - 22px) / 2); justify-self: center; }
   footer { align-items: start; flex-direction: column; justify-content: center; gap: 5px; margin-top: 42px; padding-bottom: env(safe-area-inset-bottom, 0px); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .phase-card, .phase-list a { transition: none; }
+  .phase-card, .phase-list a, .playing-face img, .color-choice { transition: none; }
 }
 @media print {
   :root { color-scheme: light; }

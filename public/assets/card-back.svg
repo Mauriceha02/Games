@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="336" viewBox="0 0 240 336" role="img" aria-labelledby="title desc">
+<title id="title">Kartenrückseite</title><desc id="desc">Einheitliche Rückseite für alle Spielkarten.</desc>
+<defs><pattern id="paper" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".5" fill="#756549" opacity=".07"/></pattern></defs>
+<rect x="1" y="1" width="238" height="334" rx="22" fill="#faf5e9"/>
+<rect x="1" y="1" width="238" height="334" rx="22" fill="url(#paper)"/>
+<rect x="12" y="12" width="216" height="312" rx="13" fill="none" stroke="#d7d6c7"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#193e35">
+<rect x="18" y="18" width="204" height="300" rx="8" fill="#193e35"/>
+<rect x="26" y="26" width="188" height="284" rx="4" fill="none" stroke="#d9b579" stroke-opacity=".65"/>
+<path d="M120 56 199 168 120 280 41 168Z" fill="none" stroke="#d9b579" stroke-opacity=".28"/>
+<path d="M120 69 189 168 120 267 51 168Z" fill="none" stroke="#d9b579" stroke-opacity=".16"/>
+<text x="120" y="137" text-anchor="middle" font-size="12" letter-spacing="4" fill="#faf5e9">PHASE</text>
+<text x="120" y="211" text-anchor="middle" font-family="Georgia, serif" font-size="81" letter-spacing="-4" fill="#faf5e9">10</text>
+<path d="M92 228h56" stroke="#d9b579"/>
+<text x="120" y="82" text-anchor="middle" font-size="12" fill="#d9b579">✦</text>
+<text x="120" y="267" text-anchor="middle" font-size="12" fill="#d9b579">✦</text></g></svg>

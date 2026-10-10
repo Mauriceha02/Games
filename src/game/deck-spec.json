@@ -1,0 +1,15 @@
+{
+  "edition": "classic",
+  "colors": [
+    { "id": "red", "label": "Rot", "hex": "#a94035", "symbol": "●" },
+    { "id": "blue", "label": "Blau", "hex": "#286396", "symbol": "■" },
+    { "id": "green", "label": "Grün", "hex": "#2e7359", "symbol": "▲" },
+    { "id": "yellow", "label": "Gelb", "hex": "#8b650b", "symbol": "◆" }
+  ],
+  "numbers": { "first": 1, "last": 12, "copiesPerColor": 2 },
+  "specials": [
+    { "type": "wild", "label": "Joker", "copies": 8 },
+    { "type": "skip", "label": "Aussetzen", "copies": 4 }
+  ],
+  "referenceCards": 2
+}
