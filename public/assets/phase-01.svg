@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="480" viewBox="0 0 360 480" role="img" aria-labelledby="title desc">
+<title id="title">Phase 1: Zwei Drillinge</title><desc id="desc">Phasenkarte für das klassische Phase-10-Kartenspiel.</desc>
+<defs><pattern id="paper" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".5" fill="#756549" opacity=".07"/></pattern></defs>
+<rect x="1" y="1" width="358" height="478" rx="22" fill="#faf5e9"/>
+<rect x="1" y="1" width="358" height="478" rx="22" fill="url(#paper)"/>
+<rect x="12" y="12" width="336" height="456" rx="13" fill="none" stroke="#d7d6c7"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#193e35">
+<text x="32" y="48" font-size="11" font-weight="700" letter-spacing="2.2">PHASE</text>
+<text x="329" y="72" text-anchor="end" font-family="Georgia, serif" font-size="48">01</text>
+<path d="M32 67h35" stroke="#bc8c4a" stroke-width="2"/>
+<text font-family="Georgia, 'Times New Roman', serif" font-size="34" letter-spacing="-.8"><tspan x="32" y="132">Zwei</tspan><tspan x="32" y="173">Drillinge</tspan></text>
+<text x="32" y="211" font-size="10" letter-spacing="1.7" fill="#637368">ZUM BEISPIEL</text>
+<g><rect x="33.5" y="233.07999999999998" width="42" height="63.84" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="33.5" y="231.07999999999998" width="42" height="63.84" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="36.5" y="234.07999999999998" width="36" height="3" rx="1" fill="#a94035"/>
+<text x="54.5" y="271.9376" text-anchor="middle" font-size="23.1" font-weight="700" fill="#a94035">7</text>
+<text x="54.5" y="288.91999999999996" text-anchor="middle" font-size="7" fill="#a94035">●</text></g><g><rect x="79.5" y="233.07999999999998" width="42" height="63.84" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="79.5" y="231.07999999999998" width="42" height="63.84" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="82.5" y="234.07999999999998" width="36" height="3" rx="1" fill="#286396"/>
+<text x="100.5" y="271.9376" text-anchor="middle" font-size="23.1" font-weight="700" fill="#286396">7</text>
+<text x="100.5" y="288.91999999999996" text-anchor="middle" font-size="7" fill="#286396">■</text></g><g><rect x="125.5" y="233.07999999999998" width="42" height="63.84" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="125.5" y="231.07999999999998" width="42" height="63.84" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="128.5" y="234.07999999999998" width="36" height="3" rx="1" fill="#2e7359"/>
+<text x="146.5" y="271.9376" text-anchor="middle" font-size="23.1" font-weight="700" fill="#2e7359">7</text>
+<text x="146.5" y="288.91999999999996" text-anchor="middle" font-size="7" fill="#2e7359">▲</text></g><text x="180" y="272" text-anchor="middle" font-size="20" fill="#637368">+</text><g><rect x="192.5" y="233.07999999999998" width="42" height="63.84" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="192.5" y="231.07999999999998" width="42" height="63.84" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="195.5" y="234.07999999999998" width="36" height="3" rx="1" fill="#8b650b"/>
+<text x="213.5" y="271.9376" text-anchor="middle" font-size="23.1" font-weight="700" fill="#8b650b">10</text>
+<text x="213.5" y="288.91999999999996" text-anchor="middle" font-size="7" fill="#8b650b">◆</text></g><g><rect x="238.5" y="233.07999999999998" width="42" height="63.84" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="238.5" y="231.07999999999998" width="42" height="63.84" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="241.5" y="234.07999999999998" width="36" height="3" rx="1" fill="#a94035"/>
+<text x="259.5" y="271.9376" text-anchor="middle" font-size="23.1" font-weight="700" fill="#a94035">10</text>
+<text x="259.5" y="288.91999999999996" text-anchor="middle" font-size="7" fill="#a94035">●</text></g><g><rect x="284.5" y="233.07999999999998" width="42" height="63.84" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="284.5" y="231.07999999999998" width="42" height="63.84" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="287.5" y="234.07999999999998" width="36" height="3" rx="1" fill="#286396"/>
+<text x="305.5" y="271.9376" text-anchor="middle" font-size="23.1" font-weight="700" fill="#286396">10</text>
+<text x="305.5" y="288.91999999999996" text-anchor="middle" font-size="7" fill="#286396">■</text></g>
+<path d="M32 324h296" stroke="#dad9cd"/>
+<text font-size="15" fill="#637368"><tspan x="32" y="356">Je drei Karten mit derselben Zahl.</tspan><tspan x="32" y="378">Die Farben dürfen verschieden sein.</tspan></text>
+<text x="32" y="445" font-size="11" font-weight="700" letter-spacing="1">6 KARTEN</text>
+<text x="328" y="445" text-anchor="end" font-size="11" letter-spacing="1" fill="#637368">SETS</text></g></svg>

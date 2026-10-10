@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="700" viewBox="0 0 440 700" role="img" aria-labelledby="title desc">
+<title id="title">Alle zehn klassischen Phasen in der richtigen Reihenfolge</title><desc id="desc">Phasenkarte für das klassische Phase-10-Kartenspiel.</desc>
+<defs><pattern id="paper" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".5" fill="#756549" opacity=".07"/></pattern></defs>
+<rect x="1" y="1" width="438" height="698" rx="22" fill="#faf5e9"/>
+<rect x="1" y="1" width="438" height="698" rx="22" fill="url(#paper)"/>
+<rect x="12" y="12" width="416" height="676" rx="13" fill="none" stroke="#d7d6c7"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#193e35">
+<text x="40" y="51" font-size="11" letter-spacing="2" font-weight="700">PHASE 10</text>
+<text x="400" y="51" text-anchor="end" font-size="10" letter-spacing="1.5" fill="#637368">ÜBERSICHT</text>
+<text x="40" y="111" font-family="Georgia, serif" font-size="39" letter-spacing="-1">Die zehn Phasen.</text>
+<path d="M40 134h360" stroke="#b98b4e"/>
+<text x="40" y="174" font-size="14" fill="#637368" font-weight="700">01</text>
+<text x="83" y="174" font-size="19">Zwei Drillinge</text>
+<path d="M40 189h360" stroke="#dfded1"/>
+<text x="40" y="217" font-size="14" fill="#637368" font-weight="700">02</text>
+<text x="83" y="217" font-size="19">Drilling + Viererfolge</text>
+<path d="M40 232h360" stroke="#dfded1"/>
+<text x="40" y="260" font-size="14" fill="#637368" font-weight="700">03</text>
+<text x="83" y="260" font-size="19">Vierling + Viererfolge</text>
+<path d="M40 275h360" stroke="#dfded1"/>
+<text x="40" y="303" font-size="14" fill="#637368" font-weight="700">04</text>
+<text x="83" y="303" font-size="19">Siebenerfolge</text>
+<path d="M40 318h360" stroke="#dfded1"/>
+<text x="40" y="346" font-size="14" fill="#637368" font-weight="700">05</text>
+<text x="83" y="346" font-size="19">Achterfolge</text>
+<path d="M40 361h360" stroke="#dfded1"/>
+<text x="40" y="389" font-size="14" fill="#637368" font-weight="700">06</text>
+<text x="83" y="389" font-size="19">Neunerfolge</text>
+<path d="M40 404h360" stroke="#dfded1"/>
+<text x="40" y="432" font-size="14" fill="#637368" font-weight="700">07</text>
+<text x="83" y="432" font-size="19">Zwei Vierlinge</text>
+<path d="M40 447h360" stroke="#dfded1"/>
+<text x="40" y="475" font-size="14" fill="#637368" font-weight="700">08</text>
+<text x="83" y="475" font-size="19">7 Karten einer Farbe</text>
+<path d="M40 490h360" stroke="#dfded1"/>
+<text x="40" y="518" font-size="14" fill="#637368" font-weight="700">09</text>
+<text x="83" y="518" font-size="19">Fünfling + Zwilling</text>
+<path d="M40 533h360" stroke="#dfded1"/>
+<text x="40" y="561" font-size="14" fill="#637368" font-weight="700">10</text>
+<text x="83" y="561" font-size="19">Fünfling + Drilling</text>
+<path d="M40 576h360" stroke="#dfded1"/>
+<text x="40" y="630" font-size="14" font-weight="700">Schritt für Schritt, von 1 bis 10.</text>
+<text x="40" y="655" font-size="13" fill="#637368">Eine vollständige Phase pro Runde auslegen.</text>
+<circle cx="365" cy="650" r="4" fill="#a94035"/><circle cx="377" cy="650" r="4" fill="#286396"/><circle cx="389" cy="650" r="4" fill="#2e7359"/><circle cx="401" cy="650" r="4" fill="#8b650b"/></g></svg>

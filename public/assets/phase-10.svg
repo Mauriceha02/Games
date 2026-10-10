@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="480" viewBox="0 0 360 480" role="img" aria-labelledby="title desc">
+<title id="title">Phase 10: Fünfling + Drilling</title><desc id="desc">Phasenkarte für das klassische Phase-10-Kartenspiel.</desc>
+<defs><pattern id="paper" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".5" fill="#756549" opacity=".07"/></pattern></defs>
+<rect x="1" y="1" width="358" height="478" rx="22" fill="#faf5e9"/>
+<rect x="1" y="1" width="358" height="478" rx="22" fill="url(#paper)"/>
+<rect x="12" y="12" width="336" height="456" rx="13" fill="none" stroke="#d7d6c7"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#193e35">
+<text x="32" y="48" font-size="11" font-weight="700" letter-spacing="2.2">PHASE</text>
+<text x="329" y="72" text-anchor="end" font-family="Georgia, serif" font-size="48">10</text>
+<path d="M32 67h35" stroke="#bc8c4a" stroke-width="2"/>
+<text font-family="Georgia, 'Times New Roman', serif" font-size="34" letter-spacing="-.8"><tspan x="32" y="132">Fünfling +</tspan><tspan x="32" y="173">Drilling</tspan></text>
+<text x="32" y="211" font-size="10" letter-spacing="1.7" fill="#637368">ZUM BEISPIEL</text>
+<g><rect x="32" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="32" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="35" y="242.535" width="24.875" height="3" rx="1" fill="#a94035"/>
+<text x="47.4375" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#a94035">6</text>
+<text x="47.4375" y="280.465" text-anchor="middle" font-size="7" fill="#a94035">●</text></g><g><rect x="66.875" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="66.875" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="69.875" y="242.535" width="24.875" height="3" rx="1" fill="#286396"/>
+<text x="82.3125" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#286396">6</text>
+<text x="82.3125" y="280.465" text-anchor="middle" font-size="7" fill="#286396">■</text></g><g><rect x="101.75" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="101.75" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="104.75" y="242.535" width="24.875" height="3" rx="1" fill="#2e7359"/>
+<text x="117.1875" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#2e7359">6</text>
+<text x="117.1875" y="280.465" text-anchor="middle" font-size="7" fill="#2e7359">▲</text></g><g><rect x="136.625" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="136.625" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="139.625" y="242.535" width="24.875" height="3" rx="1" fill="#8b650b"/>
+<text x="152.0625" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#8b650b">6</text>
+<text x="152.0625" y="280.465" text-anchor="middle" font-size="7" fill="#8b650b">◆</text></g><g><rect x="171.5" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="171.5" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="174.5" y="242.535" width="24.875" height="3" rx="1" fill="#a94035"/>
+<text x="186.9375" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#a94035">6</text>
+<text x="186.9375" y="280.465" text-anchor="middle" font-size="7" fill="#a94035">●</text></g><text x="214.875" y="272" text-anchor="middle" font-size="20" fill="#637368">+</text><g><rect x="227.375" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="227.375" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="230.375" y="242.535" width="24.875" height="3" rx="1" fill="#286396"/>
+<text x="242.8125" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#286396">12</text>
+<text x="242.8125" y="280.465" text-anchor="middle" font-size="7" fill="#286396">■</text></g><g><rect x="262.25" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="262.25" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="265.25" y="242.535" width="24.875" height="3" rx="1" fill="#2e7359"/>
+<text x="277.6875" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#2e7359">12</text>
+<text x="277.6875" y="280.465" text-anchor="middle" font-size="7" fill="#2e7359">▲</text></g><g><rect x="297.125" y="241.535" width="30.875" height="46.93" rx="5" fill="#193e35" opacity=".09"/>
+<rect x="297.125" y="239.535" width="30.875" height="46.93" rx="5" fill="#fffdf7" stroke="#d9d7cb"/>
+<rect x="300.125" y="242.535" width="24.875" height="3" rx="1" fill="#8b650b"/>
+<text x="312.5625" y="269.5702" text-anchor="middle" font-size="16.981250000000003" font-weight="700" fill="#8b650b">12</text>
+<text x="312.5625" y="280.465" text-anchor="middle" font-size="7" fill="#8b650b">◆</text></g>
+<path d="M32 324h296" stroke="#dad9cd"/>
+<text font-size="15" fill="#637368"><tspan x="32" y="356">Fünf Karten mit derselben Zahl und</tspan><tspan x="32" y="378">drei mit derselben Zahl. Die Farben</tspan><tspan x="32" y="400">sind frei.</tspan></text>
+<text x="32" y="445" font-size="11" font-weight="700" letter-spacing="1">8 KARTEN</text>
+<text x="328" y="445" text-anchor="end" font-size="11" letter-spacing="1" fill="#637368">SETS</text></g></svg>
