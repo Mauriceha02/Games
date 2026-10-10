@@ -31,6 +31,8 @@ Prüfen: `npm test`. Bauen: `npm run build` erzeugt `dist/` mit allen Dateien f�
 
 Hosting: Der Workflow `.github/workflows/pages.yml` prüft jeden Push und Pull Request. Nach bestandenen Tests veröffentlicht er den Branch `Dev` auf GitHub Pages; andere Branches werden nur geprüft. Pages verwendet **Settings → Pages → Source → GitHub Actions**. Updates durch einen Push auf `Dev`; den HTTPS-Link zeigt der erfolgreiche Deploy-Schritt an.
 
+Einmalig unter **Settings → Environments → github-pages → Deployment branches and tags** auch `Dev` als erlaubten Branch eintragen, falls dort nur `main` freigegeben ist.
+
 GitHub Pages ist mit GitHub Free für öffentliche Repositories kostenlos; Code und Website sind dann öffentlich. Spielstände werden nicht hochgeladen. [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages).
 
 Deck: 108 Spielkarten – Zahlen 1–12 je 2× pro Farbe, 8 Joker, 4 Aussetzen. Spezifikation und vollständiges Deck liegen in `src/game/`.
