@@ -93,3 +93,58 @@
 }
 @media (prefers-reduced-motion: reduce) { .hand-card { transition: none; } }
 @media print { .game-section { display: none; } }
+
+.current-phase { display: flex; align-items: center; gap: 20px; padding: 20px; margin: 0 0 24px; border: 1px solid #d9b57940; background: #faf5e906; border-radius: 12px; }
+.current-phase > img { width: 72px; height: auto; flex-shrink: 0; box-shadow: 0 5px 12px #071b2520; }
+.current-phase .eyebrow { font-size: 10px; }
+.current-phase h3 { margin: 8px 0; font-size: 25px; line-height: 1.2; }
+.current-phase p { margin: 0; font-size: 13px; line-height: 1.6; color: #cfd8ca; }
+.phase-progress { display: block; color: var(--gold); font-size: 12px; line-height: 1.6; margin-top: 10px; }
+.game-secondary { min-height: 44px; padding: 9px 14px; border: 1px solid #faf5e945; border-radius: 7px; color: var(--paper); background: transparent; font: inherit; font-size: 12px; cursor: pointer; }
+.game-secondary:disabled { opacity: .5; cursor: default; }
+.game-secondary[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.hand-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.ordering-hint, .selection-status { color: #cfd8ca; font-size: 12px; line-height: 1.6; }
+.selection-status { min-height: 20px; margin-top: 16px; text-align: center; color: var(--gold); }
+.order-controls { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.order-controls > span { color: #cfd8ca; font-size: 12px; }
+.hand-grid.is-ordering .hand-card { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.hand-grid.is-ordering .hand-card.is-dragging { opacity: .55; cursor: grabbing; }
+.hand-card.drop-target { outline: 3px dashed var(--gold); outline-offset: 3px; }
+.laid-phases { margin-top: 26px; padding-top: 18px; border-top: 1px solid #faf5e921; }
+.laid-phases > h3 { font-size: 14px; font-weight: 500; margin: 0 0 16px; }
+.laid-player { margin: 16px 0; }
+.laid-player h4 { font-size: 12px; font-weight: 500; color: #cfd8ca; margin: 0 0 10px; }
+.meld-groups { display: flex; flex-wrap: wrap; gap: 12px; }
+.meld-group { max-width: 100%; padding: 12px; background: #faf5e906; border: 1px solid #faf5e924; border-radius: 10px; }
+.meld-label { display: block; margin-bottom: 10px; color: var(--gold); font-size: 12px; }
+.meld-cards { display: flex; flex-wrap: wrap; gap: 5px; }
+.meld-card { position: relative; width: 44px; }
+.meld-card img { width: 100%; height: auto; display: block; }
+.wild-value { position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%); color: var(--ink); background: var(--paper); padding: 1px 4px; font-size: 10px; border: 1px solid #c8cabc; border-radius: 3px; }
+.meld-group .game-secondary { margin-top: 12px; }
+.round-result { margin: 24px 0; padding: 24px; border: 1px solid var(--gold); border-radius: 12px; }
+.round-result h2 { margin: 0 0 12px; font-size: 28px; }
+.round-result p { font-size: 13px; line-height: 1.6; color: #cfd8ca; }
+.round-result ul { list-style: none; padding: 0; margin: 18px 0; }
+.round-result li { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; padding: 8px 0; font-size: 13px; }
+.round-result li > span { color: var(--gold); }
+@media (max-width: 700px) {
+  .current-phase { padding: 14px 12px; gap: 12px; }
+  .current-phase > img { width: 54px; }
+  .current-phase h3 { font-size: 22px; }
+  .current-phase .eyebrow { letter-spacing: 1px; }
+  .current-phase p { font-size: 12px; }
+  .phase-progress { font-size: 11px; }
+  .turn-steps { gap: 18px; }
+  .order-controls { gap: 8px; }
+  .order-controls > span { order: -1; width: 100%; text-align: center; }
+  .round-result { padding: 18px 14px; }
+}
+@media (max-width: 700px) {
+  .meld-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .meld-group { padding: 8px; }
+  .meld-group:only-child { grid-column: 1 / -1; }
+  .meld-card { width: clamp(28px, 9vw, 36px); }
+  .meld-group .game-secondary { width: 100%; padding: 9px 5px; }
+}

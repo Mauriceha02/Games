@@ -20,9 +20,10 @@ test('computer turns draw and discard separately, including after restoring a sa
   assert.equal(drawn.players[active].hand.length, 11);
   const restored = JSON.parse(JSON.stringify(drawn));
   assertGameState(restored, catalog);
-  const discarded = playBasicTurnStep(restored, catalog);
+  let discarded = playBasicTurnStep(restored, catalog);
+  while (discarded.status === 'playing' && discarded.currentPlayer === active) discarded = playBasicTurnStep(discarded, catalog);
   assert.equal(discarded.stage, 'draw');
-  assert.equal(discarded.players[active].hand.length, 10);
+  assert(discarded.players[active].hand.length <= 10);
   assert.deepEqual(discarded.players[0].hand, humanHand);
   assertGameState(discarded, catalog);
   assert.throws(() => playBasicTurnStep(createGame(catalog, 2, unchangedOrder), catalog));
@@ -37,7 +38,8 @@ test('a computer discarding a newly drawn skip selects a valid opponent', () => 
   assertGameState(state, catalog);
   const drawn = playBasicTurnStep(state, catalog);
   assert.equal(catalog.get(drawn.drawnCard).type, 'skip');
-  const discarded = playBasicTurnStep(drawn, catalog);
+  let discarded = playBasicTurnStep(drawn, catalog);
+  while (discarded.status === 'playing' && discarded.currentPlayer === drawn.currentPlayer) discarded = playBasicTurnStep(discarded, catalog);
   assert.equal(discarded.discard.at(-1), drawn.drawnCard);
   assert(discarded.players.some(player => player.skipPending || player.skipProtected));
   assertGameState(discarded, catalog);
@@ -271,7 +273,7 @@ test('corrupt, duplicated and incompatible saved states are rejected without del
   duplicate.stock[0] = duplicate.players[0].hand[0];
   const wrongTurn = copy(valid);
   wrongTurn.stage = 'discard';
-  for (const raw of ['broken json', '{}', JSON.stringify({ ...valid, version: 2 }), JSON.stringify(duplicate), JSON.stringify(wrongTurn)]) {
+  for (const raw of ['broken json', '{}', JSON.stringify({ ...valid, version: 99 }), JSON.stringify(duplicate), JSON.stringify(wrongTurn)]) {
     storage.value = raw;
     assert.equal(loadGame(storage, catalog).state, null);
     assert(loadGame(storage, catalog).error);

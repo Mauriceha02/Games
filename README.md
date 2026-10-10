@@ -31,4 +31,4 @@ Phasenquelle: [Mattel-Spielanleitung (klassische Ausgabe)](https://service.matte
 
 Design neu erzeugen: `node scripts/render-design.mjs`.
 
-Status: Mischen, Austeilen, Ziehen/Abwerfen, Aussetzen und lokales Fortsetzen sind umgesetzt. Computer führen einfache Grundzüge aus. Phasen auslegen, Taktik und Offline-Installation folgen.
+Status: Alle zehn Phasen prüfen/auslegen, Karten anlegen, Rundenfortschritt, Hand ordnen und lokale Spielstände sind umgesetzt. Computer spielen einfache Züge; Taktik und Offline-Installation folgen.

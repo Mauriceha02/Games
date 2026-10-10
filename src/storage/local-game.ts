@@ -11,7 +11,14 @@ export function loadGame(storage: StorageAccess, catalog: Catalog): { state: Gam
   try {
     const raw = storage.getItem(STORAGE_KEY);
     if (raw === null) return { state: null, error: null };
-    const state: unknown = JSON.parse(raw);
+    let state: unknown = JSON.parse(raw);
+    // Keep the existing key and hand order when upgrading the first playable version.
+    if (state && typeof state === 'object' && 'version' in state && state.version === 1) {
+      const legacy = state as Record<string, unknown>;
+      if (!Array.isArray(legacy.players)) throw new Error('Ungültiger alter Spielstand.');
+      state = { ...legacy, version: 2, status: 'playing', roundWinner: null, winner: null, tieBreak: false, finalists: null,
+        players: legacy.players.map(player => ({ ...player, phase: 1, score: 0, melds: [] })) };
+    }
     assertGameState(state, catalog);
     return { state, error: null };
   } catch {
