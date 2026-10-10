@@ -1,12 +1,32 @@
 import { createHash } from 'node:crypto';
-import { readdir, readFile, writeFile, mkdir, copyFile, rm } from 'node:fs/promises';
+import { readdir, readFile, writeFile, mkdir, copyFile, rm, lstat } from 'node:fs/promises';
+import { extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-async function filesUnder(root, directory) {
+const assetExtensions = new Set(['.svg', '.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif', '.ico', '.woff', '.woff2', '.ttf', '.otf', '.mp3', '.ogg', '.wav', '.m4a']);
+const appExtensions = new Set(['.js']);
+
+async function assertRegularPath(root, path, directory = false) {
+  const parts = path.replace(/\/$/, '').split('/');
+  for (let index = 0; index < parts.length; index++) {
+    const prefix = parts.slice(0, index + 1).join('/');
+    const entry = await lstat(new URL(prefix, root));
+    const expectsDirectory = index < parts.length - 1 || directory;
+    if (entry.isSymbolicLink() || (expectsDirectory ? !entry.isDirectory() : !entry.isFile())) {
+      throw new Error(`Kein regulärer Veröffentlichungs-Pfad: ${prefix}`);
+    }
+  }
+}
+
+async function filesUnder(root, directory, extensions) {
+  await assertRegularPath(root, directory, true);
   const entries = await readdir(new URL(directory, root), { withFileTypes: true });
   const groups = await Promise.all(entries.map(entry => {
     const path = `${directory}${entry.name}`;
-    return entry.isDirectory() ? filesUnder(root, `${path}/`) : [path];
+    if (entry.name.startsWith('.') || entry.isSymbolicLink() || (!entry.isDirectory() && (!entry.isFile() || !extensions.has(extname(entry.name).toLowerCase())))) {
+      throw new Error(`Datei nicht zur Veröffentlichung freigegeben: ${path}`);
+    }
+    return entry.isDirectory() ? filesUnder(root, `${path}/`, extensions) : [path];
   }));
   return groups.flat();
 }
@@ -16,9 +36,10 @@ export async function buildOffline(root = new URL('../', import.meta.url)) {
     'index.html', 'manifest.webmanifest',
     'src/ui/phase-cards.css', 'src/ui/game-table.css',
     'src/game/deck.json', 'src/game/phases.json',
-    ...await filesUnder(root, 'public/assets/'),
-    ...await filesUnder(root, 'public/app/'),
+    ...await filesUnder(root, 'public/assets/', assetExtensions),
+    ...await filesUnder(root, 'public/app/', appExtensions),
   ].sort();
+  for (const path of [...assets, 'src/storage/service-worker.js']) await assertRegularPath(root, path);
   const source = await readFile(new URL('src/storage/service-worker.js', root), 'utf8');
   const hash = createHash('sha256').update(source);
   for (const path of assets) hash.update(path).update(await readFile(new URL(path, root)));

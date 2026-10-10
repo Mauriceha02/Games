@@ -11,6 +11,8 @@ Umgesetzt:
 
 Technik: TypeScript und HTML/CSS, installierbare PWA. WLAN-Mehrspieler folgt.
 
+Sicherheitsprüfung und verbleibende Grenzen: [SECURITY.md](SECURITY.md).
+
 Ordner:
 
 ```text

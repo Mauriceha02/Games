@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, writeFile, mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, mkdtemp, rm, symlink, unlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { runInNewContext } from 'node:vm';
@@ -164,5 +164,51 @@ test('build creates an isolated hosting folder and changes cache version when ga
     assert.equal(await readFile(new URL('dist/public/app/main.js', fixture), 'utf8'), 'updated game');
     await assert.rejects(readFile(new URL('dist/.env', fixture)), { code: 'ENOENT' });
     await assert.rejects(readFile(new URL('dist/src/storage/service-worker.js', fixture)), { code: 'ENOENT' });
+  } finally { await rm(fixture, { recursive: true, force: true }); }
+});
+
+test('publication rejects hidden files, unexpected file types and symlinks in asset folders', async () => {
+  const directory = await mkdtemp(tmpdir() + '/phase10-publication-');
+  const fixture = pathToFileURL(directory + '/');
+  try {
+    for (const path of ['index.html', 'manifest.webmanifest', 'src/ui/phase-cards.css', 'src/ui/game-table.css', 'src/game/deck.json', 'src/game/phases.json', 'public/assets/card.svg', 'public/app/main.js', 'src/storage/service-worker.js']) {
+      const target = new URL(path, fixture);
+      await mkdir(new URL('./', target), { recursive: true });
+      await writeFile(target, 'test-' + path);
+    }
+    for (const path of ['public/assets/.env', 'public/assets/private.pem', 'public/app/config.json']) {
+      await writeFile(new URL(path, fixture), 'dummy private content');
+      await assert.rejects(buildOffline(fixture), /nicht zur Veröffentlichung freigegeben/);
+      await rm(new URL(path, fixture));
+    }
+    const hiddenDirectory = new URL('public/assets/.private/', fixture);
+    await mkdir(hiddenDirectory);
+    await assert.rejects(buildOffline(fixture), /nicht zur Veröffentlichung freigegeben/);
+    await rm(hiddenDirectory, { recursive: true });
+    const privateFile = new URL('private.txt', fixture);
+    await writeFile(privateFile, 'dummy content outside the asset directory');
+    const indexFile = new URL('index.html', fixture);
+    await rm(indexFile);
+    await symlink(privateFile, indexFile);
+    await assert.rejects(buildOffline(fixture), /Kein regulärer Veröffentlichungs-Pfad/);
+    await rm(indexFile);
+    await writeFile(indexFile, 'test-index.html');
+    const linkedAsset = new URL('public/assets/linked.svg', fixture);
+    await symlink(privateFile, linkedAsset);
+    await assert.rejects(buildOffline(fixture), /nicht zur Veröffentlichung freigegeben/);
+    await rm(linkedAsset);
+    const assetsDirectory = new URL('public/assets', fixture);
+    await rm(assetsDirectory, { recursive: true });
+    await mkdir(new URL('private-assets/', fixture));
+    await symlink(new URL('private-assets/', fixture), assetsDirectory, 'dir');
+    await assert.rejects(buildOffline(fixture), /Kein regulärer Veröffentlichungs-Pfad/);
+    await unlink(assetsDirectory);
+    const publicDirectory = new URL('public', fixture);
+    await rm(publicDirectory, { recursive: true });
+    await mkdir(new URL('outside-public/assets/', fixture), { recursive: true });
+    await mkdir(new URL('outside-public/app/', fixture), { recursive: true });
+    await symlink(new URL('outside-public/', fixture), publicDirectory, 'dir');
+    await assert.rejects(buildOffline(fixture), /Kein regulärer Veröffentlichungs-Pfad/);
+    await assert.rejects(readFile(new URL('dist/public/assets/linked.svg', fixture)), { code: 'ENOENT' });
   } finally { await rm(fixture, { recursive: true, force: true }); }
 });
