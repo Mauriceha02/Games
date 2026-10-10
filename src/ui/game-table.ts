@@ -1,9 +1,10 @@
 import { describeCard, eligibleSkipTargets } from '../game/game.js';
 import { extendMeld, matchPhase, PHASE_GROUPS, type PhaseDefinition } from '../game/phases.js';
-import type { Card, Catalog, GameState, Meld } from '../game/types.js';
+import type { Card, Catalog, GameState, Meld, BotSetup } from '../game/types.js';
 
 export interface TableActions {
-  start(computers: number): void;
+  start(computers: number, difficulty: BotSetup): void;
+  difficulty(level: BotSetup): void;
   nextRound(): void;
   draw(source: 'stock' | 'discard'): void;
   select(id: string): void;
@@ -36,8 +37,18 @@ const disabled = (enabled: unknown): string => enabled ? '' : ' disabled';
 const colorName = { red: 'Rot', blue: 'Blau', green: 'Grün', yellow: 'Gelb' };
 const groupName = (group: Meld): string => group.kind === 'set' ? `${group.cards.length} × ${group.value}` : group.kind === 'color' ? colorName[group.color!] : `Folge ${group.value}–${group.value! + group.cards.length - 1}`;
 
-function startForm(restart: boolean, count = 2): string {
-  return `<form class="start-form"><label for="computer-count">Computergegner</label><select id="computer-count" name="computers">${[1, 2, 3, 4, 5].map(value => `<option value="${value}"${value === count ? ' selected' : ''}>${value}</option>`).join('')}</select><button class="game-primary" type="submit">${restart ? 'Neu starten' : 'Partie starten'}</button>${restart ? '<p class="reset-note">Die aktuelle Partie wird ersetzt.</p>' : ''}</form>`;
+function difficultyOptions(current: BotSetup): string {
+  return ([['easy', 'Einfach'], ['strong', 'Stark'], ['mixed', 'Gemischt']] as const)
+    .map(([value, label]) => `<option value="${value}"${current === value ? ' selected' : ''}>${label}</option>`).join('');
+}
+
+function botSetup(state: GameState): BotSetup {
+  const levels = state.players.slice(1).map(player => player.botDifficulty);
+  return levels.every(level => level === levels[0]) ? levels[0]! : 'mixed';
+}
+
+function startForm(restart: boolean, count = 2, difficulty: BotSetup = 'easy'): string {
+  return `<form class="start-form"><label for="computer-count">Computergegner</label><select id="computer-count" name="computers">${[1, 2, 3, 4, 5].map(value => `<option value="${value}"${value === count ? ' selected' : ''}>${value}</option>`).join('')}</select><label for="start-difficulty">Spielstärke</label><select id="start-difficulty" name="difficulty">${difficultyOptions(difficulty)}</select><button class="game-primary" type="submit">${restart ? 'Neu starten' : 'Partie starten'}</button>${restart ? '<p class="reset-note">Die aktuelle Partie wird ersetzt.</p>' : ''}</form>`;
 }
 
 function tableMelds(view: TableView, canPlay: boolean): string {
@@ -53,7 +64,7 @@ function result(view: TableView): string {
   const roundWinner = state.players.find(player => player.id === state.roundWinner)!;
   const winner = state.players.find(player => player.id === state.winner);
   const title = winner ? `${winner.name === 'Du' ? 'Du gewinnst' : `${winner.name} gewinnt`} die Partie!` : `${roundWinner.name} beendet Runde ${state.round}.`;
-  return `<section class="round-result" aria-label="Rundenergebnis"><h2>${escape(title)}</h2><p>${winner ? 'Alle zehn Phasen sind geschafft.' : state.finalists ? 'Gleichstand nach Phase 10. Die punktgleichen Spieler spielen eine Stichrunde; die erste ausgelegte Phase entscheidet.' : 'Wer seine Phase ausgelegt hat, spielt in der nächsten Runde die nächste Phase.'}</p><ul>${state.players.map(player => `<li><strong>${escape(player.name)}</strong><span>Phase ${player.phase}${player.melds.length ? ' ✓' : ''} · ${player.score} Punkte</span></li>`).join('')}</ul>${state.status === 'round-over' ? '<button class="game-primary" type="button" data-action="next-round" data-focus="next-round">Nächste Runde</button>' : ''}</section>`;
+  return `<section class="round-result" aria-label="Rundenergebnis"><h2>${escape(title)}</h2><p>${winner ? 'Alle zehn Phasen sind geschafft.' : state.finalists ? 'Gleichstand nach Phase 10. Die punktgleichen Spieler spielen eine Stichrunde; die erste ausgelegte Phase entscheidet.' : 'Wer seine Phase ausgelegt hat, spielt in der nächsten Runde die nächste Phase.'}</p><ul>${state.players.map(player => `<li><strong>${escape(player.name)} <span class="bot-badge">${player.botDifficulty === 'strong' ? 'Stark' : 'Einfach'}</span></strong><span>Phase ${player.phase}${player.melds.length ? ' ✓' : ''} · ${player.score} Punkte</span></li>`).join('')}</ul>${state.status === 'round-over' ? '<button class="game-primary" type="button" data-action="next-round" data-focus="next-round">Nächste Runde</button>' : ''}</section>`;
 }
 
 export function renderGameTable(root: HTMLElement, view: TableView, actions: TableActions): void {
@@ -85,9 +96,9 @@ export function renderGameTable(root: HTMLElement, view: TableView, actions: Tab
     root.dataset.stage = state.stage;
     root.dataset.player = active.id;
     root.dataset.status = state.status;
-    root.innerHTML = `<div class="game-topline"><span class="round-label">${state.tieBreak ? 'STICHRUNDE' : 'RUNDE'} ${state.round}</span><details class="new-game"><summary>Neue Partie</summary>${startForm(true, state.players.length - 1)}</details></div>
+    root.innerHTML = `<div class="game-topline"><span class="round-label">${state.tieBreak ? 'STICHRUNDE' : 'RUNDE'} ${state.round}</span><label class="bot-setting" for="bot-difficulty">Spielstärke<select id="bot-difficulty" data-focus="bot-difficulty" data-action="difficulty">${difficultyOptions(botSetup(state))}</select></label><details class="new-game"><summary>Neue Partie</summary>${startForm(true, state.players.length - 1, botSetup(state))}</details></div>
 <div class="current-phase"><img src="./public/assets/phase-${String(human.phase).padStart(2, '0')}.svg" width="240" height="336" alt="" aria-hidden="true"><div><span class="eyebrow">DEINE PHASE ${human.phase} VON 10</span><h3>${escape(phase.title)}</h3><p>${escape(phase.hint)}</p><span class="phase-progress">${spectator ? 'Du schaust bei der Stichrunde zu.' : human.melds.length ? `✓ Ausgelegt${human.phase < 10 ? ` · Phase ${human.phase + 1} in der nächsten Runde` : ' · Letzte Phase geschafft'}` : `${requiredCount} Karten mindestens · ${human.score} Punkte`}</span></div></div>
-<div class="opponents">${state.players.slice(1).map(player => `<div class="opponent${player.id === active.id && state.status === 'playing' ? ' is-active' : ''}"><div class="opponent-cards" aria-hidden="true">${Array.from({ length: Math.min(3, player.hand.length) }, () => '<img src="./public/assets/card-back.svg" width="240" height="336" alt="">').join('')}</div><strong>${escape(player.name)}</strong><span>${cardCount(player.hand.length)}${player.skipPending ? ' · setzt aus' : ''}</span><span>Phase ${player.phase}${player.melds.length ? ' ✓' : ''}</span></div>`).join('')}</div>
+<div class="opponents">${state.players.slice(1).map(player => `<div class="opponent${player.id === active.id && state.status === 'playing' ? ' is-active' : ''}"><div class="opponent-cards" aria-hidden="true">${Array.from({ length: Math.min(3, player.hand.length) }, () => '<img src="./public/assets/card-back.svg" width="240" height="336" alt="">').join('')}</div><strong>${escape(player.name)} <span class="bot-badge">${player.botDifficulty === 'strong' ? 'Stark' : 'Einfach'}</span></strong><span>${cardCount(player.hand.length)}${player.skipPending ? ' · setzt aus' : ''}</span><span>Phase ${player.phase}${player.melds.length ? ' ✓' : ''}</span></div>`).join('')}</div>
 ${result(view)}
 ${state.status === 'playing' ? `<div class="turn-heading"><h2>${escape(title)}</h2><p>${escape(instruction)}</p><ol class="turn-steps" aria-label="Schritte deines Zuges"><li class="${state.stage === 'draw' ? 'is-current' : 'is-complete'}"${canDraw ? ' aria-current="step"' : ''}><span>1</span>Ziehen</li><li class="${state.stage === 'discard' ? 'is-current' : ''}"${canPlay ? ' aria-current="step"' : ''}><span>2</span>Spielen &amp; Abwerfen</li></ol></div>` : ''}
 <div class="piles"><div><button class="pile-card" id="draw-stock" type="button" data-action="draw-stock" data-focus="draw-stock" aria-label="Eine Karte vom Nachziehstapel ziehen"${disabled(canDraw && !ordering && (state.stock.length || state.discard.length > 1))}><img src="./public/assets/card-back.svg" width="240" height="336" alt="Verdeckter Nachziehstapel"><span class="pile-count">${state.stock.length}</span></button><span class="pile-label">Nachziehstapel</span></div><div><button class="pile-card" id="draw-discard" type="button" data-action="draw-discard" data-focus="draw-discard" aria-label="Die oberste Karte vom Ablagestapel aufnehmen"${disabled(canDraw && !ordering && top && top.type !== 'skip')}>${top ? image(top) : '<span class="empty-pile">Leer</span>'}<span class="pile-count">${state.discard.length}</span></button><span class="pile-label">Ablagestapel</span></div></div>
@@ -104,9 +115,11 @@ ${message ? `<p class="game-message" role="alert">${escape(message)}</p>` : ''}
 
   root.querySelector<HTMLFormElement>('.start-form')?.addEventListener('submit', event => {
     event.preventDefault();
-    actions.start(Number(new FormData(event.currentTarget as HTMLFormElement).get('computers')));
+    const data = new FormData(event.currentTarget as HTMLFormElement);
+    actions.start(Number(data.get('computers')), String(data.get('difficulty')) as BotSetup);
   });
   const on = (name: string, action: () => void): void => { root.querySelector(`[data-action="${name}"]`)?.addEventListener('click', action); };
+  root.querySelector<HTMLSelectElement>('[data-action="difficulty"]')?.addEventListener('change', event => actions.difficulty((event.currentTarget as HTMLSelectElement).value as BotSetup));
   on('draw-stock', () => actions.draw('stock'));
   on('draw-discard', () => actions.draw('discard'));
   on('discard', actions.discard);

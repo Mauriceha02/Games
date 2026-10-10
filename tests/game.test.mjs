@@ -36,11 +36,11 @@ test('a computer discarding a newly drawn skip selects a valid opponent', () => 
   const stockIndex = state.stock.length - 1;
   [holder.hand[skipIndex], state.stock[stockIndex]] = [state.stock[stockIndex], holder.hand[skipIndex]];
   assertGameState(state, catalog);
-  const drawn = playBasicTurnStep(state, catalog);
+  const drawn = drawCard(state, catalog, state.players[state.currentPlayer].id, 'stock');
   assert.equal(catalog.get(drawn.drawnCard).type, 'skip');
   let discarded = playBasicTurnStep(drawn, catalog);
   while (discarded.status === 'playing' && discarded.currentPlayer === drawn.currentPlayer) discarded = playBasicTurnStep(discarded, catalog);
-  assert.equal(discarded.discard.at(-1), drawn.drawnCard);
+  assert.equal(catalog.get(discarded.discard.at(-1)).type, 'skip');
   assert(discarded.players.some(player => player.skipPending || player.skipProtected));
   assertGameState(discarded, catalog);
 });

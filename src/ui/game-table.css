@@ -148,3 +148,7 @@
   .meld-card { width: clamp(28px, 9vw, 36px); }
   .meld-group .game-secondary { width: 100%; padding: 9px 5px; }
 }
+.bot-setting { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #cfd8ca; }
+.bot-setting select { min-height: 44px; border: 1px solid #faf5e945; border-radius: 7px; padding: 7px 10px; background: #193e35; color: var(--paper); font: inherit; font-size: 16px; }
+.bot-badge { display: block; margin-top: 5px; font-size: 10px; font-weight: 400; color: var(--gold); }
+@media (max-width: 700px) { .bot-setting { order: 3; width: 100%; } }

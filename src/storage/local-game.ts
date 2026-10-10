@@ -19,6 +19,12 @@ export function loadGame(storage: StorageAccess, catalog: Catalog): { state: Gam
       state = { ...legacy, version: 2, status: 'playing', roundWinner: null, winner: null, tieBreak: false, finalists: null,
         players: legacy.players.map(player => ({ ...player, phase: 1, score: 0, melds: [] })) };
     }
+    if (state && typeof state === 'object' && 'version' in state && state.version === 2) {
+      const legacy = state as Record<string, unknown>;
+      if (!Array.isArray(legacy.players)) throw new Error('Ungültiger alter Spielstand.');
+      state = { ...legacy, version: 3, players: legacy.players.map(player => ({ ...player,
+        botDifficulty: player.controller === 'human' ? null : 'easy' })) };
+    }
     assertGameState(state, catalog);
     return { state, error: null };
   } catch {

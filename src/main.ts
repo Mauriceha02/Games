@@ -1,4 +1,4 @@
-import { createCatalog, createGame, drawCard, discardCard, layPhase, hitMeld, nextRound, reorderHand, sortHand } from './game/game.js';
+import { createCatalog, createGame, drawCard, discardCard, layPhase, hitMeld, nextRound, reorderHand, sortHand, setBotDifficulty } from './game/game.js';
 import { readPhaseDefinitions } from './game/phases.js';
 import { playBasicTurnStep } from './ai/basic-turn.js';
 import { loadGame, saveGame, type StorageAccess } from './storage/local-game.js';
@@ -59,7 +59,10 @@ async function start(): Promise<void> {
   }
 
   const actions: TableActions = {
-    start: computers => attempt(() => { ordering = false; focusedCard = null; update(createGame(catalog, computers)); }),
+    start: (computers, difficulty) => attempt(() => { ordering = false; focusedCard = null; update(createGame(catalog, computers, Math.random, difficulty)); }),
+    difficulty: level => attempt(() => {
+      if (state) { update(setBotDifficulty(state, catalog, level), true); announcement!.textContent = 'Die Spielstärke der Computer wurde geändert.'; }
+    }),
     nextRound: () => attempt(() => { if (state) { ordering = false; update(nextRound(state, catalog)); } }),
     draw: source => attempt(() => {
       if (state) { ordering = false; update(drawCard(state, catalog, state.players[0]!.id, source)); }

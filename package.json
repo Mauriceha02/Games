@@ -8,7 +8,8 @@
     "build": "node scripts/render-design.mjs && tsc",
     "check": "tsc --noEmit",
     "test": "npm run build && node --test tests/*.test.mjs",
-    "dev": "npm run build && python3 -m http.server 5173 --bind 127.0.0.1"
+    "dev": "npm run build && python3 -m http.server 5173 --bind 127.0.0.1",
+    "dev:lan": "npm run build && python3 -m http.server 5173 --bind 0.0.0.0"
   },
   "devDependencies": { "typescript": "5.9.3" }
 }

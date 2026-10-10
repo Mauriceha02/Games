@@ -18,10 +18,14 @@ export interface Meld {
   color: Color | null;
 }
 
+export type BotDifficulty = 'easy' | 'strong';
+export type BotSetup = BotDifficulty | 'mixed';
+
 export interface Player {
   id: string;
   name: string;
   controller: 'human' | 'computer';
+  botDifficulty: BotDifficulty | null;
   hand: string[];
   phase: number;
   score: number;
@@ -31,7 +35,7 @@ export interface Player {
 }
 
 export interface GameState {
-  version: 2;
+  version: 3;
   status: 'playing' | 'round-over' | 'finished';
   roundWinner: string | null;
   winner: string | null;
