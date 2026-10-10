@@ -28,6 +28,7 @@ async function start(): Promise<void> {
   let saveError: string | null = null;
   let selected: string[] = [];
   let ordering = false;
+  let dragging = false;
   let focusedCard: string | null = null;
   let target: string | null = null;
   let timer: ReturnType<typeof setTimeout> | null = null;
@@ -89,6 +90,7 @@ async function start(): Promise<void> {
     lay: () => attempt(() => { if (state) update(layPhase(state, catalog, state.players[0]!.id, selected)); }),
     hit: (owner, group) => attempt(() => { if (state) update(hitMeld(state, catalog, state.players[0]!.id, selected, owner, group)); }),
     orderMode: () => { ordering = !ordering; focusedCard = null; message = ''; render(); },
+    dragging: active => { dragging = active; scheduleBotTurn(); },
     move: (id, position) => attempt(() => move(id, position)),
     orderStep: direction => attempt(() => {
       if (state && focusedCard) move(focusedCard, state.players[0]!.hand.indexOf(focusedCard) + direction);
@@ -99,11 +101,16 @@ async function start(): Promise<void> {
   };
 
   function render(): void {
-    if (timer !== null) clearTimeout(timer);
     renderGameTable(root!, { state, catalog, phases, selected, target, message, ordering, focusedCard }, actions);
     storageStatus!.textContent = saveError ?? (state ? 'Auf diesem Gerät gespeichert.' : 'Dein Fortschritt wird auf diesem Gerät gespeichert.');
     storageStatus!.classList.toggle('storage-error', saveError !== null);
-    if (!document.hidden && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer' && !message) {
+    scheduleBotTurn();
+  }
+
+  function scheduleBotTurn(): void {
+    if (timer !== null) clearTimeout(timer);
+    timer = null;
+    if (!dragging && !document.hidden && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer' && !message) {
       timer = setTimeout(() => attempt(() => {
         if (state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer') update(playBasicTurnStep(state, catalog));
       }), 650);

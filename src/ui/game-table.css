@@ -108,8 +108,11 @@
 .selection-status { min-height: 20px; margin-top: 16px; text-align: center; color: var(--gold); }
 .order-controls { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
 .order-controls > span { color: #cfd8ca; font-size: 12px; }
-.hand-grid.is-ordering .hand-card { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.hand-grid.is-ordering { touch-action: none; -webkit-touch-callout: none; }
+.hand-grid.is-ordering .hand-card { touch-action: none; -webkit-touch-callout: none; cursor: grab; user-select: none; -webkit-user-select: none; }
 .hand-grid.is-ordering .hand-card.is-dragging { opacity: .55; cursor: grabbing; }
+.hand-card img { -webkit-user-drag: none; }
+.hand-drag-preview { position: fixed; top: 0; left: 0; z-index: 100; pointer-events: none; transition: none; box-shadow: 0 12px 28px #0006; }
 .hand-card.drop-target { outline: 3px dashed var(--gold); outline-offset: 3px; }
 .laid-phases { margin-top: 26px; padding-top: 18px; border-top: 1px solid #faf5e921; }
 .laid-phases > h3 { font-size: 14px; font-weight: 500; margin: 0 0 16px; }

@@ -1,13 +1,13 @@
+import { wireHand, type HandActions } from './hand-drag.js';
 import { describeCard, eligibleSkipTargets } from '../game/game.js';
 import { extendMeld, matchPhase, PHASE_GROUPS, type PhaseDefinition } from '../game/phases.js';
 import type { Card, Catalog, GameState, Meld, BotSetup } from '../game/types.js';
 
-export interface TableActions {
+export interface TableActions extends HandActions {
   start(computers: number, difficulty: BotSetup): void;
   difficulty(level: BotSetup): void;
   nextRound(): void;
   draw(source: 'stock' | 'discard'): void;
-  select(id: string): void;
   clear(): void;
   target(id: string): void;
   discard(): void;
@@ -15,7 +15,6 @@ export interface TableActions {
   hit(owner: string, group: number): void;
   orderMode(): void;
   orderStep(direction: number): void;
-  move(id: string, position: number): void;
   sort(by: 'number' | 'color'): void;
 }
 
@@ -90,7 +89,7 @@ export function renderGameTable(root: HTMLElement, view: TableView, actions: Tab
     const position = focusedCard ? human.hand.indexOf(focusedCard) : -1;
     const spectator = state.tieBreak && !state.finalists?.includes(human.id);
     const title = spectator ? 'Die Stichrunde läuft.' : yourTurn ? 'Du bist am Zug.' : `${active.name} ist am Zug.`;
-    const instruction = ordering ? 'Ziehe Karten an ihren Platz oder nutze die Pfeile.' : yourTurn
+    const instruction = ordering ? 'Ziehe die Karten mit dem Finger an ihren Platz.' : yourTurn
       ? canDraw ? 'Ziehe genau eine Karte von einem der beiden Stapel.' : human.melds.length ? 'Lege passende Karten an oder wirf eine Karte ab.' : 'Wähle Karten für deine Phase oder eine Karte zum Abwerfen.'
       : state.stage === 'draw' ? 'Zieht gleich eine Karte.' : 'Prüft die Phase und die Karten auf dem Tisch.';
     root.dataset.stage = state.stage;
@@ -106,7 +105,7 @@ ${top?.type === 'skip' ? '<p class="pile-hint">Aussetzen darf nicht vom Ablagest
 ${tableMelds(view, canPlay)}
 <div class="hand-heading"><h3>Deine Hand</h3><span id="hand-count">${cardCount(human.hand.length)}</span></div>
 <div class="hand-tools"><button class="game-secondary" type="button" data-action="sort-number" data-focus="sort-number"${disabled(human.hand.length)}>Nach Zahl</button><button class="game-secondary" type="button" data-action="sort-color" data-focus="sort-color"${disabled(human.hand.length)}>Nach Farbe</button><button class="game-secondary" type="button" data-action="order-mode" data-focus="order-mode" aria-pressed="${ordering}"${disabled(human.hand.length)}>${ordering ? 'Ordnen fertig' : 'Hand ordnen'}</button></div>
-${ordering ? `<p class="ordering-hint">Karten verschieben: ziehen oder antippen und mit den Pfeilen bewegen.</p>` : ''}
+${ordering ? `<p class="ordering-hint">Karte berühren, an den gewünschten Platz ziehen und loslassen. Alternativ: antippen und die Pfeile nutzen.</p>` : ''}
 <div class="hand-grid${ordering ? ' is-ordering' : ''}">${human.hand.map(id => `<button class="hand-card${(ordering ? focusedCard === id : selected.includes(id)) ? ' is-selected' : ''}${state.drawnCard === id && yourTurn ? ' is-drawn' : ''}" type="button" data-card="${escape(id)}" data-focus="${escape(id)}" aria-label="${escape(describeCard(catalog.get(id)!))}${ordering ? ' zum Verschieben' : ' auswählen'}" aria-pressed="${ordering ? focusedCard === id : selected.includes(id)}"${disabled(ordering || canPlay)}>${image(catalog.get(id)!)}</button>`).join('')}</div>
 ${ordering ? `<div class="order-controls"><button class="game-secondary" type="button" data-action="move-left" data-focus="move-left" aria-label="Gewählte Karte einen Platz nach links verschieben"${disabled(position > 0)}>← Nach links</button><span>${position >= 0 ? `Platz ${position + 1} von ${human.hand.length}` : 'Eine Karte auswählen'}</span><button class="game-secondary" type="button" data-action="move-right" data-focus="move-right" aria-label="Gewählte Karte einen Platz nach rechts verschieben"${disabled(position >= 0 && position < human.hand.length - 1)}>Nach rechts →</button></div>` : `<div class="selection-status" role="status">${selected.length ? `${selected.length} ausgewählt${matched ? ` · ${matched.map(group => escape(groupName(group))).join(' + ')} ✓` : !human.melds.length && selected.length > 1 ? ' · noch keine vollständige Phase' : ''}` : canDraw ? 'Erst ziehen, dann spielen.' : canPlay ? 'Tippe auf eine oder mehrere Karten.' : ''}</div><div class="discard-controls">${!human.melds.length ? `<button class="game-primary" id="lay-phase" type="button" data-action="lay-phase" data-focus="lay-phase"${disabled(matched)}>Phase ${human.phase} auslegen</button>` : ''}${needsTarget ? `<label class="skip-target">Wer setzt aus?<select data-action="skip-target" data-focus="skip-target" aria-label="Spieler zum Aussetzen auswählen"><option value="">Bitte wählen</option>${skipTargets.map(player => `<option value="${escape(player.id)}"${target === player.id ? ' selected' : ''}>${escape(player.name)}</option>`).join('')}</select></label>${skipTargets.length ? '' : '<p>Wähle eine andere Karte. Die anderen Spieler müssen erst wieder einen normalen Zug spielen.</p>'}` : ''}<button class="game-primary" id="discard-card" type="button" data-action="discard" data-focus="discard"${disabled(canPlay && selectedCard && (!needsTarget || skipTargets.some(player => player.id === target)))}>${selectedCard ? `${escape(describeCard(selectedCard))} abwerfen` : 'Eine Karte abwerfen'}</button>${selected.length ? '<button class="game-secondary" type="button" data-action="clear" data-focus="clear">Auswahl aufheben</button>' : ''}</div>`}
 ${message ? `<p class="game-message" role="alert">${escape(message)}</p>` : ''}
@@ -138,48 +137,4 @@ ${message ? `<p class="game-message" role="alert">${escape(message)}</p>` : ''}
     const element = [...root.querySelectorAll<HTMLElement>('[data-focus]')].find(node => node.dataset.focus === previouslyFocused);
     if (element && !(element instanceof HTMLButtonElement && element.disabled)) element.focus({ preventScroll: true });
   }
-}
-
-function wireHand(root: HTMLElement, ordering: boolean, actions: TableActions): void {
-  let suppressClick = false;
-  root.querySelectorAll<HTMLButtonElement>('[data-card]').forEach(button => {
-    button.addEventListener('click', () => { if (suppressClick) { suppressClick = false; return; } actions.select(button.dataset.card!); });
-    if (!ordering) return;
-    button.addEventListener('keydown', event => {
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-      event.preventDefault();
-      const buttons = [...root.querySelectorAll('[data-card]')];
-      actions.move(button.dataset.card!, buttons.indexOf(button) + (event.key === 'ArrowLeft' ? -1 : 1));
-    });
-    let startX = 0, startY = 0;
-    let destination: HTMLButtonElement | null = null;
-    let dragging = false;
-    button.addEventListener('pointerdown', event => {
-      if (event.button !== 0) return;
-      startX = event.clientX; startY = event.clientY;
-      destination = null; dragging = false; suppressClick = false;
-      button.setPointerCapture(event.pointerId);
-    });
-    button.addEventListener('pointermove', event => {
-      if (!button.hasPointerCapture(event.pointerId)) return;
-      if (Math.hypot(event.clientX - startX, event.clientY - startY) < 6) return;
-      dragging = true;
-      destination?.classList.remove('drop-target');
-      destination = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLButtonElement>('[data-card]') ?? null;
-      if (destination && root.contains(destination)) destination.classList.add('drop-target'); else destination = null;
-      button.classList.add('is-dragging');
-    });
-    const end = (event: PointerEvent): void => {
-      if (!button.hasPointerCapture(event.pointerId)) return;
-      button.releasePointerCapture(event.pointerId);
-      button.classList.remove('is-dragging');
-      destination?.classList.remove('drop-target');
-      suppressClick = dragging;
-      if (event.type === 'pointerup' && dragging && destination && destination !== button) {
-        actions.move(button.dataset.card!, [...root.querySelectorAll('[data-card]')].indexOf(destination));
-      }
-    };
-    button.addEventListener('pointerup', end);
-    button.addEventListener('pointercancel', end);
-  });
 }
