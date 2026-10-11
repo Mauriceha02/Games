@@ -145,7 +145,7 @@ async function start(): Promise<void> {
       if (link) link.textContent = summary && !summary.finished ? 'Fortsetzen →' : 'Spielen →';
       if (saved) {
         saved.hidden = !summary || summary.finished;
-        saved.textContent = summary ? `Karte ${summary.card} von 33 · ${summary.score} ${summary.score === 1 ? 'Punkt' : 'Punkte'}` : '';
+        saved.textContent = summary ? `Karte ${summary.card} von ${summary.total} · ${summary.score} ${summary.score === 1 ? 'Punkt' : 'Punkte'}` : '';
       }
     }).catch(() => {
       const saved = document.getElementById('gruselino-saved');

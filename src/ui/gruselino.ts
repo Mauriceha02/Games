@@ -1,4 +1,4 @@
-interface Summary { card: number; score: number; finished: boolean }
+interface Summary { card: number; total: number; score: number; finished: boolean }
 interface GruselinoModule {
   mountGruselino(root: HTMLElement, options: { onHome(): void }): { dispose(): void };
   getSavedSummary(): Summary | null;
