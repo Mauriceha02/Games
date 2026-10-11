@@ -1,5 +1,5 @@
-import { extendMeld, findPhase, PHASE_GROUPS } from '../game/phases.js';
-import type { BotDifficulty, Card, Catalog, GameState, Meld } from '../game/types.js';
+import { extendMeld, findPhase, phaseGroups } from '../game/phases.js';
+import type { BotDifficulty, Card, Catalog, GameState, Meld, PhaseSet } from '../game/types.js';
 
 interface PublicPlayer {
   id: string;
@@ -16,6 +16,7 @@ export interface BotView {
   id: string;
   difficulty: BotDifficulty;
   phase: number;
+  phaseSet: PhaseSet;
   hand: string[];
   melds: Meld[];
   stage: 'draw' | 'discard';
@@ -41,7 +42,7 @@ export function createBotView(state: GameState): BotView {
       melds: melds(other.melds), skipPending: other.skipPending, skipProtected: other.skipProtected };
   }).filter(other => !state.finalists || state.finalists.includes(other.id));
   return {
-    id: player.id, difficulty: player.botDifficulty, phase: player.phase, hand: [...player.hand], melds: melds(player.melds),
+    id: player.id, difficulty: player.botDifficulty, phase: player.phase, phaseSet: state.phaseSet, hand: [...player.hand], melds: melds(player.melds),
     stage: state.stage, opponents, topDiscard: state.discard[state.discard.length - 1] ?? null,
     canDrawStock: state.stock.length > 0 || state.discard.length > 1,
     table: [player, ...opponents].flatMap(other => other.melds.map((meld, group) => ({ owner: other.id, group, meld: { ...meld, cards: [...meld.cards] } }))),
@@ -60,8 +61,8 @@ function canEndTurn(hand: readonly string[], target: string | null, catalog: Cat
 }
 
 /** Maximum phase slots that can be filled, with no card or Joker counted twice. */
-export function phaseProgress(hand: readonly string[], phase: number, catalog: Catalog): number {
-  const groups = PHASE_GROUPS[phase - 1];
+export function phaseProgress(hand: readonly string[], phase: number, catalog: Catalog, set: PhaseSet = 'classic'): number {
+  const groups = phaseGroups(phase, set);
   if (!groups) throw new Error('Ungültige Phase.');
   const counts = Array<number>(13).fill(0);
   const colors = new Map<string, number>();
@@ -87,7 +88,7 @@ export function phaseProgress(hand: readonly string[], phase: number, catalog: C
   let progress = 0;
   if (groups.length === 1) progress = best(groups[0]!, counts, wilds);
   else {
-    // All classic two-part phases start with a set. Enumerate how many natural
+    // Both phase sets start two-part tasks with a set. Enumerate how many natural
     // cards and Jokers belong to that set, leaving the remainder for part two.
     const first = groups[0]!, second = groups[1]!;
     for (let value = 1; value <= 12; value++) {
@@ -103,10 +104,10 @@ export function phaseProgress(hand: readonly string[], phase: number, catalog: C
   return counts.some(count => count > 0) ? progress : Math.min(progress, required - 1);
 }
 
-function localUsefulness(id: string, hand: readonly string[], phase: number, catalog: Catalog): number {
+function localUsefulness(id: string, hand: readonly string[], phase: number, catalog: Catalog, set: PhaseSet = 'classic'): number {
   const card = catalog.get(id)!;
   if (card.type !== 'number') return card.type === 'wild' ? 100 : 0;
-  const kinds = PHASE_GROUPS[phase - 1]!.map(group => group.kind);
+  const kinds = phaseGroups(phase, set)!.map(group => group.kind);
   let value = 0;
   for (const otherId of hand) {
     if (otherId === id) continue;
@@ -157,9 +158,9 @@ function drawSource(view: BotView, catalog: Catalog): 'stock' | 'discard' {
   }
   if (view.melds.length) return view.table.some(group => extendMeld(group.meld, [top.id], catalog)) ? 'discard' : 'stock';
   const withTop = [...view.hand, top.id];
-  if (findPhase(withTop, view.phase, catalog)) return 'discard';
-  const useful = view.difficulty === 'strong' ? phaseProgress(withTop, view.phase, catalog) > phaseProgress(view.hand, view.phase, catalog) :
-    localUsefulness(top.id, withTop, view.phase, catalog) > 0;
+  if (findPhase(withTop, view.phase, catalog, view.phaseSet)) return 'discard';
+  const useful = view.difficulty === 'strong' ? phaseProgress(withTop, view.phase, catalog, view.phaseSet) > phaseProgress(view.hand, view.phase, catalog, view.phaseSet) :
+    localUsefulness(top.id, withTop, view.phase, catalog, view.phaseSet) > 0;
   return useful ? 'discard' : 'stock';
 }
 
@@ -177,7 +178,7 @@ export function chooseBotMove(view: BotView, catalog: Catalog): BotMove {
   if (view.stage === 'draw') return { kind: 'draw', source: drawSource(view, catalog) };
   const target = targetForSkip(view);
   if (!view.melds.length) {
-    const phase = findPhase(view.hand, view.phase, catalog);
+    const phase = findPhase(view.hand, view.phase, catalog, view.phaseSet);
     if (phase && canEndTurn(view.hand.filter(id => !phase.includes(id)), target, catalog)) return { kind: 'lay', cards: phase };
   } else {
     const hit = chooseHit(view, catalog, target);
@@ -191,7 +192,7 @@ export function chooseBotMove(view: BotView, catalog: Catalog): BotMove {
     const safe = view.difficulty === 'strong' ? numbers.filter(id => risk.get(id) === 0) : numbers;
     const options = safe.length ? safe : numbers;
     const utility = new Map(options.map(id => [id, view.melds.length ? 0 : view.difficulty === 'strong' ?
-      phaseProgress(view.hand.filter(card => card !== id), view.phase, catalog) : -localUsefulness(id, view.hand, view.phase, catalog)]));
+      phaseProgress(view.hand.filter(card => card !== id), view.phase, catalog, view.phaseSet) : -localUsefulness(id, view.hand, view.phase, catalog, view.phaseSet)]));
     const card = [...options].sort((a, b) => utility.get(b)! - utility.get(a)! ||
       (view.difficulty === 'strong' ? risk.get(a)! - risk.get(b)! : 0) || penalty(catalog.get(b)!) - penalty(catalog.get(a)!))[0]!;
     return { kind: 'discard', card, target: null };

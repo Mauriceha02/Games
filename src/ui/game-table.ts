@@ -1,14 +1,14 @@
 import { wireHand, type HandActions } from './hand-drag.js';
 import { describeCard, eligibleSkipTargets } from '../game/game.js';
-import { extendMeld, matchPhase, PHASE_GROUPS, type PhaseDefinition } from '../game/phases.js';
+import { extendMeld, matchPhase, phaseGroups, phaseSetName, type PhaseDefinitions } from '../game/phases.js';
 import type { VisibleGameState } from '../game/local-match.js';
-import type { Card, Catalog, GameState, Meld, BotSetup, Player } from '../game/types.js';
+import type { Card, Catalog, GameState, Meld, BotSetup, Player, PhaseSet } from '../game/types.js';
 
 export interface TableActions extends HandActions {
   multiplayer?(): void;
   leaveMultiplayer?(): void;
   restartMultiplayer?(): void;
-  start(computers: number, difficulty: BotSetup): void;
+  start(computers: number, difficulty: BotSetup, phaseSet: PhaseSet): void;
   difficulty(level: BotSetup): void;
   nextRound(): void;
   draw(source: 'stock' | 'discard'): void;
@@ -27,7 +27,7 @@ export interface TableView {
   viewerId?: string;
   network?: { connected: boolean; host: boolean; pending: boolean; status: string };
   catalog: Catalog;
-  phases: PhaseDefinition[];
+  phases: PhaseDefinitions;
   selected: string[];
   target: string | null;
   message: string;
@@ -61,8 +61,12 @@ function botSetup(state: Pick<GameState, 'players'>): BotSetup {
   return levels.every(level => level === levels[0]) ? levels[0]! : 'mixed';
 }
 
-function startForm(restart: boolean, count = 2, difficulty: BotSetup = 'easy'): string {
-  return `<form class="start-form"><label for="computer-count">Computergegner</label><select id="computer-count" name="computers">${[1, 2, 3, 4, 5].map(value => `<option value="${value}"${value === count ? ' selected' : ''}>${value}</option>`).join('')}</select><label for="start-difficulty">Spielstärke</label><select id="start-difficulty" name="difficulty">${difficultyOptions(difficulty)}</select><button class="game-primary" type="submit">${restart ? 'Neu starten' : 'Partie starten'}</button>${restart ? '<p class="reset-note">Die aktuelle Partie wird ersetzt.</p>' : ''}</form>`;
+export function phaseSetOptions(current: PhaseSet): string {
+  return (['classic', 'extreme'] as const).map(set => `<option value="${set}"${current === set ? ' selected' : ''}>${phaseSetName(set)}</option>`).join('');
+}
+
+function startForm(restart: boolean, count = 2, difficulty: BotSetup = 'easy', phaseSet: PhaseSet = 'classic'): string {
+  return `<form class="start-form"><div class="phase-choice"><label for="start-phase-set">Phasen</label><select id="start-phase-set" name="phaseSet">${phaseSetOptions(phaseSet)}</select><span class="variant-note">Extrem: eigene, schwierigere Phasen.</span></div><label for="computer-count">Computergegner</label><select id="computer-count" name="computers">${[1, 2, 3, 4, 5].map(value => `<option value="${value}"${value === count ? ' selected' : ''}>${value}</option>`).join('')}</select><label for="start-difficulty">Spielstärke</label><select id="start-difficulty" name="difficulty">${difficultyOptions(difficulty)}</select><button class="game-primary" type="submit">${restart ? 'Neu starten' : 'Partie starten'}</button>${restart ? '<p class="reset-note">Die aktuelle Partie wird ersetzt.</p>' : ''}</form>`;
 }
 
 const viewer = (view: TableView): Player => view.state!.players.find(player => player.id === view.viewerId) ?? view.state!.players[0]!;
@@ -107,9 +111,9 @@ export function renderGameTable(root: HTMLElement, view: TableView, actions: Tab
     const selectedCard = selected.length === 1 ? catalog.get(selected[0]!)! : null;
     const skipTargets = eligibleSkipTargets(state);
     const needsTarget = selectedCard?.type === 'skip' && !ordering;
-    const phase = phases[human.phase - 1]!;
-    const requiredCount = PHASE_GROUPS[human.phase - 1]!.reduce((total, group) => total + group.size, 0);
-    const matched = canPlay && !human.melds.length && selected.length ? matchPhase(selected, human.phase, catalog) : null;
+    const phase = phases[state.phaseSet][human.phase - 1]!;
+    const requiredCount = phaseGroups(human.phase, state.phaseSet)!.reduce((total, group) => total + group.size, 0);
+    const matched = canPlay && !human.melds.length && selected.length ? matchPhase(selected, human.phase, catalog, state.phaseSet) : null;
     const position = focusedCard ? human.hand.indexOf(focusedCard) : -1;
     const spectator = state.tieBreak && !state.finalists?.includes(human.id);
     const title = spectator ? 'Die Stichrunde läuft.' : yourTurn ? 'Du bist am Zug.' : `${playerName(view, active)} ist am Zug.`;
@@ -120,7 +124,7 @@ export function renderGameTable(root: HTMLElement, view: TableView, actions: Tab
     root.dataset.player = active.id;
     root.dataset.status = state.status;
     root.innerHTML = `<div class="table-fixed-top">
-<div class="game-topline"><span class="round-label">${state.tieBreak ? 'STICHRUNDE' : 'RUNDE'} ${state.round}</span><details class="table-settings" data-panel="settings"><summary>Spielmenü</summary><div class="settings-content"><div class="phase-help"><img src="./public/assets/phase-${String(human.phase).padStart(2, '0')}.svg" width="240" height="336" alt="Phase ${human.phase}"><div><strong>${escape(phase.title)}</strong><p>${escape(phase.hint)}</p><p>${human.score} Punkte · ${requiredCount} Karten für die Phase</p></div></div>${view.network ? `<p class="multiplayer-note">Gemeinsame Partie · ${escape(view.network.status)}. Beide Geräte geöffnet lassen.</p><button class="game-secondary" type="button" data-action="multiplayer-leave">Zur Solopartie</button>` : `<label class="bot-setting" for="bot-difficulty">Spielstärke<select id="bot-difficulty" data-focus="bot-difficulty" data-action="difficulty">${difficultyOptions(botSetup(state))}</select></label>${actions.multiplayer ? '<button class="game-secondary multiplayer-entry" type="button" data-action="multiplayer">Mitspieler im WLAN</button>' : ''}<details class="new-game"><summary>Neue Partie</summary>${startForm(true, state.players.length - 1, botSetup(state))}</details>`}<details class="turn-history" data-panel="history"><summary>Letzte Züge</summary><ol>${state.history.map(entry => `<li>${escape(entry)}</li>`).join('')}</ol></details></div></details></div>
+<div class="game-topline"><div class="round-meta"><span class="round-label">${state.tieBreak ? 'STICHRUNDE' : 'RUNDE'} ${state.round}</span><span class="phase-set-badge" data-phase-set="${state.phaseSet}">${phaseSetName(state.phaseSet)}</span></div><details class="table-settings" data-panel="settings"><summary>Spielmenü</summary><div class="settings-content"><div class="phase-help"><img src="./public/assets/phase-${state.phaseSet === 'extreme' ? 'extreme-' : ''}${String(human.phase).padStart(2, '0')}.svg" width="240" height="336" alt="${phaseSetName(state.phaseSet)} · Phase ${human.phase}"><div><strong>${escape(phase.title)}</strong><p>${escape(phase.hint)}</p><p>${human.score} Punkte · ${requiredCount} Karten für die Phase</p></div></div>${view.network ? `<p class="multiplayer-note">Gemeinsame Partie · ${escape(view.network.status)}. Beide Geräte geöffnet lassen.</p><button class="game-secondary" type="button" data-action="multiplayer-leave">Zur Solopartie</button>` : `<label class="bot-setting" for="bot-difficulty">Spielstärke<select id="bot-difficulty" data-focus="bot-difficulty" data-action="difficulty">${difficultyOptions(botSetup(state))}</select></label>${actions.multiplayer ? '<button class="game-secondary multiplayer-entry" type="button" data-action="multiplayer">Mitspieler im WLAN</button>' : ''}<details class="new-game"><summary>Neue Partie</summary>${startForm(true, state.players.length - 1, botSetup(state), state.phaseSet)}</details>`}<details class="turn-history" data-panel="history"><summary>Letzte Züge</summary><ol>${state.history.map(entry => `<li>${escape(entry)}</li>`).join('')}</ol></details></div></details></div>
 <div class="current-phase"><h3>Phase ${human.phase} · ${escape(phase.title)}</h3><span class="phase-progress">${spectator ? 'Stichrunde: Du schaust zu.' : human.melds.length ? `✓ Ausgelegt${human.phase < 10 ? `<span class="phase-next"> · nächste Phase ${human.phase + 1}</span>` : '<span class="phase-next"> · letzte Phase</span>'}` : `${requiredCount} Karten · ${human.score} Punkte`}</span></div>
 ${state.status === 'playing' ? `<div class="turn-heading"><h2>${escape(view.network && !view.network.connected ? 'Verbindung unterbrochen.' : view.network?.pending ? 'Zug wird übertragen …' : title)}</h2><p>${escape(instruction)}</p></div>` : ''}
 <div class="piles"><div><button class="pile-card" id="draw-stock" type="button" data-action="draw-stock" data-focus="draw-stock" aria-label="Eine Karte vom Nachziehstapel ziehen"${disabled(canDraw && !ordering && (stockCount || state.discard.length > 1))}><img src="./public/assets/card-back.svg" width="240" height="336" alt="Verdeckter Nachziehstapel"><span class="pile-count">${stockCount}</span></button><span class="pile-label">Nachziehen</span></div><div><button class="pile-card" id="draw-discard" type="button" data-action="draw-discard" data-focus="draw-discard" aria-label="Die oberste Karte vom Ablagestapel aufnehmen"${disabled(canDraw && !ordering && top && top.type !== 'skip')}>${top ? image(top) : '<span class="empty-pile">Leer</span>'}<span class="pile-count">${state.discard.length}</span></button><span class="pile-label">Ablage<strong>${top ? escape(describeCard(top)) : 'Leer'}</strong></span></div></div>
@@ -141,7 +145,7 @@ ${message ? `<p class="game-message" role="alert">${escape(message)}</p>` : ''}
   root.querySelector<HTMLFormElement>('.start-form')?.addEventListener('submit', event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget as HTMLFormElement);
-    actions.start(Number(data.get('computers')), String(data.get('difficulty')) as BotSetup);
+    actions.start(Number(data.get('computers')), String(data.get('difficulty')) as BotSetup, String(data.get('phaseSet')) as PhaseSet);
   });
   const on = (name: string, action: () => void): void => { root.querySelector(`[data-action="${name}"]`)?.addEventListener('click', action); };
   root.querySelector<HTMLSelectElement>('[data-action="difficulty"]')?.addEventListener('change', event => actions.difficulty((event.currentTarget as HTMLSelectElement).value as BotSetup));

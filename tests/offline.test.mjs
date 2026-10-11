@@ -76,6 +76,8 @@ test('installed app opens and serves every local asset without a network, includ
   assert(assets.includes('public/games/gruselino/app/ui/game-app.js'));
   assert(assets.includes('public/games/gruselino/assets/gruselino.css'));
   assert(assets.includes('public/games/gruselino/assets/ghost.svg'));
+  assert(assets.includes('src/game/phases-extreme.json'));
+  for (let phase = 1; phase <= 10; phase++) assert(assets.includes(`public/assets/phase-extreme-${String(phase).padStart(2, '0')}.svg`));
   for (const path of ['app/ui/local-game.js', 'app/game/local-match.js', 'network/peer.js', 'network/signals.js', 'network/protocol.js']) assert(assets.includes('public/games/gruselino/' + path), path);
   for (const path of ['public/app/ui/local-phase10.js', 'public/app/game/local-match.js', 'public/app/network/peer.js']) assert(assets.includes(path), path);
   for (const scope of ['https://example.test/', 'https://example.test/Phase10/', 'https://example.test/Games/']) {
@@ -84,6 +86,10 @@ test('installed app opens and serves every local asset without a network, includ
     assert.equal(await app.ready(), true);
     const home = await app.request('./?from=homescreen', 'navigate');
     assert.equal(home.body, scope + 'index.html');
+    for (const fragment of ['#game', '#overview-extreme', '#phase-extreme-5']) {
+      const link = await app.request('./?from=homescreen' + fragment, 'navigate');
+      assert.equal(link.body, scope + 'index.html');
+    }
     for (const asset of assets) {
       const response = await app.request(asset + '?test=1');
       assert.equal(response.body, scope + asset);
@@ -153,7 +159,7 @@ test('build creates an isolated hosting folder and changes cache version when ga
   const directory = await mkdtemp(tmpdir() + '/phase10-build-');
   const fixture = pathToFileURL(directory + '/');
   try {
-    for (const path of ['index.html', 'manifest.webmanifest', 'src/ui/phase-cards.css', 'src/ui/game-table.css', 'src/game/deck.json', 'src/game/phases.json', 'public/assets/card.svg', 'public/app/main.js']) {
+    for (const path of ['index.html', 'manifest.webmanifest', 'src/ui/phase-cards.css', 'src/ui/game-table.css', 'src/game/deck.json', 'src/game/phases.json', 'src/game/phases-extreme.json', 'public/assets/card.svg', 'public/app/main.js']) {
       const target = new URL(path, fixture);
       await mkdir(new URL('./', target), { recursive: true });
       await writeFile(target, 'test-' + path);
@@ -176,7 +182,7 @@ test('publication rejects hidden files, unexpected file types and symlinks in as
   const directory = await mkdtemp(tmpdir() + '/phase10-publication-');
   const fixture = pathToFileURL(directory + '/');
   try {
-    for (const path of ['index.html', 'manifest.webmanifest', 'src/ui/phase-cards.css', 'src/ui/game-table.css', 'src/game/deck.json', 'src/game/phases.json', 'public/assets/card.svg', 'public/app/main.js', 'src/storage/service-worker.js']) {
+    for (const path of ['index.html', 'manifest.webmanifest', 'src/ui/phase-cards.css', 'src/ui/game-table.css', 'src/game/deck.json', 'src/game/phases.json', 'src/game/phases-extreme.json', 'public/assets/card.svg', 'public/app/main.js', 'src/storage/service-worker.js']) {
       const target = new URL(path, fixture);
       await mkdir(new URL('./', target), { recursive: true });
       await writeFile(target, 'test-' + path);

@@ -1,0 +1,318 @@
+[
+  {
+    "id": 1,
+    "title": "Fünfling + Drilling",
+    "lines": [
+      "Fünfling +",
+      "Drilling"
+    ],
+    "category": "Sets",
+    "hint": "Fünf gleiche Zahlen und drei gleiche Zahlen. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "set",
+        "size": 5,
+        "example": [
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      },
+      {
+        "kind": "set",
+        "size": 3,
+        "example": [
+          10,
+          10,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Fünfling + Viererfolge",
+    "lines": [
+      "Fünfling +",
+      "Viererfolge"
+    ],
+    "category": "Set + Folge",
+    "hint": "Fünf gleiche Zahlen und vier Zahlen direkt hintereinander. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "set",
+        "size": 5,
+        "example": [
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      },
+      {
+        "kind": "run",
+        "size": 4,
+        "example": [
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Fünfling + Fünferfolge",
+    "lines": [
+      "Fünfling +",
+      "Fünferfolge"
+    ],
+    "category": "Set + Folge",
+    "hint": "Fünf gleiche Zahlen und fünf Zahlen direkt hintereinander. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "set",
+        "size": 5,
+        "example": [
+          8,
+          8,
+          8,
+          8,
+          8
+        ]
+      },
+      {
+        "kind": "run",
+        "size": 5,
+        "example": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Neunerfolge",
+    "lines": [
+      "Eine",
+      "Neunerfolge"
+    ],
+    "category": "Folge",
+    "hint": "Neun Zahlen direkt hintereinander, ohne Lücke. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "run",
+        "size": 9,
+        "example": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Zehnerfolge",
+    "lines": [
+      "Eine",
+      "Zehnerfolge"
+    ],
+    "category": "Folge",
+    "hint": "Zehn Zahlen direkt hintereinander, ohne Lücke. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "run",
+        "size": 10,
+        "example": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Vierling + Sechserfolge",
+    "lines": [
+      "Vierling +",
+      "Sechserfolge"
+    ],
+    "category": "Set + Folge",
+    "hint": "Vier gleiche Zahlen und sechs Zahlen direkt hintereinander. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "set",
+        "size": 4,
+        "example": [
+          11,
+          11,
+          11,
+          11
+        ]
+      },
+      {
+        "kind": "run",
+        "size": 6,
+        "example": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Zwei Fünflinge",
+    "lines": [
+      "Zwei",
+      "Fünflinge"
+    ],
+    "category": "Sets",
+    "hint": "Je fünf Karten mit derselben Zahl. Die Farben dürfen verschieden sein.",
+    "groups": [
+      {
+        "kind": "set",
+        "size": 5,
+        "example": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "kind": "set",
+        "size": 5,
+        "example": [
+          9,
+          9,
+          9,
+          9,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "9 Karten einer Farbe",
+    "lines": [
+      "9 Karten",
+      "einer Farbe"
+    ],
+    "category": "Farbe",
+    "hint": "Neun Karten derselben Farbe. Die Zahlen müssen keine Folge bilden.",
+    "groups": [
+      {
+        "kind": "color",
+        "size": 9,
+        "example": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          9,
+          10,
+          12
+        ]
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Sechsling + Drilling",
+    "lines": [
+      "Sechsling +",
+      "Drilling"
+    ],
+    "category": "Sets",
+    "hint": "Sechs gleiche Zahlen und drei gleiche Zahlen. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "set",
+        "size": 6,
+        "example": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ]
+      },
+      {
+        "kind": "set",
+        "size": 3,
+        "example": [
+          11,
+          11,
+          11
+        ]
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Sechsling + Vierling",
+    "lines": [
+      "Sechsling +",
+      "Vierling"
+    ],
+    "category": "Sets",
+    "hint": "Sechs gleiche Zahlen und vier gleiche Zahlen. Die Farben sind frei.",
+    "groups": [
+      {
+        "kind": "set",
+        "size": 6,
+        "example": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ]
+      },
+      {
+        "kind": "set",
+        "size": 4,
+        "example": [
+          12,
+          12,
+          12,
+          12
+        ]
+      }
+    ]
+  }
+]

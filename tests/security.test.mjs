@@ -8,7 +8,10 @@ import { renderGameTable } from '../public/app/ui/game-table.js';
 
 const cards = JSON.parse(await readFile(new URL('../src/game/deck.json', import.meta.url), 'utf8'));
 const catalog = createCatalog(cards);
-const phases = readPhaseDefinitions(JSON.parse(await readFile(new URL('../src/game/phases.json', import.meta.url), 'utf8')));
+const phases = {
+  classic: readPhaseDefinitions(JSON.parse(await readFile(new URL('../src/game/phases.json', import.meta.url), 'utf8'))),
+  extreme: readPhaseDefinitions(JSON.parse(await readFile(new URL('../src/game/phases-extreme.json', import.meta.url), 'utf8')), 'extreme'),
+};
 
 test('card assets cannot reference external URLs, traverse folders or break HTML attributes', () => {
   for (const asset of ['https://attacker.invalid/track.svg', '//attacker.invalid/track.svg', '../private.svg', 'public/assets/../../private.svg', 'public/assets/card-red-01.svg" onerror="alert(1)']) {
@@ -18,8 +21,8 @@ test('card assets cannot reference external URLs, traverse folders or break HTML
   }
 });
 
-test('malicious text in an otherwise valid save remains text when the table renders', () => {
-  const initial = createGame(catalog, 1, () => 0.999999);
+for (const phaseSet of ['classic', 'extreme']) test(`${phaseSet}: malicious text in an otherwise valid save remains text when the table renders`, () => {
+  const initial = createGame(catalog, 1, () => 0.999999, 'easy', phaseSet);
   const state = drawCard(initial, catalog, initial.players[0].id, 'stock');
   const skip = state.players[0].hand.find(id => catalog.get(id).type === 'skip');
   assert(skip);

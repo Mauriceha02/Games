@@ -8,6 +8,8 @@ Im gleichen WLAN testen: `npm run dev:lan` → `http://<IP-des-Macs>:5173`.
 Prüfen: `npm test`. Bauen: `npm run build` → `dist/`.
 Ein Push auf `Dev` veröffentlicht die App über GitHub Pages und erhöht die angezeigte Version automatisch.
 
+Phase10: Beim Start „Klassisch“ oder „Extrem“ wählen, solo oder zu zweit. Extrem ist eine eigene Variante mit zehn schwierigeren Phasen, beginnend mit Fünfling + Drilling. Die Auswahl bleibt in der Partie gespeichert; die Phasenkarten stehen unter „Regeln“.
+
 Auf dem iPhone über HTTPS in Safari öffnen → Teilen → Zum Home-Bildschirm. Einmal auf „Offline bereit“ warten. Für Updates alle App-Fenster schließen und erneut öffnen.
 
 Code: `src/game/` (Regeln), `src/ai/` (Computer), `src/ui/` (Oberfläche), `src/storage/` (Spielstand und Offlinebetrieb). `scripts/` erzeugt Kartenbilder und die Website; `index.html` wird beim Bauen neu erstellt.

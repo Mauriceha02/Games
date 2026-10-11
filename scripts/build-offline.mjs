@@ -35,7 +35,7 @@ export async function buildOffline(root = new URL('../', import.meta.url)) {
   const assets = [
     'index.html', 'manifest.webmanifest',
     'src/ui/phase-cards.css', 'src/ui/game-table.css',
-    'src/game/deck.json', 'src/game/phases.json',
+    'src/game/deck.json', 'src/game/phases.json', 'src/game/phases-extreme.json',
     ...await filesUnder(root, 'public/assets/', assetExtensions),
     ...await filesUnder(root, 'public/app/', appExtensions),
   ].sort();

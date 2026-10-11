@@ -20,6 +20,7 @@ export interface Meld {
 
 export type BotDifficulty = 'easy' | 'strong';
 export type BotSetup = BotDifficulty | 'mixed';
+export type PhaseSet = 'classic' | 'extreme';
 
 export interface Player {
   id: string;
@@ -35,7 +36,8 @@ export interface Player {
 }
 
 export interface GameState {
-  version: 3;
+  version: 4;
+  phaseSet: PhaseSet;
   status: 'playing' | 'round-over' | 'finished';
   roundWinner: string | null;
   winner: string | null;

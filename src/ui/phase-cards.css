@@ -72,6 +72,8 @@ nav { display: flex; gap: 30px; }
 nav a { min-height: 44px; display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-size: 14px; color: #ece8d8; }
 nav a:hover, .download-link:hover, footer a:hover { color: var(--gold); }
 .intro { padding-block: 66px 44px; }
+.reference-choice { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.reference-choice select { min-height: 44px; border: 1px solid #faf5e959; border-radius: 7px; padding: 8px 14px; background: var(--felt); color: var(--paper); font: inherit; font-size: 16px; }
 .eyebrow { margin: 0 0 20px; font-size: 11px; font-weight: 600; letter-spacing: 2px; color: var(--gold); }
 .eyebrow > span { margin-right: 7px; font-size: 15px; }
 h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: -1.8px; }

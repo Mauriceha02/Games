@@ -1,5 +1,5 @@
 import { createCatalog, createGame, drawCard, discardCard, layPhase, hitMeld, nextRound, reorderHand, sortHand, setBotDifficulty } from './game/game.js';
-import { readPhaseDefinitions } from './game/phases.js';
+import { readPhaseDefinitions, phaseSetName } from './game/phases.js';
 import { playBasicTurnStep } from './ai/basic-turn.js';
 import { loadGame, saveGame, type StorageAccess } from './storage/local-game.js';
 import { renderGameTable, type TableActions } from './ui/game-table.js';
@@ -16,11 +16,11 @@ async function start(): Promise<void> {
   const storageStatus = document.getElementById('storage-status');
   const announcement = document.getElementById('game-announcement');
   if (!root || !storageStatus || !announcement) return;
-  const responses = await Promise.all(['deck', 'phases'].map(name => fetch(new URL(`./src/game/${name}.json`, document.baseURI))));
+  const responses = await Promise.all(['deck', 'phases', 'phases-extreme'].map(name => fetch(new URL(`./src/game/${name}.json`, document.baseURI))));
   if (responses.some(response => !response.ok)) throw new Error('Die Spielkarten konnten nicht geladen werden.');
-  const [cards, definitions] = await Promise.all(responses.map(response => response.json()));
+  const [cards, definitions, extreme] = await Promise.all(responses.map(response => response.json()));
   const catalog = createCatalog(cards);
-  const phases = readPhaseDefinitions(definitions);
+  const phases = { classic: readPhaseDefinitions(definitions), extreme: readPhaseDefinitions(extreme, 'extreme') };
   const storage: StorageAccess = {
     getItem: key => window.localStorage.getItem(key),
     setItem: (key, value) => window.localStorage.setItem(key, value),
@@ -43,7 +43,7 @@ async function start(): Promise<void> {
     const hash = window.location.hash;
     if (hash === '#game' || hash.startsWith('#game?invite=')) return 'game';
     if (hash === '#gruselino' || hash.startsWith('#gruselino?invite=')) return 'gruselino';
-    return /^#(?:overview|deck|cards|phase-(?:[1-9]|10))$/.test(hash) ? 'reference' : 'home';
+    return /^#(?:overview(?:-extreme)?|deck|cards(?:-extreme)?|phase-(?:extreme-)?(?:[1-9]|10))$/.test(hash) ? 'reference' : 'home';
   };
   let dragging = false;
   let focusedCard: string | null = null;
@@ -66,7 +66,7 @@ async function start(): Promise<void> {
     window.location.hash = 'game'; render();
     try {
       const instance = await mountLocalPhase10(root!, {
-        catalog, phases, signal: localLoading.signal, ...(invite ? { invite } : {}),
+        catalog, phases, phaseSet: state?.phaseSet ?? 'classic', signal: localLoading.signal, ...(invite ? { invite } : {}),
         onBack: () => { stopLocal(); render(); },
         onPlaying: value => { if (generation !== localGeneration) return; localPlaying = value; document.body.classList.toggle('is-playing', localMode && value && view() === 'game'); },
       });
@@ -115,7 +115,7 @@ async function start(): Promise<void> {
 
   const actions: TableActions = {
     multiplayer: () => { void multiplayer(); },
-    start: (computers, difficulty) => attempt(() => { ordering = false; focusedCard = null; window.location.hash = 'game'; update(createGame(catalog, computers, Math.random, difficulty)); }),
+    start: (computers, difficulty, phaseSet) => attempt(() => { ordering = false; focusedCard = null; window.location.hash = 'game'; update(createGame(catalog, computers, Math.random, difficulty, phaseSet)); }),
     difficulty: level => attempt(() => {
       if (state) { update(setBotDifficulty(state, catalog, level), true); announcement!.textContent = 'Die Spielstärke der Computer wurde geändert.'; }
     }),
@@ -154,6 +154,7 @@ async function start(): Promise<void> {
 
   function render(): void {
     const currentView = view();
+    if (currentView === 'reference' && location.hash !== '#deck') showPhaseReference(location.hash.includes('extreme') ? 'extreme' : 'classic');
     if (currentView !== 'game' && localMode) stopLocal();
     document.body.classList.toggle('is-home', currentView === 'home');
     document.body.classList.toggle('is-game', currentView === 'game');
@@ -199,7 +200,7 @@ async function start(): Promise<void> {
     const savedGame = document.getElementById('saved-game');
     if (savedGame) {
       savedGame.hidden = !state || state.status === 'finished';
-      savedGame.textContent = state ? `Runde ${state.round} · Phase ${state.players[0]!.phase}` : '';
+      savedGame.textContent = state ? `${phaseSetName(state.phaseSet)} · Runde ${state.round} · Phase ${state.players[0]!.phase}` : '';
     }
     const appTools = document.querySelector('.app-tools');
     if (appTools) {
@@ -225,6 +226,17 @@ async function start(): Promise<void> {
 
   window.addEventListener('hashchange', () => {
     if (!receiveInvitation()) render();
+  });
+
+  function showPhaseReference(set: string): void {
+    document.querySelectorAll<HTMLElement>('[data-phase-reference]').forEach(section => { section.hidden = section.dataset.phaseReference !== set; });
+    const select = document.getElementById('reference-phase-set') as HTMLSelectElement | null;
+    if (select) select.value = set;
+  }
+  document.getElementById('reference-phase-set')?.addEventListener('change', event => {
+    const set = (event.currentTarget as HTMLSelectElement).value;
+    window.location.hash = set === 'extreme' ? 'overview-extreme' : 'overview';
+    showPhaseReference(set);
   });
 
   document.addEventListener('click', event => {

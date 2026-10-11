@@ -1,5 +1,5 @@
 import { assertGameState, createHumanGame, drawCard, discardCard, layPhase, hitMeld, nextRound } from './game.js';
-import { assertMeld, PHASE_GROUPS } from './phases.js';
+import { assertMeld, phaseGroups, isPhaseSet } from './phases.js';
 import type { Catalog, GameState } from './types.js';
 import type { Role } from '../network/transport.js';
 
@@ -83,7 +83,7 @@ export function readSnapshot(value: unknown, catalog: Catalog, viewer: string): 
   const invalid = (): never => { throw new Error('Ungültiger gemeinsamer Spielstand.'); };
   if (!record(value) || value.version !== 1 || typeof value.match !== 'string' || !/^[a-f0-9]{32}$/.test(value.match) || !integer(value.revision, 0) || value.viewer !== viewer || !validId(viewer) || !record(value.state)) return invalid();
   const state = value.state;
-  if ('stock' in state || state.version !== 3 || !integer(state.round, 1) || !integer(state.turn, 1) || !integer(state.currentPlayer, 0, 1) || !['playing', 'round-over', 'finished'].includes(String(state.status)) || !['draw', 'discard'].includes(String(state.stage)) || typeof state.tieBreak !== 'boolean' || !integer(state.stockCount, 0, 108) || !record(state.handCounts) || !Array.isArray(state.players) || state.players.length !== 2 || !Array.isArray(state.discard) || !Array.isArray(state.history) || state.history.length > 6 || !state.history.every(entry => typeof entry === 'string' && entry.length <= 250)) return invalid();
+  if ('stock' in state || state.version !== 4 || !isPhaseSet(state.phaseSet) || !integer(state.round, 1) || !integer(state.turn, 1) || !integer(state.currentPlayer, 0, 1) || !['playing', 'round-over', 'finished'].includes(String(state.status)) || !['draw', 'discard'].includes(String(state.stage)) || typeof state.tieBreak !== 'boolean' || !integer(state.stockCount, 0, 108) || !record(state.handCounts) || !Array.isArray(state.players) || state.players.length !== 2 || !Array.isArray(state.discard) || !Array.isArray(state.history) || state.history.length > 6 || !state.history.every(entry => typeof entry === 'string' && entry.length <= 250)) return invalid();
   const owned: string[] = [];
   function cardIds(data: unknown, maximum = 108): asserts data is string[] {
     if (!Array.isArray(data) || data.length > maximum || !data.every(id => typeof id === 'string' && catalog.has(id))) invalid();
@@ -98,7 +98,7 @@ export function readSnapshot(value: unknown, catalog: Catalog, viewer: string): 
     cardIds(player.hand, 11);
     if (player.hand.length !== (player.id === viewer ? handCount : 0)) return invalid();
     owned.push(...player.hand); count += handCount;
-    const requirements = PHASE_GROUPS[player.phase - 1]!;
+    const requirements = phaseGroups(player.phase, state.phaseSet)!;
     if (player.melds.length && player.melds.length !== requirements.length) return invalid();
     player.melds.forEach((meld: unknown, group: number) => {
       assertMeld(meld, catalog);

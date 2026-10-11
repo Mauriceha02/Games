@@ -25,6 +25,9 @@ export function loadGame(storage: StorageAccess, catalog: Catalog): { state: Gam
       state = { ...legacy, version: 3, players: legacy.players.map(player => ({ ...player,
         botDifficulty: player.controller === 'human' ? null : 'easy' })) };
     }
+    if (state && typeof state === 'object' && 'version' in state && state.version === 3) {
+      state = { ...state, version: 4, phaseSet: 'classic' };
+    }
     assertGameState(state, catalog);
     if (state.players.filter(player => player.controller === 'human').length !== 1) throw new Error('Ungültiger Solo-Spielstand.');
     return { state, error: null };

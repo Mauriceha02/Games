@@ -198,7 +198,7 @@ test('previous saves retain their cards, laid phases and round when migrating to
   const raw = JSON.stringify(state);
   const loaded = loadGame({ getItem: () => raw }, catalog);
   assert.equal(loaded.error, null);
-  assert.equal(loaded.state.version, 3);
+  assert.equal(loaded.state.version, 4);
   assert.deepEqual(loaded.state.players[1].hand, state.players[1].hand);
   assert.deepEqual(loaded.state.players[0].melds, state.players[0].melds);
   assert.equal(loaded.state.players[0].phase, 4);

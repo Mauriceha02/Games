@@ -30,6 +30,7 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
   url.search = '';
+  url.hash = '';
   const isHome = event.request.mode === 'navigate' && url.href === self.registration.scope;
   const key = isHome ? indexUrl : url.href;
   if (!allowed.has(key)) return;

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Generated with node scripts/render-design.mjs. Phase definitions: src/game/phases.json. -->
+<!-- Generated with node scripts/render-design.mjs. Phase definitions: src/game/phases*.json. -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -63,8 +63,9 @@
     </section>
     <section class="intro reference-intro" aria-labelledby="page-title">
       <h1 id="page-title">Phasen und Regeln</h1>
+      <label class="reference-choice" for="reference-phase-set">Phasen<select id="reference-phase-set"><option value="classic">Klassisch</option><option value="extreme">Extrem</option></select></label>
     </section>
-    <section class="overview-section" id="overview" aria-labelledby="overview-title">
+    <section class="overview-section" id="overview" data-phase-reference="classic" aria-labelledby="overview-title">
       <div class="overview-card">
         <div class="overview-top"><span>PHASE 10</span><span>ÜBERSICHT</span></div>
         <h2 id="overview-title">Die zehn Phasen.</h2>
@@ -92,6 +93,31 @@
         </dl>
         <details class="wild-note"><summary>Und die Joker?</summary><p>Joker ersetzen eine Zahl oder eine Farbe. Jede ausgelegte Phase muss mindestens eine Zahlenkarte enthalten. Ein ausgelegter Joker bleibt bis zum Rundenende an seinem Platz.</p></details>
         <a class="download-link" href="./public/assets/phases-overview.svg" download="phasen-uebersicht.svg">Übersicht als Karte herunterladen <span aria-hidden="true">↓</span></a>
+      </aside>
+    </section>
+    <section class="overview-section" id="overview-extreme" data-phase-reference="extreme" aria-labelledby="extreme-overview-title" hidden>
+      <div class="overview-card">
+        <div class="overview-top"><span>PHASE 10 · EXTREM</span><span>ÜBERSICHT</span></div>
+        <h2 id="extreme-overview-title">Die zehn Extrem-Phasen.</h2>
+        <ol class="phase-list"><li><a href="#phase-extreme-1"><span class="phase-number">01</span><span>Fünfling + Drilling</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-2"><span class="phase-number">02</span><span>Fünfling + Viererfolge</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-3"><span class="phase-number">03</span><span>Fünfling + Fünferfolge</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-4"><span class="phase-number">04</span><span>Neunerfolge</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-5"><span class="phase-number">05</span><span>Zehnerfolge</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-6"><span class="phase-number">06</span><span>Vierling + Sechserfolge</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-7"><span class="phase-number">07</span><span>Zwei Fünflinge</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-8"><span class="phase-number">08</span><span>9 Karten einer Farbe</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-9"><span class="phase-number">09</span><span>Sechsling + Drilling</span><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+<li><a href="#phase-extreme-10"><span class="phase-number">10</span><span>Sechsling + Vierling</span><span class="row-arrow" aria-hidden="true">↗</span></a></li></ol>
+        <div class="overview-bottom"><span>Eine Phase pro Runde.</span><span class="color-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+      </div>
+      <aside class="guide" aria-labelledby="extreme-guide-title">
+        <p class="eyebrow">EIGENE VARIANTE</p>
+        <h2 id="extreme-guide-title">Größere Aufgaben.</h2>
+        <p>Du startest mit einem Fünfling und einem Drilling. Danach warten längere Folgen, größere Gruppen und neun Karten einer Farbe.</p>
+        <p>Jede Phase braucht acht bis zehn Karten. Du erhältst weiterhin zehn Handkarten und ziehst zu Beginn deines Zuges eine Karte. Joker, Anlegen, Aussetzen und Punkte funktionieren wie gewohnt.</p>
+        <p>Lege die ganze Phase auf einmal aus. Wer seine Phase schafft, spielt in der nächsten Runde die nächste; sonst wird sie wiederholt.</p>
+        <a class="download-link" href="./public/assets/phases-extreme-overview.svg" download="extrem-phasen-uebersicht.svg">Extrem-Übersicht herunterladen <span aria-hidden="true">↓</span></a>
       </aside>
     </section>
     <section class="cards-section deck-section" id="deck" aria-labelledby="deck-title">
@@ -157,7 +183,7 @@
 <figure class="special-card"><a class="playing-face" href="./public/assets/card-skip.svg" download aria-label="Aussetzen, SVG herunterladen"><img src="./public/assets/card-skip.svg" width="240" height="336" loading="lazy" alt="Aussetzen"></a><figcaption><strong>4× Aussetzen</strong><span>Ein anderer Spieler setzt einen Zug aus.</span></figcaption></figure><figure class="special-card"><a class="playing-face" href="./public/assets/card-back.svg" download aria-label="Kartenrückseite, SVG herunterladen"><img src="./public/assets/card-back.svg" width="240" height="336" loading="lazy" alt="Dunkelgrüne Kartenrückseite mit Phase 10"></a><figcaption><strong>Die Rückseite</strong><span>Für alle 108 Spielkarten gleich.</span></figcaption></figure></div>
   <p class="deck-download-note">Tippe auf eine Spielkarte, um ihr SVG herunterzuladen.</p>
 </section>
-    <section class="cards-section" id="cards" aria-labelledby="cards-title">
+    <section class="cards-section" id="cards" data-phase-reference="classic" aria-labelledby="cards-title">
       <div class="section-heading"><div><h2 id="cards-title">Phasenkarten</h2></div><span>01 — 10</span></div>
       <p class="section-copy">Die Zahlen auf den Karten sind Beispiele. Du kannst jede passende Kombination bilden.</p>
       <div class="card-grid"><article class="phase-item" id="phase-1" aria-label="Phase 1">
@@ -199,6 +225,50 @@
 <article class="phase-item" id="phase-10" aria-label="Phase 10">
   <img class="phase-card" src="./public/assets/phase-10.svg" width="360" height="480" loading="lazy" alt="Phase 10: Fünfling + Drilling. 8 Karten. Fünf Karten mit derselben Zahl und drei mit derselben Zahl. Die Farben sind frei. Beispiel: 6, 6, 6, 6, 6 und 12, 12, 12.">
   <a class="card-download" href="./public/assets/phase-10.svg" download="phase-10.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article></div>
+    </section>
+    <section class="cards-section" id="cards-extreme" data-phase-reference="extreme" aria-labelledby="extreme-cards-title" hidden>
+      <div class="section-heading"><div><h2 id="extreme-cards-title">Extrem-Phasenkarten</h2></div><span>01 — 10</span></div>
+      <p class="section-copy">Eigene, schwierigere Phasen. Die abgebildeten Zahlen sind Beispiele.</p>
+      <div class="card-grid"><article class="phase-item" id="phase-extreme-1" aria-label="Phase 1">
+  <img class="phase-card" src="./public/assets/phase-extreme-01.svg" width="360" height="480" loading="lazy" alt="Phase 1: Fünfling + Drilling. 8 Karten. Fünf gleiche Zahlen und drei gleiche Zahlen. Die Farben sind frei. Beispiel: 7, 7, 7, 7, 7 und 10, 10, 10.">
+  <a class="card-download" href="./public/assets/phase-extreme-01.svg" download="phase-extreme-01.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-2" aria-label="Phase 2">
+  <img class="phase-card" src="./public/assets/phase-extreme-02.svg" width="360" height="480" loading="lazy" alt="Phase 2: Fünfling + Viererfolge. 9 Karten. Fünf gleiche Zahlen und vier Zahlen direkt hintereinander. Die Farben sind frei. Beispiel: 7, 7, 7, 7, 7 und 2, 3, 4, 5.">
+  <a class="card-download" href="./public/assets/phase-extreme-02.svg" download="phase-extreme-02.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-3" aria-label="Phase 3">
+  <img class="phase-card" src="./public/assets/phase-extreme-03.svg" width="360" height="480" loading="lazy" alt="Phase 3: Fünfling + Fünferfolge. 10 Karten. Fünf gleiche Zahlen und fünf Zahlen direkt hintereinander. Die Farben sind frei. Beispiel: 8, 8, 8, 8, 8 und 2, 3, 4, 5, 6.">
+  <a class="card-download" href="./public/assets/phase-extreme-03.svg" download="phase-extreme-03.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-4" aria-label="Phase 4">
+  <img class="phase-card" src="./public/assets/phase-extreme-04.svg" width="360" height="480" loading="lazy" alt="Phase 4: Neunerfolge. 9 Karten. Neun Zahlen direkt hintereinander, ohne Lücke. Die Farben sind frei. Beispiel: 2, 3, 4, 5, 6, 7, 8, 9, 10.">
+  <a class="card-download" href="./public/assets/phase-extreme-04.svg" download="phase-extreme-04.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-5" aria-label="Phase 5">
+  <img class="phase-card" src="./public/assets/phase-extreme-05.svg" width="360" height="480" loading="lazy" alt="Phase 5: Zehnerfolge. 10 Karten. Zehn Zahlen direkt hintereinander, ohne Lücke. Die Farben sind frei. Beispiel: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10.">
+  <a class="card-download" href="./public/assets/phase-extreme-05.svg" download="phase-extreme-05.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-6" aria-label="Phase 6">
+  <img class="phase-card" src="./public/assets/phase-extreme-06.svg" width="360" height="480" loading="lazy" alt="Phase 6: Vierling + Sechserfolge. 10 Karten. Vier gleiche Zahlen und sechs Zahlen direkt hintereinander. Die Farben sind frei. Beispiel: 11, 11, 11, 11 und 1, 2, 3, 4, 5, 6.">
+  <a class="card-download" href="./public/assets/phase-extreme-06.svg" download="phase-extreme-06.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-7" aria-label="Phase 7">
+  <img class="phase-card" src="./public/assets/phase-extreme-07.svg" width="360" height="480" loading="lazy" alt="Phase 7: Zwei Fünflinge. 10 Karten. Je fünf Karten mit derselben Zahl. Die Farben dürfen verschieden sein. Beispiel: 4, 4, 4, 4, 4 und 9, 9, 9, 9, 9.">
+  <a class="card-download" href="./public/assets/phase-extreme-07.svg" download="phase-extreme-07.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-8" aria-label="Phase 8">
+  <img class="phase-card" src="./public/assets/phase-extreme-08.svg" width="360" height="480" loading="lazy" alt="Phase 8: 9 Karten einer Farbe. 9 Karten. Neun Karten derselben Farbe. Die Zahlen müssen keine Folge bilden. Beispiel: 1, 2, 3, 4, 5, 7, 9, 10, 12.">
+  <a class="card-download" href="./public/assets/phase-extreme-08.svg" download="phase-extreme-08.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-9" aria-label="Phase 9">
+  <img class="phase-card" src="./public/assets/phase-extreme-09.svg" width="360" height="480" loading="lazy" alt="Phase 9: Sechsling + Drilling. 9 Karten. Sechs gleiche Zahlen und drei gleiche Zahlen. Die Farben sind frei. Beispiel: 5, 5, 5, 5, 5, 5 und 11, 11, 11.">
+  <a class="card-download" href="./public/assets/phase-extreme-09.svg" download="phase-extreme-09.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
+</article>
+<article class="phase-item" id="phase-extreme-10" aria-label="Phase 10">
+  <img class="phase-card" src="./public/assets/phase-extreme-10.svg" width="360" height="480" loading="lazy" alt="Phase 10: Sechsling + Vierling. 10 Karten. Sechs gleiche Zahlen und vier gleiche Zahlen. Die Farben sind frei. Beispiel: 6, 6, 6, 6, 6, 6 und 12, 12, 12, 12.">
+  <a class="card-download" href="./public/assets/phase-extreme-10.svg" download="phase-extreme-10.svg">Karte herunterladen <span aria-hidden="true">↗</span></a>
 </article></div>
     </section>
   </main>
