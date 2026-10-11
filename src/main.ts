@@ -28,7 +28,11 @@ async function start(): Promise<void> {
   let saveError: string | null = null;
   let selected: string[] = [];
   let ordering = false;
-  let showReference = Boolean(window.location.hash && window.location.hash !== '#game');
+  const view = (): 'home' | 'game' | 'reference' => {
+    const hash = window.location.hash;
+    if (hash === '#game') return 'game';
+    return /^#(?:overview|deck|cards|phase-(?:[1-9]|10))$/.test(hash) ? 'reference' : 'home';
+  };
   let dragging = false;
   let focusedCard: string | null = null;
   let target: string | null = null;
@@ -64,7 +68,7 @@ async function start(): Promise<void> {
   }
 
   const actions: TableActions = {
-    start: (computers, difficulty) => attempt(() => { ordering = false; focusedCard = null; showReference = false; window.location.hash = 'game'; update(createGame(catalog, computers, Math.random, difficulty)); }),
+    start: (computers, difficulty) => attempt(() => { ordering = false; focusedCard = null; window.location.hash = 'game'; update(createGame(catalog, computers, Math.random, difficulty)); }),
     difficulty: level => attempt(() => {
       if (state) { update(setBotDifficulty(state, catalog, level), true); announcement!.textContent = 'Die Spielstärke der Computer wurde geändert.'; }
     }),
@@ -102,8 +106,25 @@ async function start(): Promise<void> {
   };
 
   function render(): void {
-    document.body.classList.toggle('is-playing', state !== null && !showReference);
-    document.body.classList.toggle('is-reference', state !== null && showReference);
+    const currentView = view();
+    document.body.classList.toggle('is-home', currentView === 'home');
+    document.body.classList.toggle('is-game', currentView === 'game');
+    document.body.classList.toggle('is-playing', state !== null && currentView === 'game');
+    document.body.classList.toggle('is-reference', currentView === 'reference');
+    document.querySelectorAll<HTMLElement>('[data-phase-nav]').forEach(link => { link.hidden = currentView === 'home'; });
+    document.title = currentView === 'home' ? 'Spiele' : 'Phase10';
+    const gameLink = document.getElementById('phase10-link');
+    if (gameLink) gameLink.textContent = state && state.status !== 'finished' ? 'Fortsetzen →' : 'Spielen →';
+    const savedGame = document.getElementById('saved-game');
+    if (savedGame) {
+      savedGame.hidden = !state || state.status === 'finished';
+      savedGame.textContent = state ? `Runde ${state.round} · Phase ${state.players[0]!.phase}` : '';
+    }
+    const appTools = document.querySelector('.app-tools');
+    if (appTools) {
+      if (currentView === 'home') document.getElementById('home-tools')?.append(appTools);
+      else storageStatus!.after(appTools);
+    }
     renderGameTable(root!, { state, catalog, phases, selected, target, message, ordering, focusedCard }, actions);
     storageStatus!.textContent = saveError ?? (state ? 'Auf diesem Gerät gespeichert.' : 'Dein Fortschritt wird auf diesem Gerät gespeichert.');
     storageStatus!.classList.toggle('storage-error', saveError !== null);
@@ -113,21 +134,14 @@ async function start(): Promise<void> {
   function scheduleBotTurn(): void {
     if (timer !== null) clearTimeout(timer);
     timer = null;
-    if (!dragging && !document.hidden && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer' && !message) {
+    if (view() === 'game' && !dragging && !document.hidden && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer' && !message) {
       timer = setTimeout(() => attempt(() => {
-        if (state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer') update(playBasicTurnStep(state, catalog));
+        if (view() === 'game' && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer') update(playBasicTurnStep(state, catalog));
       }), 650);
     }
   }
 
-  document.querySelectorAll<HTMLAnchorElement>('.site-header a[href^="#"]').forEach(link => {
-    link.addEventListener('click', () => {
-      showReference = link.getAttribute('href') !== '#game';
-      render();
-    });
-  });
   window.addEventListener('hashchange', () => {
-    showReference = Boolean(window.location.hash && window.location.hash !== '#game');
     render();
   });
 
@@ -152,6 +166,13 @@ async function start(): Promise<void> {
 }
 
 void start().catch(() => {
+  const home = document.getElementById('home-tools');
+  if (home) {
+    const error = document.createElement('p');
+    error.setAttribute('role', 'alert');
+    error.textContent = 'Phase10 konnte nicht geladen werden. Bitte öffne die Seite erneut.';
+    home.append(error);
+  }
   const root = document.getElementById('game-root');
   if (root) root.textContent = 'Das Spiel konnte nicht geladen werden. Bitte öffne die Seite erneut.';
 });

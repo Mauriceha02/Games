@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Phase10",
-  "short_name": "Phase10",
-  "description": "Dein Kartenspiel gegen Computer – mit lokalem Spielstand und Offlinebetrieb.",
+  "name": "Spiele",
+  "short_name": "Spiele",
+  "description": "Spielesammlung mit lokalen Spielständen und Offlinebetrieb.",
   "lang": "de",
   "start_url": "./",
   "scope": "./",

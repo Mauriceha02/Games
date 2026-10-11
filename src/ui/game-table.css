@@ -24,21 +24,11 @@
 .opponents { display: flex; justify-content: center; gap: 26px; flex-wrap: wrap; }
 .opponent { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 98px; padding: 8px 8px 12px; border-radius: 10px; border: 1px solid transparent; }
 .opponent.is-active { border-color: #d9b57970; background: #faf5e908; }
-.opponent-cards { position: relative; height: 58px; width: 65px; margin-bottom: 3px; }
-.opponent-cards img { position: absolute; width: 36px; height: auto; top: 3px; left: 1px; transform: rotate(-15deg); }
-.opponent-cards img:nth-child(2) { left: 14px; top: 0; transform: none; }
-.opponent-cards img:nth-child(3) { left: 27px; transform: rotate(15deg); }
 .opponent strong { font-size: 13px; font-weight: 500; }
 .opponent > span { font-size: 11px; color: #cfd8ca; }
 .turn-heading { text-align: center; padding-top: 26px; }
 .turn-heading h2 { font-size: 34px; letter-spacing: -.8px; margin: 0 0 12px; line-height: 1.2; }
 .turn-heading p { font-size: 15px; line-height: 1.6; color: #cfd8ca; margin: 0; }
-.turn-steps { display: flex; justify-content: center; gap: 28px; list-style: none; margin: 22px 0 26px; padding: 0; }
-.turn-steps li { display: flex; align-items: center; gap: 7px; color: #bdc8b6; font-size: 12px; }
-.turn-steps li > span { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1px solid #faf5e940; }
-.turn-steps .is-current { color: var(--paper); }
-.turn-steps .is-current > span { background: var(--gold); color: var(--ink); border-color: var(--gold); }
-.turn-steps .is-complete > span { border-color: var(--gold); color: var(--gold); }
 .piles { display: flex; justify-content: center; gap: 34px; }
 .piles > div { width: 104px; text-align: center; }
 .pile-card { position: relative; display: block; width: 100%; aspect-ratio: 5 / 7; padding: 0; border: 0; background: transparent; border-radius: 10px; cursor: pointer; }
@@ -149,7 +139,6 @@
   .current-phase .eyebrow { letter-spacing: 1px; }
   .current-phase p { font-size: 12px; }
   .phase-progress { font-size: 11px; }
-  .turn-steps { gap: 18px; }
   .order-controls { gap: 8px; }
   .order-controls > span { order: -1; width: 100%; text-align: center; }
   .round-result { padding: 18px 14px; }
@@ -226,7 +215,6 @@ body.is-playing .install-guide[open] { position:absolute; bottom:100%; right:12p
 .game-table[data-status] .opponents { flex-wrap:nowrap; justify-content:start; gap:8px; overflow-x:auto; padding:8px 0; }
 .game-table[data-status] .opponent { flex:none; min-width:86px; padding:7px 8px; gap:4px; align-items:start; border:1px solid #faf5e924; }
 .game-table[data-status] .opponent.is-active { border-color:#d9b57990; }
-.game-table[data-status] .opponent-cards { display:none; }
 .game-table[data-status] .opponent strong { font-size:11px; }
 .game-table[data-status] .opponent > span { font-size:10px; }
 .game-table[data-status] .bot-badge { display:none; }

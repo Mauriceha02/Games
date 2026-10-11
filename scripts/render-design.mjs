@@ -123,10 +123,10 @@ await writeFile(new URL('index.html', root), `<!doctype html>
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#173e34">
-  <meta name="description" content="Phase10 gegen Computer spielen. Deine Partie bleibt auf diesem Gerät – auch offline.">
+  <meta name="description" content="Spiele auswählen und offline spielen. Spielstände bleiben auf diesem Gerät.">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Phase10">
-  <title>Phase10 · Dein Spiel</title>
+  <meta name="apple-mobile-web-app-title" content="Spiele">
+  <title>Spiele</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" href="./public/assets/app-icon-180.png">
   <link rel="icon" href="./public/assets/favicon.svg" type="image/svg+xml">
@@ -134,15 +134,30 @@ await writeFile(new URL('index.html', root), `<!doctype html>
   <link rel="stylesheet" href="./src/ui/game-table.css">
   <script type="module" src="./public/app/main.js"></script>
 </head>
-<body>
-  <a class="skip-link" href="#game">Zum Inhalt</a>
+<body class="is-home">
+  <a class="skip-link" href="#home">Zur Spieleauswahl</a>
   <header class="site-header">
-    <div class="brand"><a class="wordmark" href="#game" aria-label="Phase10, zum Spiel">PHASE<span>10</span><i aria-hidden="true"></i></a><span class="app-version" id="app-version">Version ${escape(version)}</span></div>
-    <nav aria-label="Seitennavigation"><a href="#game">Spielen</a><a href="#overview">Phasen</a><a href="#deck">Spielkarten</a></nav>
+    <div class="brand"><a class="wordmark" href="#home" aria-label="Zur Spieleauswahl">Spiele<i aria-hidden="true"></i></a><span class="app-version" id="app-version">Version ${escape(version)}</span></div>
+    <nav aria-label="Seitennavigation"><a href="#home">Alle Spiele</a><a href="#game" data-phase-nav>Phase10</a><a href="#overview" data-phase-nav>Regeln</a></nav>
   </header>
   <main>
+    <section class="games-home" id="home" aria-labelledby="home-title">
+      <div class="home-heading"><h1 id="home-title">Welches Spiel?</h1><p>Wähle ein Spiel aus.</p></div>
+      <div class="games-grid">
+        <article class="game-tile">
+          <div class="tile-art phase-art" aria-hidden="true"><img src="./public/assets/card-red-07.svg" width="240" height="336" alt=""><img src="./public/assets/card-blue-07.svg" width="240" height="336" alt=""><img src="./public/assets/card-green-07.svg" width="240" height="336" alt=""></div>
+          <div class="tile-copy"><span class="game-tag">Kartenspiel</span><h2>Phase10</h2><p>Zehn Phasen gegen Computergegner.</p><a class="game-link" id="phase10-link" href="#game">Spielen <span aria-hidden="true">→</span></a><p class="saved-game" id="saved-game" hidden></p></div>
+        </article>
+        <article class="game-tile planned-game">
+          <div class="tile-art ghost-art" aria-hidden="true"><span class="ghost-shape"><i></i><i></i></span><span class="ghost-shadow"></span></div>
+          <div class="tile-copy"><span class="game-tag">Geplant</span><h2>Gruselino</h2><p>Kommt später in die Spielesammlung.</p><span class="planned-label">Noch nicht spielbar</span></div>
+        </article>
+      </div>
+      <div id="home-tools"></div>
+      <noscript><p>Bitte aktiviere JavaScript, um ein Spiel zu öffnen.</p></noscript>
+    </section>
     <section class="game-section" id="game" aria-labelledby="game-title">
-      <div class="section-heading"><div><p class="eyebrow">DEIN SPIELTISCH</p><h1 id="game-title">Dein Spiel. Dein Zug.</h1></div></div>
+      <div class="section-heading"><div><h1 id="game-title">Phase10 spielen</h1></div></div>
       <div class="game-table" id="game-root"><p>Der Spieltisch wird geladen.</p></div>
       <p class="storage-status" id="storage-status" role="status"></p>
       <div class="app-tools">
@@ -150,7 +165,7 @@ await writeFile(new URL('index.html', root), `<!doctype html>
         <details class="install-guide" id="install-guide">
           <summary>Als App installieren</summary>
           <p>Auf dem iPhone:</p>
-          <ol><li>Diese Seite in Safari öffnen und auf „Teilen“ tippen.</li><li>„Zum Home-Bildschirm“ wählen. Falls angezeigt, „Als Web-App öffnen“ einschalten und auf „Hinzufügen“ tippen.</li><li>Phase10 über das neue Symbol öffnen und einmal online warten, bis „Offline bereit“ erscheint. Danach kannst du ohne Internet spielen.</li></ol>
+          <ol><li>Diese Seite in Safari öffnen und auf „Teilen“ tippen.</li><li>„Zum Home-Bildschirm“ wählen. Falls angezeigt, „Als Web-App öffnen“ einschalten und auf „Hinzufügen“ tippen.</li><li>Die App über das neue Symbol öffnen und einmal online warten, bis „Offline bereit“ erscheint. Danach kannst du ohne Internet spielen.</li></ol>
           <p>Auf anderen Geräten findest du „App installieren“ im Browsermenü, sofern unterstützt.</p>
         </details>
       </div>
@@ -158,22 +173,20 @@ await writeFile(new URL('index.html', root), `<!doctype html>
       <noscript><p>Bitte aktiviere JavaScript, um das Spiel zu starten.</p></noscript>
     </section>
     <section class="intro reference-intro" aria-labelledby="page-title">
-      <p class="eyebrow"><span aria-hidden="true">✦</span> DAS KLASSISCHE KARTENSPIEL</p>
-      <h1 id="page-title">Deine Phasen.<br><em>Auf einen Blick.</em></h1>
-      <p class="intro-copy">Zehn kleine Ziele für den nächsten Spieleabend.</p>
+      <h1 id="page-title">Phasen und Regeln</h1>
     </section>
     <section class="overview-section" id="overview" aria-labelledby="overview-title">
       <div class="overview-card">
         <div class="overview-top"><span>PHASE 10</span><span>ÜBERSICHT</span></div>
         <h2 id="overview-title">Die zehn Phasen.</h2>
         <ol class="phase-list">${rows}</ol>
-        <div class="overview-bottom"><span>Von 1 bis 10. Schritt für Schritt.</span><span class="color-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+        <div class="overview-bottom"><span>Eine Phase pro Runde.</span><span class="color-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
       </div>
       <aside class="guide" aria-labelledby="guide-title">
         <div class="sample-hand" aria-hidden="true"><span>7<small>●</small></span><span>7<small>■</small></span><span>7<small>▲</small></span></div>
         <p class="eyebrow">KURZ ERKLÄRT</p>
-        <h2 id="guide-title">Eine Karte.<br>Ein klares Ziel.</h2>
-        <p>Lege deine Phase vollständig aus. In der nächsten Runde geht es mit der nächsten Phase weiter. Pro Runde zählt eine Phase.</p>
+        <h2 id="guide-title">So legst du eine Phase</h2>
+        <p>Lege deine aktuelle Phase vollständig aus. Wer das schafft, spielt in der nächsten Runde die nächste Phase. Andernfalls wird dieselbe Phase wiederholt.</p>
         <dl class="definitions">
           <div><dt>Gleiche Zahl</dt><dd>Ein Drilling besteht aus drei gleichen Zahlen, ein Vierling aus vier. Die Farbe ist dabei egal.</dd></div>
           <div><dt>Direkt hintereinander</dt><dd>Eine Folge hat aufeinanderfolgende Zahlen ohne Lücken. Auch hier sind die Farben frei.</dd></div>
@@ -185,12 +198,12 @@ await writeFile(new URL('index.html', root), `<!doctype html>
     </section>
     ${deckSection}
     <section class="cards-section" id="cards" aria-labelledby="cards-title">
-      <div class="section-heading"><div><p class="eyebrow">DIE EINZELKARTEN</p><h2 id="cards-title">Für jede Phase eine Karte.</h2></div><span>01 — 10</span></div>
+      <div class="section-heading"><div><h2 id="cards-title">Phasenkarten</h2></div><span>01 — 10</span></div>
       <p class="section-copy">Die Zahlen auf den Karten sind Beispiele. Du kannst jede passende Kombination bilden.</p>
       <div class="card-grid">${cards}</div>
     </section>
   </main>
-  <footer><span>Phase10 · Die klassischen zehn Phasen</span><a href="${source}" target="_blank" rel="noopener noreferrer">Regelquelle: Mattel <span aria-hidden="true">↗</span></a></footer>
+  <footer><span>Spielstände bleiben auf diesem Gerät.</span><a href="${source}" target="_blank" rel="noopener noreferrer">Phase10-Regeln: Mattel <span aria-hidden="true">↗</span></a></footer>
 </body>
 </html>
 `);

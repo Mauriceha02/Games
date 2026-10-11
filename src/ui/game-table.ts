@@ -82,7 +82,7 @@ export function renderGameTable(root: HTMLElement, view: TableView, actions: Tab
   const previouslyFocused = root.contains(document.activeElement) && document.activeElement instanceof HTMLElement
     ? document.activeElement.dataset.focus ?? null : null;
   if (state === null) {
-    root.innerHTML = `<div class="game-start"><div class="start-card-art" aria-hidden="true"><img src="./public/assets/card-back.svg" width="240" height="336" alt=""><img src="./public/assets/card-green-07.svg" width="240" height="336" alt=""></div><div><p class="eyebrow">DEIN PLATZ AM TISCH</p><h2>Eine neue Partie.</h2><p>Du erhältst zehn Karten. Die Hände der Computergegner bleiben verdeckt.</p>${startForm(false)}</div></div>${message ? `<p class="game-message" role="alert">${escape(message)}</p>` : ''}`;
+    root.innerHTML = `<div class="game-start"><div class="start-card-art" aria-hidden="true"><img src="./public/assets/card-back.svg" width="240" height="336" alt=""><img src="./public/assets/card-green-07.svg" width="240" height="336" alt=""></div><div><h2>Neue Partie</h2><p>Du erhältst zehn Karten. Die Hände der Computergegner bleiben verdeckt.</p>${startForm(false)}</div></div>${message ? `<p class="game-message" role="alert">${escape(message)}</p>` : ''}`;
   } else {
     const active = state.players[state.currentPlayer]!;
     const human = state.players[0]!;
