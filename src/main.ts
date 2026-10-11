@@ -5,6 +5,7 @@ import { loadGame, saveGame, type StorageAccess } from './storage/local-game.js'
 import { renderGameTable, type TableActions } from './ui/game-table.js';
 import type { GameState } from './game/types.js';
 import { setupOfflineApp } from './ui/offline-app.js';
+import { loadGruselino } from './ui/gruselino.js';
 
 setupOfflineApp();
 
@@ -28,9 +29,13 @@ async function start(): Promise<void> {
   let saveError: string | null = null;
   let selected: string[] = [];
   let ordering = false;
-  const view = (): 'home' | 'game' | 'reference' => {
+  let gruselino: { dispose(): void } | null = null;
+  let mountingGruselino = false;
+  let gruselinoGeneration = 0;
+  const view = (): 'home' | 'game' | 'gruselino' | 'reference' => {
     const hash = window.location.hash;
     if (hash === '#game') return 'game';
+    if (hash === '#gruselino') return 'gruselino';
     return /^#(?:overview|deck|cards|phase-(?:[1-9]|10))$/.test(hash) ? 'reference' : 'home';
   };
   let dragging = false;
@@ -109,10 +114,43 @@ async function start(): Promise<void> {
     const currentView = view();
     document.body.classList.toggle('is-home', currentView === 'home');
     document.body.classList.toggle('is-game', currentView === 'game');
+    document.body.classList.toggle('is-gruselino', currentView === 'gruselino');
     document.body.classList.toggle('is-playing', state !== null && currentView === 'game');
     document.body.classList.toggle('is-reference', currentView === 'reference');
-    document.querySelectorAll<HTMLElement>('[data-phase-nav]').forEach(link => { link.hidden = currentView === 'home'; });
-    document.title = currentView === 'home' ? 'Spiele' : 'Phase10';
+    document.querySelectorAll<HTMLElement>('[data-phase-nav]').forEach(link => { link.hidden = currentView === 'home' || currentView === 'gruselino'; });
+    document.title = currentView === 'home' ? 'Spiele' : currentView === 'gruselino' ? 'Gruselino' : 'Phase10';
+    if (currentView !== 'gruselino') {
+      gruselinoGeneration++; mountingGruselino = false;
+      gruselino?.dispose(); gruselino = null;
+    } else if (!gruselino && !mountingGruselino) {
+      mountingGruselino = true;
+      const generation = ++gruselinoGeneration;
+      const gameRoot = document.getElementById('gruselino-root');
+      if (gameRoot) gameRoot.textContent = 'Gruselino wird geladen.';
+      void loadGruselino().then(module => {
+        if (!gameRoot || generation !== gruselinoGeneration || view() !== 'gruselino') return;
+        gruselino = module.mountGruselino(gameRoot, { onHome: () => { window.location.hash = 'home'; } });
+        mountingGruselino = false;
+      }).catch(() => {
+        if (generation !== gruselinoGeneration || view() !== 'gruselino') return;
+        mountingGruselino = false;
+        if (gameRoot) gameRoot.textContent = 'Gruselino konnte nicht geladen werden. Bitte öffne die App erneut.';
+      });
+    }
+    if (currentView === 'home') void loadGruselino().then(module => {
+      if (view() !== 'home') return;
+      const summary = module.getSavedSummary();
+      const link = document.getElementById('gruselino-link');
+      const saved = document.getElementById('gruselino-saved');
+      if (link) link.textContent = summary && !summary.finished ? 'Fortsetzen →' : 'Spielen →';
+      if (saved) {
+        saved.hidden = !summary || summary.finished;
+        saved.textContent = summary ? `Karte ${summary.card} von 33 · ${summary.score} ${summary.score === 1 ? 'Punkt' : 'Punkte'}` : '';
+      }
+    }).catch(() => {
+      const saved = document.getElementById('gruselino-saved');
+      if (saved) { saved.hidden = false; saved.textContent = 'Gruselino konnte nicht geladen werden. Bitte erneut öffnen.'; }
+    });
     const gameLink = document.getElementById('phase10-link');
     if (gameLink) gameLink.textContent = state && state.status !== 'finished' ? 'Fortsetzen →' : 'Spielen →';
     const savedGame = document.getElementById('saved-game');
@@ -123,6 +161,7 @@ async function start(): Promise<void> {
     const appTools = document.querySelector('.app-tools');
     if (appTools) {
       if (currentView === 'home') document.getElementById('home-tools')?.append(appTools);
+      else if (currentView === 'gruselino') document.getElementById('gruselino-tools')?.append(appTools);
       else storageStatus!.after(appTools);
     }
     renderGameTable(root!, { state, catalog, phases, selected, target, message, ordering, focusedCard }, actions);

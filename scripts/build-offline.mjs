@@ -39,6 +39,10 @@ export async function buildOffline(root = new URL('../', import.meta.url)) {
     ...await filesUnder(root, 'public/assets/', assetExtensions),
     ...await filesUnder(root, 'public/app/', appExtensions),
   ].sort();
+  const gameFolder = new URL('public/games/', root);
+  const hasGames = await lstat(gameFolder).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; });
+  if (hasGames) assets.push(...await filesUnder(root, 'public/games/', new Set(['.js', '.css', '.svg', '.png'])));
+  assets.sort();
   for (const path of [...assets, 'src/storage/service-worker.js']) await assertRegularPath(root, path);
   const source = await readFile(new URL('src/storage/service-worker.js', root), 'utf8');
   const hash = createHash('sha256').update(source);

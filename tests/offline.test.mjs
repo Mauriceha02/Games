@@ -73,6 +73,9 @@ function worker(scope = 'https://example.test/Phase10/') {
 }
 
 test('installed app opens and serves every local asset without a network, including under a subpath', async () => {
+  assert(assets.includes('public/games/gruselino/app/ui/game-app.js'));
+  assert(assets.includes('public/games/gruselino/assets/gruselino.css'));
+  assert(assets.includes('public/games/gruselino/assets/ghost.svg'));
   for (const scope of ['https://example.test/', 'https://example.test/Phase10/']) {
     const app = worker(scope);
     await app.lifecycle('install');
@@ -176,7 +179,8 @@ test('publication rejects hidden files, unexpected file types and symlinks in as
       await mkdir(new URL('./', target), { recursive: true });
       await writeFile(target, 'test-' + path);
     }
-    for (const path of ['public/assets/.env', 'public/assets/private.pem', 'public/app/config.json']) {
+    await mkdir(new URL('public/games/gruselino/', fixture), { recursive: true });
+    for (const path of ['public/assets/.env', 'public/assets/private.pem', 'public/app/config.json', 'public/games/gruselino/.env', 'public/games/gruselino/private.pem']) {
       await writeFile(new URL(path, fixture), 'dummy private content');
       await assert.rejects(buildOffline(fixture), /nicht zur Veröffentlichung freigegeben/);
       await rm(new URL(path, fixture));

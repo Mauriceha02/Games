@@ -32,5 +32,24 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      - name: Read pinned Gruselino version
+        id: gruselino
+        run: |
+          node --input-type=module -e 'import {readFileSync} from "node:fs"; const {gruselino}=JSON.parse(readFileSync("games.json","utf8")); if(gruselino.repository!=="Mauriceha02/Gruselino" || !/^[a-f0-9]{40}$/.test(gruselino.revision)) throw new Error("Invalid Gruselino version"); process.stdout.write("revision="+gruselino.revision+"\n");' >> "$GITHUB_OUTPUT"
+
+      - name: Check out pinned Gruselino source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: Mauriceha02/Gruselino
+          ref: ${{ steps.gruselino.outputs.revision }}
+          path: .cache/gruselino
+          persist-credentials: false
+
+      - name: Install Gruselino dependencies
+        working-directory: .cache/gruselino
+        run: npm ci --ignore-scripts
+
       - name: Build and test the game
+        env:
+          GRUSELINO_SOURCE: ${{ github.workspace }}/.cache/gruselino
         run: npm test

@@ -132,6 +132,7 @@ await writeFile(new URL('index.html', root), `<!doctype html>
   <link rel="icon" href="./public/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./src/ui/phase-cards.css">
   <link rel="stylesheet" href="./src/ui/game-table.css">
+  <link rel="stylesheet" href="./public/games/gruselino/assets/gruselino.css">
   <script type="module" src="./public/app/main.js"></script>
 </head>
 <body class="is-home">
@@ -148,13 +149,17 @@ await writeFile(new URL('index.html', root), `<!doctype html>
           <div class="tile-art phase-art" aria-hidden="true"><img src="./public/assets/card-red-07.svg" width="240" height="336" alt=""><img src="./public/assets/card-blue-07.svg" width="240" height="336" alt=""><img src="./public/assets/card-green-07.svg" width="240" height="336" alt=""></div>
           <div class="tile-copy"><span class="game-tag">Kartenspiel</span><h2>Phase10</h2><p>Zehn Phasen gegen Computergegner.</p><a class="game-link" id="phase10-link" href="#game">Spielen <span aria-hidden="true">→</span></a><p class="saved-game" id="saved-game" hidden></p></div>
         </article>
-        <article class="game-tile planned-game">
-          <div class="tile-art ghost-art" aria-hidden="true"><span class="ghost-shape"><i></i><i></i></span><span class="ghost-shadow"></span></div>
-          <div class="tile-copy"><span class="game-tag">Geplant</span><h2>Gruselino</h2><p>Kommt später in die Spielesammlung.</p><span class="planned-label">Noch nicht spielbar</span></div>
+        <article class="game-tile">
+          <div class="tile-art ghost-art" aria-hidden="true"><img src="./public/games/gruselino/assets/ghost.svg" width="128" height="128" alt=""><span class="ghost-shadow"></span></div>
+          <div class="tile-copy"><span class="game-tag">Suchspiel</span><h2>Gruselino</h2><p>Finde die fehlende Figur.</p><a class="game-link" id="gruselino-link" href="#gruselino">Spielen <span aria-hidden="true">→</span></a><p class="saved-game" id="gruselino-saved" hidden></p></div>
         </article>
       </div>
       <div id="home-tools"></div>
       <noscript><p>Bitte aktiviere JavaScript, um ein Spiel zu öffnen.</p></noscript>
+    </section>
+    <section id="gruselino" aria-label="Gruselino">
+      <div id="gruselino-root"></div>
+      <div id="gruselino-tools"></div>
     </section>
     <section class="game-section" id="game" aria-labelledby="game-title">
       <div class="section-heading"><div><h1 id="game-title">Phase10 spielen</h1></div></div>

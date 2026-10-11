@@ -295,3 +295,17 @@ body.is-playing .install-guide[open] { position:absolute; bottom:100%; right:12p
   .game-table[data-status] .hand-order-button, .hand-options > summary { min-height:28px; }
   .hand-panel { padding-top:4px; padding-bottom:6px; }
 }
+body.is-gruselino { height:100vh; height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+body.is-gruselino .site-header { flex:none; width:100%; max-width:960px; height:48px; min-height:48px; padding:4px 12px; flex-wrap:nowrap; }
+body.is-gruselino .wordmark { font-size:14px; }
+body.is-gruselino .brand .app-version { font-size:9px; }
+body.is-gruselino nav a { font-size:11px; }
+body.is-gruselino main { flex:1; min-height:0; width:100%; max-width:960px; padding:0; }
+body.is-gruselino main > section:not(#gruselino), body.is-gruselino footer { display:none; }
+body.is-gruselino #gruselino { height:100%; min-height:0; display:flex; flex-direction:column; }
+body.is-gruselino #gruselino-root { flex:1; min-height:0; }
+body.is-gruselino #gruselino-tools { flex:none; }
+body.is-gruselino .app-tools { position:relative; margin:0; padding:3px 12px; gap:6px; }
+body.is-gruselino .offline-status { flex:1; font-size:10px; line-height:1.5; }
+body.is-gruselino .install-guide summary { min-height:24px; padding:3px 0; font-size:10px; }
+body.is-gruselino .install-guide[open] { position:absolute; bottom:100%; left:12px; right:12px; z-index:30; padding:12px; max-height:60vh; overflow:auto; border:1px solid #d9b57970; border-radius:10px; background:var(--felt); }
