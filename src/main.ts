@@ -35,7 +35,7 @@ async function start(): Promise<void> {
   const view = (): 'home' | 'game' | 'gruselino' | 'reference' => {
     const hash = window.location.hash;
     if (hash === '#game') return 'game';
-    if (hash === '#gruselino') return 'gruselino';
+    if (hash === '#gruselino' || hash.startsWith('#gruselino?invite=')) return 'gruselino';
     return /^#(?:overview|deck|cards|phase-(?:[1-9]|10))$/.test(hash) ? 'reference' : 'home';
   };
   let dragging = false;

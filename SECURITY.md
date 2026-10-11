@@ -34,3 +34,12 @@ Die CSP steht direkt nach der Zeichensatzangabe und gilt auch für die offline g
 - Karten antippen, überlappend darstellen, verschieben, abbrechen, speichern und neu laden bleiben unter der CSP funktionsfähig; Bot-Pause während des Ziehens wurde ebenfalls geprüft. Kein Test auf einem echten iPhone durchgeführt.
 
 Die Änderungen sind zunächst lokal. Sie erreichen die installierte App erst nach Push auf `Dev`, erfolgreichem GitHub-Pages-Deployment und Aktivierung des heruntergeladenen Updates beim nächsten vollständigen Öffnen.
+
+## Gruselino im WLAN (11. Oktober 2026)
+
+Gruselino bindet die geprüfte Commit-ID des separaten `Game-Multiplayer`-Moduls ein. GitHub Actions holen beide festgelegten Quellstände; Netzwerkdateien werden mit der App ausgeliefert und offline gespeichert.
+
+- Ohne Internet-Hilfe verwendet die Verbindung keine STUN-Server. Die optionale Internet-Hilfe kontaktiert Googles STUN-Dienst. Spielnachrichten laufen über einen verschlüsselten WebRTC-Datenkanal direkt zwischen den Geräten. Einladung und Antwort enthalten Verbindungsdaten und gelten zum Verbindungsaufbau 15 Minuten; die laufende Verbindung darf länger bestehen. Codes werden nicht lokal gespeichert. Einladungslinks verwenden das URL-Fragment, das die App nach dem Einlesen entfernt.
+- Die Verbindung prüft Protokoll, Sitzung, Spiel, Gegenstellenrolle, Nachrichtenreihenfolge und Größe. Gruselino validiert zusätzlich Kartenlayouts und Punktstände. Der Gastgeber wertet Antworten und Eingabesperren aus; alte oder doppelte Antworten können keine weiteren Punkte vergeben.
+- Der Gastgeber kontrolliert die gemeinsame Partie. Dieser private WLAN-Modus ist kein Schutz gegen absichtliches Schummeln durch einen veränderten Spielclient. Netzwerkverzögerung kann dem Gastgeber einen kleinen Vorteil geben, weil die erste bei ihm eingetroffene richtige Antwort gewinnt.
+- Der WLAN-Modus schreibt keine Spielstände in den Browser-Speicher. Solopartien bleiben erhalten. Auf Kamera, Mikrofon oder Standort wird weiterhin nicht zugegriffen.
