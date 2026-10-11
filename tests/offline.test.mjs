@@ -77,6 +77,7 @@ test('installed app opens and serves every local asset without a network, includ
   assert(assets.includes('public/games/gruselino/assets/gruselino.css'));
   assert(assets.includes('public/games/gruselino/assets/ghost.svg'));
   for (const path of ['app/ui/local-game.js', 'app/game/local-match.js', 'network/peer.js', 'network/signals.js', 'network/protocol.js']) assert(assets.includes('public/games/gruselino/' + path), path);
+  for (const path of ['public/app/ui/local-phase10.js', 'public/app/game/local-match.js', 'public/app/network/peer.js']) assert(assets.includes(path), path);
   for (const scope of ['https://example.test/', 'https://example.test/Phase10/']) {
     const app = worker(scope);
     await app.lifecycle('install');

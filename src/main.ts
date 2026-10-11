@@ -6,6 +6,8 @@ import { renderGameTable, type TableActions } from './ui/game-table.js';
 import type { GameState } from './game/types.js';
 import { setupOfflineApp } from './ui/offline-app.js';
 import { loadGruselino } from './ui/gruselino.js';
+import { mountLocalPhase10 } from './ui/local-phase10.js';
+import { wireHand } from './ui/hand-drag.js';
 
 setupOfflineApp();
 
@@ -32,9 +34,14 @@ async function start(): Promise<void> {
   let gruselino: { dispose(): void } | null = null;
   let mountingGruselino = false;
   let gruselinoGeneration = 0;
+  let localMode = false;
+  let localPlaying = false;
+  let localGeneration = 0;
+  let localLoading = new AbortController();
+  let local: { dispose(): void; invitation(code: string): void } | null = null;
   const view = (): 'home' | 'game' | 'gruselino' | 'reference' => {
     const hash = window.location.hash;
-    if (hash === '#game') return 'game';
+    if (hash === '#game' || hash.startsWith('#game?invite=')) return 'game';
     if (hash === '#gruselino' || hash.startsWith('#gruselino?invite=')) return 'gruselino';
     return /^#(?:overview|deck|cards|phase-(?:[1-9]|10))$/.test(hash) ? 'reference' : 'home';
   };
@@ -42,6 +49,40 @@ async function start(): Promise<void> {
   let focusedCard: string | null = null;
   let target: string | null = null;
   let timer: ReturnType<typeof setTimeout> | null = null;
+
+  function stopLocal(): void {
+    localGeneration++; localLoading.abort(); local?.dispose(); local = null;
+    localMode = false; localPlaying = false;
+  }
+  async function multiplayer(invite?: string): Promise<void> {
+    if (localMode && local) { if (invite) local.invitation(invite); return; }
+    if (timer !== null) clearTimeout(timer);
+    stopLocal(); localMode = true; dragging = false;
+    const generation = ++localGeneration;
+    localLoading = new AbortController();
+    wireHand(root!, false, { select: () => {}, move: () => {}, dragging: () => {} });
+    delete root!.dataset.status; delete root!.dataset.stage; delete root!.dataset.player;
+    root!.textContent = 'Mehrspielermodus wird geladen.';
+    window.location.hash = 'game'; render();
+    try {
+      const instance = await mountLocalPhase10(root!, {
+        catalog, phases, signal: localLoading.signal, ...(invite ? { invite } : {}),
+        onBack: () => { stopLocal(); render(); },
+        onPlaying: value => { if (generation !== localGeneration) return; localPlaying = value; document.body.classList.toggle('is-playing', localMode && value && view() === 'game'); },
+      });
+      if (generation !== localGeneration || view() !== 'game') { instance.dispose(); return; }
+      local = instance;
+    } catch {
+      if (generation === localGeneration) { stopLocal(); message = 'Mehrspielermodus konnte nicht geladen werden. Bitte öffne die App erneut.'; render(); }
+    }
+  }
+  function receiveInvitation(): boolean {
+    if (!location.hash.startsWith('#game?invite=')) return false;
+    const invite = new URLSearchParams(location.hash.slice(6)).get('invite');
+    history.replaceState(null, '', location.pathname + location.search + '#game');
+    if (invite) void multiplayer(invite);
+    return !!invite;
+  }
 
   function update(next: GameState, keepSelection = false): void {
     state = next;
@@ -73,6 +114,7 @@ async function start(): Promise<void> {
   }
 
   const actions: TableActions = {
+    multiplayer: () => { void multiplayer(); },
     start: (computers, difficulty) => attempt(() => { ordering = false; focusedCard = null; window.location.hash = 'game'; update(createGame(catalog, computers, Math.random, difficulty)); }),
     difficulty: level => attempt(() => {
       if (state) { update(setBotDifficulty(state, catalog, level), true); announcement!.textContent = 'Die Spielstärke der Computer wurde geändert.'; }
@@ -112,10 +154,11 @@ async function start(): Promise<void> {
 
   function render(): void {
     const currentView = view();
+    if (currentView !== 'game' && localMode) stopLocal();
     document.body.classList.toggle('is-home', currentView === 'home');
     document.body.classList.toggle('is-game', currentView === 'game');
     document.body.classList.toggle('is-gruselino', currentView === 'gruselino');
-    document.body.classList.toggle('is-playing', state !== null && currentView === 'game');
+    document.body.classList.toggle('is-playing', currentView === 'game' && (localMode ? localPlaying : state !== null));
     document.body.classList.toggle('is-reference', currentView === 'reference');
     document.querySelectorAll<HTMLElement>('[data-phase-nav]').forEach(link => { link.hidden = currentView === 'home' || currentView === 'gruselino'; });
     document.title = currentView === 'home' ? 'Spiele' : currentView === 'gruselino' ? 'Gruselino' : 'Phase10';
@@ -164,24 +207,24 @@ async function start(): Promise<void> {
       else if (currentView === 'gruselino') document.getElementById('gruselino-tools')?.append(appTools);
       else storageStatus!.after(appTools);
     }
-    renderGameTable(root!, { state, catalog, phases, selected, target, message, ordering, focusedCard }, actions);
-    storageStatus!.textContent = saveError ?? (state ? 'Auf diesem Gerät gespeichert.' : 'Dein Fortschritt wird auf diesem Gerät gespeichert.');
-    storageStatus!.classList.toggle('storage-error', saveError !== null);
+    if (!localMode) renderGameTable(root!, { state, catalog, phases, selected, target, message, ordering, focusedCard }, actions);
+    storageStatus!.textContent = localMode ? 'Gemeinsame Partie · beide Geräte geöffnet lassen. Dein Solospielstand bleibt erhalten.' : saveError ?? (state ? 'Auf diesem Gerät gespeichert.' : 'Dein Fortschritt wird auf diesem Gerät gespeichert.');
+    storageStatus!.classList.toggle('storage-error', !localMode && saveError !== null);
     scheduleBotTurn();
   }
 
   function scheduleBotTurn(): void {
     if (timer !== null) clearTimeout(timer);
     timer = null;
-    if (view() === 'game' && !dragging && !document.hidden && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer' && !message) {
+    if (view() === 'game' && !localMode && !dragging && !document.hidden && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer' && !message) {
       timer = setTimeout(() => attempt(() => {
-        if (view() === 'game' && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer') update(playBasicTurnStep(state, catalog));
+        if (view() === 'game' && !localMode && state?.status === 'playing' && state.players[state.currentPlayer]!.controller === 'computer') update(playBasicTurnStep(state, catalog));
       }), 650);
     }
   }
 
   window.addEventListener('hashchange', () => {
-    render();
+    if (!receiveInvitation()) render();
   });
 
   document.addEventListener('click', event => {
@@ -201,7 +244,7 @@ async function start(): Promise<void> {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { if (timer !== null) clearTimeout(timer); } else render();
   });
-  render();
+  if (!receiveInvitation()) render();
 }
 
 void start().catch(() => {

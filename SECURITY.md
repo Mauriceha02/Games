@@ -43,3 +43,12 @@ Gruselino bindet die geprüfte Commit-ID des separaten `Game-Multiplayer`-Moduls
 - Die Verbindung prüft Protokoll, Sitzung, Spiel, Gegenstellenrolle, Nachrichtenreihenfolge und Größe. Gruselino validiert zusätzlich Kartenlayouts und Punktstände. Der Gastgeber wertet Antworten und Eingabesperren aus; alte oder doppelte Antworten können keine weiteren Punkte vergeben.
 - Der Gastgeber kontrolliert die gemeinsame Partie. Dieser private WLAN-Modus ist kein Schutz gegen absichtliches Schummeln durch einen veränderten Spielclient. Netzwerkverzögerung kann dem Gastgeber einen kleinen Vorteil geben, weil die erste bei ihm eingetroffene richtige Antwort gewinnt.
 - Der WLAN-Modus schreibt keine Spielstände in den Browser-Speicher. Solopartien bleiben erhalten. Auf Kamera, Mikrofon oder Standort wird weiterhin nicht zugegriffen.
+
+## Phase10 im WLAN (11. Oktober 2026)
+
+Phase10 verwendet dasselbe festgelegte Verbindungsmodul. Der Gastgeber hält den vollständigen Spielstand und prüft die Aktionen beider Menschen mit den bestehenden Spielregeln.
+
+- Zum Mitspieler werden ausschließlich seine eigene Hand, offene Karten, Phasen, Punkte, Handkartenzahlen und Stapelgrößen übertragen. Die verdeckte Hand des Gastgebers, die Nachziehreihenfolge und verdeckt gezogene Karten des Gastgebers sind nicht Teil der übertragenen Ansicht. Der Gastgeber hat als Spielleitung Zugriff auf beide Hände; dieser private Modus schützt nicht gegen einen absichtlich veränderten Gastgeber-Client.
+- Aktionen sind an die Partie, deren aktuellen Stand und eine fortlaufende Nummer gebunden. Die Gegenstellenrolle bestimmt den Spieler; der Mitspieler kann keine Gastgeberrolle durch ein Nachrichtenfeld übernehmen. Doppelte, verspätete und unzulässige Züge ändern den Spielstand nicht.
+- Beide Spieler verwenden dieselben Regeln für Ziehen, Abwerfen, Phasen, Anlegen, Aussetzen, Punkte und Rundenwechsel. Der Gastgeber startet die nächste Runde. Handkarten werden auf jedem Gerät unabhängig geordnet; ihre Reihenfolge wird nicht übertragen.
+- Die gemeinsame Partie schreibt keine Solospielstände. Der Solo-Speicher akzeptiert weiterhin genau einen Menschen mit Computergegnern. Bei Verbindungsunterbrechung werden Spielzüge gesperrt; eine erneute Verbindung derselben offenen Sitzung synchronisiert den Stand. Schließen oder Neuladen beendet die Sitzung.

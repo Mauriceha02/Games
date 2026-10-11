@@ -83,12 +83,11 @@ export function assertGameState(value: unknown, catalog: Catalog): asserts value
     if (index === value.currentPlayer && player.skipPending) throw new Error('Ein ausgesetzter Spieler kann nicht am Zug sein.');
     if (player.controller === 'human') {
       humans++;
-      if (index !== 0) throw new Error('Der menschliche Spieler muss an erster Stelle stehen.');
     }
     ids.add(player.id);
     owned.push(...player.hand);
   });
-  if (humans !== 1) throw new Error('Die Partie braucht genau einen menschlichen Spieler.');
+  if (!humans || value.players[0].controller !== 'human') throw new Error('An erster Stelle muss ein menschlicher Spieler stehen.');
   if (owned.length !== catalog.size || !owned.every(id => typeof id === 'string' && catalog.has(id)) || new Set(owned).size !== catalog.size) {
     throw new Error('Karten fehlen oder kommen mehrfach im Spiel vor.');
   }
@@ -191,7 +190,7 @@ export function drawCard(state: GameState, catalog: Catalog, playerId: string, s
   return next;
 }
 
-export function eligibleSkipTargets(state: GameState): Player[] {
+export function eligibleSkipTargets(state: Pick<GameState, 'players' | 'currentPlayer' | 'finalists'>): Player[] {
   return state.players.filter((player, index) => index !== state.currentPlayer && (!state.finalists || state.finalists.includes(player.id)) && !player.skipPending && !player.skipProtected);
 }
 
@@ -351,7 +350,12 @@ export function reorderHand(state: GameState, catalog: Catalog, playerId: string
 export function sortHand(state: GameState, catalog: Catalog, playerId: string, by: 'number' | 'color'): GameState {
   const player = state.players.find(other => other.id === playerId);
   if (!player || (by !== 'number' && by !== 'color')) throw new Error('Ungültige Sortierung.');
-  const order = [...player.hand].sort((a, b) => {
+  return reorderHand(state, catalog, playerId, sortedCards(player.hand, catalog, by));
+}
+
+export function sortedCards(hand: readonly string[], catalog: Catalog, by: 'number' | 'color'): string[] {
+  if (by !== 'number' && by !== 'color') throw new Error('Ungültige Sortierung.');
+  return [...hand].sort((a, b) => {
     const first = catalog.get(a)!;
     const second = catalog.get(b)!;
     const rank = (card: Card): number => card.type === 'number' ? card.value : card.type === 'wild' ? 13 : 14;
@@ -359,7 +363,15 @@ export function sortHand(state: GameState, catalog: Catalog, playerId: string, b
     if (first.type === 'number' && second.type === 'number') return by === 'color' ? color || rank(first) - rank(second) : rank(first) - rank(second) || color;
     return rank(first) - rank(second);
   });
-  return reorderHand(state, catalog, playerId, order);
+}
+
+export function createHumanGame(catalog: Catalog, random: Random = Math.random): GameState {
+  const state = createGame(catalog, 1, random);
+  state.players[0]!.name = 'Gastgeber';
+  Object.assign(state.players[1]!, { name: 'Mitspieler', controller: 'human', botDifficulty: null });
+  state.history = ['Karten gemischt. Jeder Spieler hat zehn Karten.', ...(state.players[0]!.skipProtected ? ['Der Gastgeber setzt den ersten Zug aus.'] : [])];
+  assertGameState(state, catalog);
+  return state;
 }
 
 

@@ -26,6 +26,7 @@ export function loadGame(storage: StorageAccess, catalog: Catalog): { state: Gam
         botDifficulty: player.controller === 'human' ? null : 'easy' })) };
     }
     assertGameState(state, catalog);
+    if (state.players.filter(player => player.controller === 'human').length !== 1) throw new Error('Ungültiger Solo-Spielstand.');
     return { state, error: null };
   } catch {
     return { state: null, error: 'Der gespeicherte Spielstand konnte nicht geladen werden. Du kannst eine neue Partie starten.' };
@@ -34,6 +35,7 @@ export function loadGame(storage: StorageAccess, catalog: Catalog): { state: Gam
 
 export function saveGame(storage: StorageAccess, state: GameState, catalog: Catalog): string | null {
   assertGameState(state, catalog);
+  if (state.players.filter(player => player.controller === 'human').length !== 1) throw new Error('Eine gemeinsame Partie gehört nicht in den Solo-Spielstand.');
   try {
     storage.setItem(STORAGE_KEY, JSON.stringify(state));
     return null;

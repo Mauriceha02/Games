@@ -279,6 +279,19 @@ body.is-playing .install-guide[open] { position:absolute; bottom:100%; right:12p
 }
 .game-table[data-status] .meld-group.can-hit { border-color:#d9b579b0; background:#d9b5790c; }
 .game-table[data-status] .meld-group.can-hit .game-secondary { border-color:#d9b57990; color:var(--gold); }
+.multiplayer-entry { margin-block:12px; }
+.multiplayer-lobby { max-width:540px; margin:auto; padding:10px 4px; }
+.multiplayer-lobby h2 { font-size:30px; margin:24px 0 12px; }
+.multiplayer-lobby h3 { font-size:18px; margin-top:24px; }
+.multiplayer-lobby p { color:#cfd8ca; font-size:13px; line-height:1.6; }
+.multiplayer-lobby label { display:grid; gap:8px; margin:16px 0 12px; color:#cfd8ca; font-size:12px; }
+.multiplayer-lobby textarea { width:100%; min-width:0; max-width:100%; resize:vertical; padding:10px; border:1px solid #faf5e94d; border-radius:7px; color:var(--paper); background:#193e35; font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; overflow-wrap:anywhere; }
+.multiplayer-lobby form { margin-block:24px; }
+.multiplayer-lobby .connection-check { display:flex; align-items:center; gap:8px; }
+.connection-share { display:flex; gap:10px; flex-wrap:wrap; }
+.multiplayer-lobby .connection-note, .multiplayer-note { font-size:11px; line-height:1.6; }
+.multiplayer-lobby .connection-notice, .multiplayer-lobby .connection-status { color:var(--gold); }
+.connection-lost { padding:8px 0; color:var(--gold); font-size:11px; line-height:1.5; }
 @media (max-height:680px) and (max-width:599px) {
   .game-table[data-status] .game-topline, .table-settings > summary { min-height:28px; }
   .settings-content { top:28px; }

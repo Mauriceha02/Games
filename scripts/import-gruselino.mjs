@@ -32,4 +32,10 @@ async function copy(directory = '') {
   }
 }
 await copy();
+// Both games use the same pinned transport; each game keeps its own rules and UI.
+const network = new URL('public/app/network/', root);
+await mkdir(network, { recursive: true });
+for (const name of ['peer', 'protocol', 'signals']) {
+  await copyFile(new URL(`network/${name}.js`, destination), new URL(`${name}.js`, network));
+}
 console.log(`Gruselino eingebunden: ${head.slice(0, 7)}.`);
