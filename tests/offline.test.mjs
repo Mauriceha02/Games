@@ -78,7 +78,7 @@ test('installed app opens and serves every local asset without a network, includ
   assert(assets.includes('public/games/gruselino/assets/ghost.svg'));
   for (const path of ['app/ui/local-game.js', 'app/game/local-match.js', 'network/peer.js', 'network/signals.js', 'network/protocol.js']) assert(assets.includes('public/games/gruselino/' + path), path);
   for (const path of ['public/app/ui/local-phase10.js', 'public/app/game/local-match.js', 'public/app/network/peer.js']) assert(assets.includes(path), path);
-  for (const scope of ['https://example.test/', 'https://example.test/Phase10/']) {
+  for (const scope of ['https://example.test/', 'https://example.test/Phase10/', 'https://example.test/Games/']) {
     const app = worker(scope);
     await app.lifecycle('install');
     assert.equal(await app.ready(), true);
@@ -137,7 +137,7 @@ test('foreign URLs, other apps, unknown pages and write requests bypass the cach
 test('manifest installs in its own folder and supplies real PNG icons at the declared sizes', async () => {
   const manifest = JSON.parse(await readFile(new URL('manifest.webmanifest', root), 'utf8'));
   assert.equal(manifest.display, 'standalone');
-  for (const scope of ['https://example.test/', 'https://example.test/Phase10/']) {
+  for (const scope of ['https://example.test/', 'https://example.test/Phase10/', 'https://example.test/Games/']) {
     for (const key of ['id', 'start_url', 'scope']) assert.equal(new URL(manifest[key], scope).href, scope);
   }
   for (const [path, size] of [...manifest.icons.map(icon => [icon.src, Number(icon.sizes.split('x')[0])]), ['public/assets/app-icon-180.png', 180]]) {

@@ -5,7 +5,7 @@
   "type": "module",
   "engines": { "node": ">=16.20.0" },
   "scripts": {
-    "build": "node scripts/render-design.mjs && tsc && node scripts/import-gruselino.mjs && node scripts/build-offline.mjs",
+    "build": "tsc && node scripts/import-gruselino.mjs && node scripts/render-design.mjs && node scripts/build-offline.mjs",
     "check": "tsc --noEmit",
     "test": "npm run build && node --test tests/*.test.mjs",
     "dev": "npm run build && python3 -m http.server 5173 --bind 127.0.0.1 --directory dist",

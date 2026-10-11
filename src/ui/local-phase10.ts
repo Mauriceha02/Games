@@ -2,7 +2,7 @@ import { LocalMatch, readSnapshot, type Snapshot, type GameAction } from '../gam
 import { sortedCards } from '../game/game.js';
 import type { Catalog } from '../game/types.js';
 import type { PhaseDefinition } from '../game/phases.js';
-import { loadTransport, type Role } from '../network/transport.js';
+import { loadTransport, type Role, type RoomLink } from '../network/transport.js';
 import { renderGameTable, type TableActions } from './game-table.js';
 import { wireHand } from './hand-drag.js';
 
@@ -11,12 +11,15 @@ const escape = (value: string): string => value.replace(/[&<>"']/g, char => ({ '
 const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
 
 export async function mountLocalPhase10(root: HTMLElement, options: Options): Promise<{ dispose(): void; invitation(code: string): void }> {
-  const { transport, signals } = await loadTransport();
+  const { transport, signals, rooms } = await loadTransport();
+  const service = await rooms.getServiceURL();
   if (options.signal.aborted) throw new Error('Mehrspielermodus abgebrochen.');
   let disposed = false;
   let role: Role | null = null;
   let incoming = options.invite ?? '';
   let outgoing = '';
+  let linkMode = service !== null;
+  let room: RoomLink | null = null;
   let reply = '';
   let internet = false;
   let busy = false;
@@ -114,6 +117,28 @@ export async function mountLocalPhase10(root: HTMLElement, options: Options): Pr
       } else throw new Error('Ungültige Nachricht des Gastgebers.');
     },
   });
+  if (service) room = new rooms.RoomLink(service, peer, message => { if (!disposed) { peer.close(); notice = message; render(); } });
+  function shareValue(): string {
+    if (!rooms.readRoomInvite(outgoing)) return outgoing;
+    const url = new URL('./', document.baseURI); url.hash = `game?${new URLSearchParams({ invite: outgoing })}`;
+    return url.href;
+  }
+  function linkPanel(): string {
+    if (rooms.readRoomInvite(outgoing)) return `<h3>Einladung teilen</h3><p>Dein Mitspieler öffnet diesen Link. Ihr werdet automatisch verbunden – ohne Antwortcode.</p><label>Einladungslink<textarea readonly rows="3" data-output>${escape(shareValue())}</textarea></label><div class="connection-share"><button class="game-primary" type="button" data-local="share">Teilen …</button><button class="game-secondary" type="button" data-local="copy">Link kopieren</button></div>`;
+    if (linkMode && role === 'guest') return '<h3>Mitspieler wird verbunden</h3><p>Lass dieses Fenster geöffnet. Die Verbindung wird automatisch vorbereitet.</p>';
+    return '';
+  }
+  async function join(): Promise<void> {
+    if (rooms.readRoomInvite(incoming)) {
+      if (!room) throw new Error('Einladungslinks sind hier noch nicht eingerichtet. Bitte öffne die aktuelle App.');
+      linkMode = true; role = 'guest'; await room.join(incoming, 'phase10');
+    } else {
+      room?.close(); linkMode = false;
+      const invitation = signals.readSignal(incoming);
+      if (invitation.game !== 'phase10' || invitation.type !== 'offer') throw new Error('Du brauchst eine Phase10-Einladung.');
+      role = 'guest'; outgoing = await peer.joinInvitation(incoming);
+    }
+  }
   function render(): void {
     if (disposed) return;
     if (dragging) { renderPending = true; return; }
@@ -128,7 +153,7 @@ export async function mountLocalPhase10(root: HTMLElement, options: Options): Pr
       return;
     }
     delete root.dataset.status; delete root.dataset.stage; delete root.dataset.player;
-    root.innerHTML = `<section class="multiplayer-lobby"><button class="game-secondary" type="button" data-local="back">← Zur Solopartie</button><h2>Phase10 zusammen spielen</h2><p>Öffnet Phase10 auf beiden Geräten im selben WLAN. Jeder sieht nur seine eigene Hand.</p><p class="connection-status" role="status">${escape(status)}</p>${outgoing ? `<h3>${role === 'host' ? 'Einladung teilen' : 'Antwort zurückgeben'}</h3><p>${role === 'host' ? 'Dein Mitspieler tritt mit deiner Einladung bei und gibt dir seinen Antwortcode zurück.' : 'Gib diesen Code an den Gastgeber zurück. Er fügt ihn in seinem ursprünglichen Fenster ein. Lass dieses Fenster geöffnet.'}</p><label>Dein ${role === 'host' ? 'Einladungscode' : 'Antwortcode'}<textarea readonly rows="3" data-output>${escape(outgoing)}</textarea></label><div class="connection-share"><button class="game-primary" type="button" data-local="share">Teilen …</button><button class="game-secondary" type="button" data-local="copy">Code kopieren</button></div>${role === 'host' ? `<form data-form="answer"><label>Antwortcode<textarea name="answer" rows="3" maxlength="34816" required spellcheck="false" autocapitalize="off">${escape(reply)}</textarea></label><button class="game-primary" type="submit"${busy ? ' disabled' : ''}>Verbinden</button></form>` : ''}` : `<form data-form="create"><label class="connection-check"><input type="checkbox" name="internet"${internet ? ' checked' : ''}>Internet-Hilfe für die Verbindung nutzen</label><button class="game-primary" type="submit"${busy ? ' disabled' : ''}>Einladung erstellen</button></form><form data-form="join"><h3>Einladung annehmen</h3><label>Einladungscode oder Link<textarea name="invite" rows="3" maxlength="34816" required spellcheck="false" autocapitalize="off">${escape(incoming)}</textarea></label><button class="game-primary" type="submit"${busy ? ' disabled' : ''}>Beitreten</button></form>`}<p class="connection-note">Einladung und Antwort gelten 15 Minuten. Die Internet-Hilfe nutzt Googles STUN-Dienst. Spielnachrichten werden direkt übertragen.</p><p class="connection-note">Beide Geräte geöffnet lassen. Schließen, Neuladen oder Verlassen beendet die gemeinsame Partie. Eure Solospielstände bleiben erhalten.</p><p class="connection-notice" role="alert">${escape(notice)}</p><button class="game-secondary" type="button" data-local="reset"${busy ? ' disabled' : ''}>Neu verbinden</button></section>`;
+    root.innerHTML = `<section class="multiplayer-lobby"><button class="game-secondary" type="button" data-local="back">← Zur Solopartie</button><h2>Phase10 zusammen spielen</h2><p>Öffnet Phase10 auf beiden Geräten im selben WLAN. Jeder sieht nur seine eigene Hand.</p><p class="connection-status" role="status">${escape(status)}</p>${linkPanel() || (outgoing ? `<h3>${role === 'host' ? 'Einladung teilen' : 'Antwort zurückgeben'}</h3><p>${role === 'host' ? 'Dein Mitspieler tritt mit deiner Einladung bei und gibt dir seinen Antwortcode zurück.' : 'Gib diesen Code an den Gastgeber zurück. Er fügt ihn in seinem ursprünglichen Fenster ein. Lass dieses Fenster geöffnet.'}</p><label>Dein ${role === 'host' ? 'Einladungscode' : 'Antwortcode'}<textarea readonly rows="3" data-output>${escape(outgoing)}</textarea></label><div class="connection-share"><button class="game-primary" type="button" data-local="share">Teilen …</button><button class="game-secondary" type="button" data-local="copy">Code kopieren</button></div>${role === 'host' ? `<form data-form="answer"><label>Antwortcode<textarea name="answer" rows="3" maxlength="34816" required spellcheck="false" autocapitalize="off">${escape(reply)}</textarea></label><button class="game-primary" type="submit"${busy ? ' disabled' : ''}>Verbinden</button></form>` : ''}` : `<form data-form="create"><label class="connection-check"><input type="checkbox" name="internet"${internet ? ' checked' : ''}>Internet-Hilfe für die Verbindung nutzen</label><button class="game-primary" type="submit"${busy ? ' disabled' : ''}>${linkMode ? 'Einladungslink erstellen' : 'Einladungscode erstellen'}</button></form><form data-form="join"><h3>Einladung annehmen</h3><label>Einladungslink oder Code<textarea name="invite" rows="3" maxlength="34816" required spellcheck="false" autocapitalize="off">${escape(incoming)}</textarea></label><button class="game-primary" type="submit"${busy ? ' disabled' : ''}>Beitreten</button></form>`)}${service && !outgoing && !role ? `<button class="game-secondary" type="button" data-local="mode"${busy ? ' disabled' : ''}>${linkMode ? 'Ohne Internet per Code verbinden' : 'Per Einladungslink verbinden'}</button>` : ''}<p class="connection-note">Einladungen gelten 15 Minuten. Für Einladungslinks braucht ihr kurz Internet. Ohne Internet könnt ihr Codes nutzen. Die Internet-Hilfe nutzt Googles STUN-Dienst. Spielnachrichten werden direkt übertragen.</p><p class="connection-note">Beide Geräte geöffnet lassen. Schließen, Neuladen oder Verlassen beendet die gemeinsame Partie. Eure Solospielstände bleiben erhalten.</p><p class="connection-notice" role="alert">${escape(notice)}</p><button class="game-secondary" type="button" data-local="reset"${busy ? ' disabled' : ''}>Neu verbinden</button></section>`;
   }
   async function run(callback: () => Promise<void>): Promise<void> {
     if (busy) return;
@@ -146,11 +171,9 @@ export async function mountLocalPhase10(root: HTMLElement, options: Options): Pr
     if (!(event.target instanceof HTMLFormElement) || !event.target.dataset.form) return;
     event.preventDefault(); const form = event.target.dataset.form; const data = new FormData(event.target);
     void run(async () => {
-      if (form === 'create') { internet = data.has('internet'); role = 'host'; outgoing = await peer.createInvitation('phase10', internet); }
+      if (form === 'create') { internet = data.has('internet'); role = 'host'; outgoing = room && linkMode ? await room.create('phase10', internet) : await peer.createInvitation('phase10', internet); }
       else if (form === 'join') {
-        incoming = String(data.get('invite')); const invitation = signals.readSignal(incoming);
-        if (invitation.game !== 'phase10' || invitation.type !== 'offer') throw new Error('Du brauchst eine Phase10-Einladung.');
-        role = 'guest'; outgoing = await peer.joinInvitation(incoming);
+        incoming = String(data.get('invite')); await join();
       } else if (form === 'answer') { reply = String(data.get('answer')); await peer.acceptAnswer(reply); }
     });
   }, { signal: events.signal });
@@ -159,7 +182,9 @@ export async function mountLocalPhase10(root: HTMLElement, options: Options): Pr
     if (!button || !root.contains(button) || button.disabled) return;
     const action = button.dataset.local;
     if (action === 'back') { options.onBack(); return; }
+    if (action === 'mode') { linkMode = !linkMode; notice = ''; render(); return; }
     if (action === 'reset') {
+      room?.close();
       generation++; snapshot = null; match = null; role = null; outgoing = ''; reply = ''; incoming = ''; busy = false; pending = null; notice = ''; hand = [];
       options.onPlaying(false); peer.close(); render(); return;
     }
@@ -168,14 +193,15 @@ export async function mountLocalPhase10(root: HTMLElement, options: Options): Pr
         if (action === 'share' && navigator.share) {
           const url = new URL('./', document.baseURI); url.hash = `game?${new URLSearchParams({ invite: outgoing })}`;
           await navigator.share(role === 'host' ? { title: 'Phase10 zusammen spielen', url: url.href } : { title: 'Phase10-Antwortcode', text: outgoing });
-        } else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(outgoing); notice = 'Code kopiert.'; render(); }
+        } else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(shareValue()); notice = rooms.readRoomInvite(outgoing) ? 'Link kopiert.' : 'Code kopiert.'; render(); }
         else { const field = root.querySelector<HTMLTextAreaElement>('[data-output]'); field?.focus(); field?.select(); }
       } catch (error) { if (!(error instanceof DOMException && error.name === 'AbortError')) { notice = 'Du kannst den Code markieren und kopieren.'; render(); } }
     })();
   }, { signal: events.signal });
   render();
+  if (options.invite && rooms.readRoomInvite(options.invite)) void run(join);
   return {
-    invitation(code: string): void { if (snapshot || peer.state === 'connected') { notice = 'Beende zuerst die aktuelle Partie.'; render(); } else { incoming = code; render(); } },
-    dispose(): void { disposed = true; generation++; events.abort(); wireHand(root, false, { select: () => {}, move: () => {}, dragging: () => {} }); peer.close(); root.replaceChildren(); },
+    invitation(code: string): void { if (snapshot || peer.state === 'connected') { notice = 'Beende zuerst die aktuelle Partie.'; render(); } else { incoming = code; if (rooms.readRoomInvite(code)) void run(join); else render(); } },
+    dispose(): void { disposed = true; generation++; events.abort(); room?.close(); wireHand(root, false, { select: () => {}, move: () => {}, dragging: () => {} }); peer.close(); root.replaceChildren(); },
   };
 }

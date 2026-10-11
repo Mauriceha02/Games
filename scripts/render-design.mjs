@@ -1,8 +1,10 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { renderPlayingCards } from './render-playing-cards.mjs';
 import { appVersion } from './app-version.mjs';
+import { connectionService } from './connection-service.mjs';
 
 const root = new URL('../', import.meta.url);
+const service = await connectionService(root);
 const version = appVersion();
 const phases = JSON.parse(await readFile(new URL('src/game/phases.json', root), 'utf8'));
 const specification = JSON.parse(await readFile(new URL('src/game/deck-spec.json', root), 'utf8'));
@@ -119,7 +121,7 @@ await writeFile(new URL('index.html', root), `<!doctype html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self'; font-src 'self'; connect-src 'self'${service ? ' ' + service : ''}; worker-src 'self'; manifest-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#173e34">
