@@ -8,6 +8,7 @@ Umgesetzt:
 - Spielstände automatisch lokal speichern und später fortsetzen.
 - Ohne Anmeldung, Werbung oder Tracking.
 - Zehn Phasen, Karten anlegen, Hand ordnen und zwei Bot-Stärken.
+- Kompakter Spieltisch: Stapel und Hand bleiben sichtbar; ausgelegte Phasen scrollen dazwischen.
 
 Technik: TypeScript und HTML/CSS, installierbare PWA. WLAN-Mehrspieler folgt.
 

@@ -28,6 +28,7 @@ async function start(): Promise<void> {
   let saveError: string | null = null;
   let selected: string[] = [];
   let ordering = false;
+  let showReference = Boolean(window.location.hash && window.location.hash !== '#game');
   let dragging = false;
   let focusedCard: string | null = null;
   let target: string | null = null;
@@ -63,7 +64,7 @@ async function start(): Promise<void> {
   }
 
   const actions: TableActions = {
-    start: (computers, difficulty) => attempt(() => { ordering = false; focusedCard = null; update(createGame(catalog, computers, Math.random, difficulty)); }),
+    start: (computers, difficulty) => attempt(() => { ordering = false; focusedCard = null; showReference = false; window.location.hash = 'game'; update(createGame(catalog, computers, Math.random, difficulty)); }),
     difficulty: level => attempt(() => {
       if (state) { update(setBotDifficulty(state, catalog, level), true); announcement!.textContent = 'Die Spielstärke der Computer wurde geändert.'; }
     }),
@@ -101,6 +102,8 @@ async function start(): Promise<void> {
   };
 
   function render(): void {
+    document.body.classList.toggle('is-playing', state !== null && !showReference);
+    document.body.classList.toggle('is-reference', state !== null && showReference);
     renderGameTable(root!, { state, catalog, phases, selected, target, message, ordering, focusedCard }, actions);
     storageStatus!.textContent = saveError ?? (state ? 'Auf diesem Gerät gespeichert.' : 'Dein Fortschritt wird auf diesem Gerät gespeichert.');
     storageStatus!.classList.toggle('storage-error', saveError !== null);
@@ -116,6 +119,31 @@ async function start(): Promise<void> {
       }), 650);
     }
   }
+
+  document.querySelectorAll<HTMLAnchorElement>('.site-header a[href^="#"]').forEach(link => {
+    link.addEventListener('click', () => {
+      showReference = link.getAttribute('href') !== '#game';
+      render();
+    });
+  });
+  window.addEventListener('hashchange', () => {
+    showReference = Boolean(window.location.hash && window.location.hash !== '#game');
+    render();
+  });
+
+  document.addEventListener('click', event => {
+    if (!(event.target instanceof Node)) return;
+    root!.querySelectorAll<HTMLDetailsElement>('details[data-panel][open]').forEach(panel => {
+      if (!panel.contains(event.target as Node)) panel.open = false;
+    });
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    root!.querySelectorAll<HTMLDetailsElement>('details[data-panel][open]').forEach(panel => {
+      panel.open = false;
+      panel.querySelector<HTMLElement>('summary')?.focus({ preventScroll: true });
+    });
+  });
 
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { if (timer !== null) clearTimeout(timer); } else render();

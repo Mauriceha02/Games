@@ -172,3 +172,138 @@
 .install-guide ol { padding-left: 20px; margin: 8px 0; }
 .install-guide li { margin-bottom: 8px; padding-left: 4px; }
 @media (max-width: 700px) { .bot-setting { order: 3; width: 100%; } }
+
+/* Fixed playing zones: only the table in the middle scrolls. */
+.brand { display:flex; flex-direction:column; gap:3px; }
+.brand .app-version { margin:0; font-size:10px; line-height:1.3; }
+body.is-playing { height:100vh; height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+body.is-playing .site-header { flex:none; width:100%; max-width:960px; min-height:48px; height:48px; padding:4px 12px; gap:12px; flex-wrap:nowrap; }
+body.is-playing .wordmark { font-size:14px; }
+body.is-playing .wordmark span { font-size:20px; }
+body.is-playing .wordmark i { width:4px; height:4px; margin-top:5px; }
+body.is-playing .brand { gap:1px; }
+body.is-playing .brand .app-version { font-size:9px; }
+body.is-playing nav { gap:14px; }
+body.is-playing nav a { font-size:11px; }
+body.is-playing main { flex:1; min-height:0; width:100%; max-width:960px; padding:0; }
+body.is-playing main > section:not(#game), body.is-playing footer, body.is-playing .game-section > .section-heading { display:none; }
+body.is-reference #game { display:none; }
+body.is-playing #game { height:100%; min-height:0; padding:0; display:flex; flex-direction:column; }
+body.is-playing .storage-status { display:none; }
+body.is-playing .storage-status.storage-error { display:block; flex:none; margin:0; padding:4px 12px; font-size:11px; }
+body.is-playing .app-tools { position:relative; flex:none; gap:6px; margin:0; padding:3px 12px; }
+body.is-playing .offline-status { flex:1; font-size:10px; line-height:1.5; }
+body.is-playing .install-guide { font-size:11px; }
+body.is-playing .install-guide summary { min-height:24px; padding:3px 0; font-size:10px; }
+body.is-playing .install-guide[open] { position:absolute; bottom:100%; right:12px; left:12px; z-index:30; max-height:60vh; overflow:auto; padding:12px; border:1px solid #d9b57970; border-radius:10px; background:var(--felt); box-shadow:0 8px 28px #0005; }
+.game-table[data-status] { position:relative; flex:1; min-height:0; padding:0; border:0; border-radius:0; display:flex; flex-direction:column; background:transparent; }
+.table-fixed-top { flex:none; padding:0 12px 10px; border-bottom:1px solid #faf5e91a; }
+.game-table[data-status] .game-topline { align-items:center; margin:0; min-height:34px; gap:12px; }
+.table-settings { position:static; font-size:11px; }
+.table-settings > summary { min-height:34px; display:flex; align-items:center; cursor:pointer; padding:4px 0 4px 12px; color:#cfd8ca; list-style:none; }
+.table-settings > summary::-webkit-details-marker, .hand-options > summary::-webkit-details-marker { display:none; }
+.settings-content { position:absolute; top:34px; right:12px; left:12px; z-index:20; max-height:calc(100vh - 100px); max-height:calc(100dvh - 100px); overflow:auto; padding:18px; border:1px solid #d9b57970; border-radius:12px; background:var(--felt); box-shadow:0 12px 32px #0005; }
+.phase-help { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.phase-help img { width:56px; height:auto; flex:none; }
+.phase-help p { font-size:12px; line-height:1.6; color:#cfd8ca; margin:8px 0 0; }
+.settings-content .new-game { text-align:left; }
+.settings-content .new-game .start-form { justify-content:start; }
+.settings-content .turn-history { margin-top:10px; }
+.game-table[data-status] .current-phase { display:block; padding:3px 0 8px; margin:0; border:0; background:none; border-radius:0; }
+.game-table[data-status] .current-phase h3 { margin:0; font:500 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:0; }
+.game-table[data-status] .phase-progress { margin-top:3px; font-size:10px; line-height:1.4; }
+.game-table[data-status] .turn-heading { padding:0 0 8px; }
+.game-table[data-status] .turn-heading h2 { margin:0; font:500 14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:0; }
+.game-table[data-status] .turn-heading p { margin:2px 0 0; font-size:10px; line-height:1.4; }
+.game-table[data-status] .piles { gap:28px; }
+.game-table[data-status] .piles > div { width:auto; display:flex; align-items:center; gap:9px; }
+.game-table[data-status] .pile-card { flex:none; width:44px; border-radius:5px; }
+.game-table[data-status] .pile-count { right:-4px; top:-4px; min-width:19px; height:19px; font-size:9px; }
+.game-table[data-status] .pile-label { margin:0; font-size:10px; text-align:left; }
+.game-table[data-status] .pile-label strong { display:block; margin-top:3px; color:var(--paper); font-size:11px; font-weight:500; }
+.game-table[data-status] .pile-hint { margin:8px 0 0; font-size:10px; }
+.table-scroll { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:0 12px 12px; scrollbar-width:thin; scrollbar-color:#d9b57970 transparent; }
+.game-table[data-status] .opponents { flex-wrap:nowrap; justify-content:start; gap:8px; overflow-x:auto; padding:8px 0; }
+.game-table[data-status] .opponent { flex:none; min-width:86px; padding:7px 8px; gap:4px; align-items:start; border:1px solid #faf5e924; }
+.game-table[data-status] .opponent.is-active { border-color:#d9b57990; }
+.game-table[data-status] .opponent-cards { display:none; }
+.game-table[data-status] .opponent strong { font-size:11px; }
+.game-table[data-status] .opponent > span { font-size:10px; }
+.game-table[data-status] .bot-badge { display:none; }
+.game-table[data-status] .laid-phases { margin:8px 0 0; padding-top:10px; }
+.game-table[data-status] .laid-phases > h3 { font-size:12px; margin-bottom:12px; }
+.game-table[data-status] .laid-player { margin:12px 0; }
+.game-table[data-status] .laid-player h4 { font-size:11px; margin-bottom:8px; }
+.game-table[data-status] .meld-groups { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+.game-table[data-status] .meld-group { padding:8px; }
+.game-table[data-status] .meld-group:only-child { grid-column:1 / -1; }
+.game-table[data-status] .meld-label { font-size:11px; margin-bottom:8px; }
+.game-table[data-status] .meld-cards { --meld-card-width:36px; }
+.game-table[data-status] .meld-group .game-secondary { width:100%; margin-top:6px; min-height:44px; padding:8px 4px; font-size:11px; }
+.empty-table { margin:24px 0; text-align:center; color:#cfd8ca; font-size:12px; line-height:1.6; }
+.hand-panel { position:relative; flex:none; padding:5px 12px 8px; border-top:1px solid #d9b57955; background:#13372f; box-shadow:0 -6px 20px #09291b25; z-index:5; }
+.game-table[data-status] .hand-heading { margin:0; align-items:center; gap:8px; }
+.game-table[data-status] .hand-heading > div:first-child { display:flex; align-items:baseline; gap:7px; min-width:0; }
+.game-table[data-status] .hand-heading h3 { font-size:11px; white-space:nowrap; }
+.game-table[data-status] #hand-count { color:#cfd8ca; font-size:10px; white-space:nowrap; }
+.game-table[data-status] .hand-tools { gap:8px; margin:0; flex-wrap:nowrap; }
+.hand-options { position:relative; font-size:11px; }
+.hand-options > summary { min-height:32px; display:flex; align-items:center; cursor:pointer; color:#cfd8ca; list-style:none; }
+.hand-options > div { position:absolute; bottom:100%; right:0; width:145px; padding:8px; border:1px solid #d9b57970; border-radius:9px; background:var(--felt); box-shadow:0 8px 20px #0005; }
+.hand-options button { width:100%; margin-bottom:4px; }
+.game-table[data-status] .hand-order-button { min-height:32px; padding:4px 7px; font-size:10px; border-color:transparent; }
+.game-table[data-status] .hand-order-button[aria-pressed="true"] { border-color:var(--gold); }
+.game-table[data-status] .hand-grid { max-width:calc((var(--hand-count) + 1) * 26px); padding:8px 0 3px; }
+.game-table[data-status] .hand-card { border-radius:5px; }
+.game-table[data-status] .hand-card.is-selected { transform:translateY(-5px); outline-width:2px; outline-offset:1px; }
+.game-table[data-status] .hand-card .hand-corner { top:3px; left:2px; font-size:12px; }
+.game-table[data-status] .hand-card .hand-corner small { font-size:7px; }
+.game-table[data-status] .selection-status { min-height:16px; margin:0; font-size:10px; line-height:1.5; text-align:left; }
+.game-table[data-status] .discard-controls { gap:8px; padding-top:4px; }
+.game-table[data-status] .discard-controls .game-primary { width:auto; flex:1; min-width:0; min-height:44px; padding:6px 8px; font-size:11px; }
+.game-table[data-status] .discard-controls [data-action="clear"] { flex:none; min-height:44px; width:44px; padding:4px; }
+.game-table[data-status] .skip-target { width:100%; font-size:11px; }
+.game-table[data-status] .skip-target select { flex:1; min-width:0; }
+.game-table[data-status] .ordering-hint { margin:0; font-size:10px; line-height:1.4; }
+.game-table[data-status] .order-controls { margin-top:3px; gap:8px; flex-wrap:nowrap; }
+.game-table[data-status] .order-controls > span { width:auto; order:0; white-space:nowrap; font-size:10px; }
+.game-table[data-status] .order-controls button { min-height:44px; padding:6px 8px; font-size:10px; }
+.game-table[data-status] .game-message { position:absolute; bottom:100%; left:0; right:0; margin:0; padding:8px 12px; max-height:40vh; overflow:auto; border-top:1px solid #d9b57970; background:#13372f; font-size:12px; line-height:1.5; }
+.game-table[data-status="round-over"] .hand-panel, .game-table[data-status="finished"] .hand-panel { display:none; }
+.game-table[data-status] .round-result { margin:12px 0; padding:18px 12px; }
+@media (max-height:500px) {
+  body.is-playing .site-header { min-height:40px; height:40px; }
+  .game-table[data-status] .current-phase { display:flex; gap:10px; padding-block:0; }
+  .game-table[data-status] .phase-progress { margin:0; }
+  .game-table[data-status] .pile-card { width:34px; }
+  .game-table[data-status] .turn-heading { padding-bottom:4px; }
+  .game-table[data-status] .turn-heading p { display:none; }
+  .table-fixed-top { padding-bottom:6px; }
+  .game-table[data-status] .hand-grid { max-width:calc((var(--hand-count) + 1) * 22px); padding-top:6px; }
+}
+@media (max-height:500px) and (min-width:600px) {
+  .game-table[data-status] { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.85fr); grid-template-rows:auto minmax(0,1fr); }
+  .table-fixed-top { grid-column:1; grid-row:1; }
+  .table-scroll { grid-column:1; grid-row:2; }
+  .hand-panel { grid-column:2; grid-row:1 / -1; display:flex; flex-direction:column; justify-content:center; border-top:0; border-left:1px solid #d9b57955; }
+  .game-table[data-status="round-over"], .game-table[data-status="finished"] { grid-template-columns:minmax(0,1fr); }
+  .game-table[data-status] .hand-grid { margin-block:4px; }
+}
+.game-table[data-status] .meld-group.can-hit { border-color:#d9b579b0; background:#d9b5790c; }
+.game-table[data-status] .meld-group.can-hit .game-secondary { border-color:#d9b57990; color:var(--gold); }
+@media (max-height:680px) and (max-width:599px) {
+  .game-table[data-status] .game-topline, .table-settings > summary { min-height:28px; }
+  .settings-content { top:28px; }
+  .game-table[data-status] .current-phase { display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding-block:2px 6px; }
+  .game-table[data-status] .current-phase h3 { min-width:0; font-size:11px; }
+  .game-table[data-status] .phase-progress { flex:none; margin:0; font-size:9px; }
+  .phase-next { display:none; }
+  .game-table[data-status] .turn-heading { padding-bottom:6px; }
+  .game-table[data-status] .turn-heading h2 { font-size:13px; }
+  .game-table[data-status] .turn-heading p { display:none; }
+  .game-table[data-status] .pile-card { width:38px; }
+  .table-fixed-top { padding-bottom:8px; }
+  .game-table[data-status] .hand-grid { max-width:calc((var(--hand-count) + 1) * 24px); }
+  .game-table[data-status] .hand-order-button, .hand-options > summary { min-height:28px; }
+  .hand-panel { padding-top:4px; padding-bottom:6px; }
+}

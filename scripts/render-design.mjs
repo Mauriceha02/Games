@@ -137,12 +137,12 @@ await writeFile(new URL('index.html', root), `<!doctype html>
 <body>
   <a class="skip-link" href="#game">Zum Inhalt</a>
   <header class="site-header">
-    <a class="wordmark" href="#" aria-label="Phase10, nach oben">PHASE<span>10</span><i aria-hidden="true"></i></a>
+    <div class="brand"><a class="wordmark" href="#game" aria-label="Phase10, zum Spiel">PHASE<span>10</span><i aria-hidden="true"></i></a><span class="app-version" id="app-version">Version ${escape(version)}</span></div>
     <nav aria-label="Seitennavigation"><a href="#game">Spielen</a><a href="#overview">Phasen</a><a href="#deck">Spielkarten</a></nav>
   </header>
   <main>
     <section class="game-section" id="game" aria-labelledby="game-title">
-      <div class="section-heading"><div><p class="eyebrow">DEIN SPIELTISCH</p><h1 id="game-title">Dein Spiel. Dein Zug.</h1><p class="app-version" id="app-version">Version ${escape(version)}</p></div></div>
+      <div class="section-heading"><div><p class="eyebrow">DEIN SPIELTISCH</p><h1 id="game-title">Dein Spiel. Dein Zug.</h1></div></div>
       <div class="game-table" id="game-root"><p>Der Spieltisch wird geladen.</p></div>
       <p class="storage-status" id="storage-status" role="status"></p>
       <div class="app-tools">

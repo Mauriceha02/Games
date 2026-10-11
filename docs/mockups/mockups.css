@@ -120,3 +120,7 @@ footer { margin-top:38px; padding-top:24px; border-top:1px solid #faf5e920; colo
 @media(max-width:1050px) { .board { padding:36px 20px; } .concepts { gap:16px; } .concept-heading { align-items:start; flex-direction:column; } .concept-heading h2 { font-size:22px; } .concept-copy { min-height:86px; } .phone { height:760px; } .pile { gap:6px; } .piles { gap:12px; } .hand .corner { font-size:15px; } }
 @media(max-width:790px) { .board { max-width:460px; } h1 { font-size:40px; } .concepts { grid-template-columns:1fr; gap:36px; } .concept-heading { flex-direction:row; align-items:center; } .concept-copy { min-height:0; } .phone { height:780px; } }
 @media(prefers-reduced-motion:reduce) { * { transition:none!important; } }
+
+.phone.a .turn-line { justify-content:center; padding-bottom:8px; }
+.phone.a .turn-line h3 { font:500 13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:0; }
+.phone.a .turn-chip { display:none; }
