@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createCatalog, createGame, drawCard } from '../public/app/game/game.js';
-import { loadGame } from '../public/app/storage/local-game.js';
+import { loadGame, saveGame } from '../public/app/storage/local-game.js';
 import { readPhaseDefinitions } from '../public/app/game/phases.js';
 import { renderGameTable } from '../public/app/ui/game-table.js';
 
@@ -19,6 +19,17 @@ test('card assets cannot reference external URLs, traverse folders or break HTML
     forged[0].asset = asset;
     assert.throws(() => createCatalog(forged), /ungültige/);
   }
+});
+
+test('oversized saves are rejected without replacing the stored game', () => {
+  const state = { ...createGame(catalog, 1), padding: 'x'.repeat(64 * 1024) };
+  const raw = JSON.stringify(state);
+  let writes = 0;
+  const storage = { getItem: () => raw, setItem: () => { writes++; } };
+  assert.equal(loadGame(storage, catalog).state, null);
+  assert(loadGame(storage, catalog).error);
+  assert(saveGame(storage, state, catalog));
+  assert.equal(writes, 0);
 });
 
 for (const phaseSet of ['classic', 'extreme']) test(`${phaseSet}: malicious text in an otherwise valid save remains text when the table renders`, () => {

@@ -11,6 +11,7 @@ export function loadGame(storage: StorageAccess, catalog: Catalog): { state: Gam
   try {
     const raw = storage.getItem(STORAGE_KEY);
     if (raw === null) return { state: null, error: null };
+    if (raw.length > 64 * 1024) throw new Error('Spielstand zu groß.');
     let state: unknown = JSON.parse(raw);
     // Keep the existing key and hand order when upgrading the first playable version.
     if (state && typeof state === 'object' && 'version' in state && state.version === 1) {
@@ -40,7 +41,9 @@ export function saveGame(storage: StorageAccess, state: GameState, catalog: Cata
   assertGameState(state, catalog);
   if (state.players.filter(player => player.controller === 'human').length !== 1) throw new Error('Eine gemeinsame Partie gehört nicht in den Solo-Spielstand.');
   try {
-    storage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const raw = JSON.stringify(state);
+    if (raw.length > 64 * 1024) throw new Error('Spielstand zu groß.');
+    storage.setItem(STORAGE_KEY, raw);
     return null;
   } catch {
     return 'Speichern ist gerade nicht möglich. Der aktuelle Fortschritt könnte beim Schließen verloren gehen.';
