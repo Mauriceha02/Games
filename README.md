@@ -31,7 +31,9 @@ Installieren: Über HTTPS in Safari öffnen → Teilen → Zum Home-Bildschirm. 
 
 Prüfen: `npm test`. Bauen: `npm run build` erzeugt `dist/` mit allen Dateien fürs statische Hosting, auch unter einem Unterpfad wie `/Phase10/`. Lokal lässt sich Offlinebetrieb über `localhost` testen.
 
-Hosting: Der Workflow `.github/workflows/pages.yml` prüft jeden Push und Pull Request. Nach bestandenen Tests veröffentlicht er den Branch `Dev` auf GitHub Pages; andere Branches werden nur geprüft. Pages verwendet **Settings → Pages → Source → GitHub Actions**. Updates durch einen Push auf `Dev`; den HTTPS-Link zeigt der erfolgreiche Deploy-Schritt an.
+Hosting: `.github/workflows/publish.yml` prüft und veröffentlicht jeden Push auf `Dev`. `.github/workflows/pages.yml` prüft andere Branches und Pull Requests. Pages verwendet **Settings → Pages → Source → GitHub Actions**. Updates durch einen Push auf `Dev`; den HTTPS-Link zeigt der erfolgreiche Deploy-Schritt an.
+
+Version am Spieltisch: Start bei `1.0.0.5`, automatisch hochgezählt je neuem Veröffentlichungslauf. Wiederholungen behalten die Nummer; fehlgeschlagene oder manuelle Läufe können Nummern verbrauchen. Die Anzeige zeigt auch offline die geladene Version. Lokale Vorschau: `1.0.0.5`. [GitHub-Laufzähler](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context).
 
 Einmalig unter **Settings → Environments → github-pages → Deployment branches and tags** auch `Dev` als erlaubten Branch eintragen, falls dort nur `main` freigegeben ist.
 

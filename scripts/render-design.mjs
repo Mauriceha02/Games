@@ -1,7 +1,9 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { renderPlayingCards } from './render-playing-cards.mjs';
+import { appVersion } from './app-version.mjs';
 
 const root = new URL('../', import.meta.url);
+const version = appVersion();
 const phases = JSON.parse(await readFile(new URL('src/game/phases.json', root), 'utf8'));
 const specification = JSON.parse(await readFile(new URL('src/game/deck-spec.json', root), 'utf8'));
 const source = 'https://service.mattel.com/instruction-sheets/files/FFY05%20Phase%2010%20%5BEnglish_French_German_Italian_Dutch%5D%20%5B5LD%5D.PDF';
@@ -140,7 +142,7 @@ await writeFile(new URL('index.html', root), `<!doctype html>
   </header>
   <main>
     <section class="game-section" id="game" aria-labelledby="game-title">
-      <div class="section-heading"><div><p class="eyebrow">DEIN SPIELTISCH</p><h1 id="game-title">Dein Spiel. Dein Zug.</h1></div></div>
+      <div class="section-heading"><div><p class="eyebrow">DEIN SPIELTISCH</p><h1 id="game-title">Dein Spiel. Dein Zug.</h1><p class="app-version" id="app-version">Version ${escape(version)}</p></div></div>
       <div class="game-table" id="game-root"><p>Der Spieltisch wird geladen.</p></div>
       <p class="storage-status" id="storage-status" role="status"></p>
       <div class="app-tools">
