@@ -1,4 +1,5 @@
-import type { Card, Catalog, Color, Meld, PhaseSet } from './types.js';
+import { shuffle } from './shuffle.js';
+import type { BasePhaseSet, Card, Catalog, Color, Meld, PhaseSet, PhaseTask, Random } from './types.js';
 
 // Kept in agreement with phases.json; a test checks all ten requirements.
 export const PHASE_GROUPS: ReadonlyArray<ReadonlyArray<{ kind: Meld['kind']; size: number }>> = [
@@ -24,17 +25,52 @@ export const EXTREME_PHASE_GROUPS: typeof PHASE_GROUPS = [
   [{ kind: 'set', size: 6 }, { kind: 'set', size: 4 }],
 ];
 
-export const phaseSetName = (set: PhaseSet): string => set === 'extreme' ? 'Extrem' : 'Klassisch';
-export const isPhaseSet = (value: unknown): value is PhaseSet => value === 'classic' || value === 'extreme';
-export function phaseGroups(phase: number, set: PhaseSet = 'classic'): typeof PHASE_GROUPS[number] | undefined {
+export const phaseSetName = (set: PhaseSet): string => set === 'mixed' ? 'Gemischt' : set === 'extreme' ? 'Extrem' : 'Klassisch';
+export const isBasePhaseSet = (value: unknown): value is BasePhaseSet => value === 'classic' || value === 'extreme';
+export const isPhaseSet = (value: unknown): value is PhaseSet => isBasePhaseSet(value) || value === 'mixed';
+
+export function phaseTask(phase: number, set: PhaseSet = 'classic', order?: readonly PhaseTask[]): PhaseTask | undefined {
   if (!isPhaseSet(set)) throw new Error('Ungültige Phasenauswahl.');
-  return (set === 'extreme' ? EXTREME_PHASE_GROUPS : PHASE_GROUPS)[phase - 1];
+  if (!Number.isInteger(phase) || phase < 1 || phase > 10) return undefined;
+  if (order) return order[phase - 1];
+  if (set === 'mixed') throw new Error('Die gemischte Phasenfolge fehlt.');
+  return { set, phase };
+}
+
+export function phaseGroups(phase: number, set: PhaseSet = 'classic', order?: readonly PhaseTask[]): typeof PHASE_GROUPS[number] | undefined {
+  const task = phaseTask(phase, set, order);
+  return task ? (task.set === 'extreme' ? EXTREME_PHASE_GROUPS : PHASE_GROUPS)[task.phase - 1] : undefined;
+}
+
+const taskKey = (task: PhaseTask): string => JSON.stringify(phaseGroups(task.phase, task.set));
+
+export function createPhaseOrder(set: PhaseSet, random: Random = Math.random): PhaseTask[] {
+  if (!isPhaseSet(set)) throw new Error('Ungültige Phasenauswahl.');
+  const tasks = (source: BasePhaseSet): PhaseTask[] => Array.from({ length: 10 }, (_, index) => ({ set: source, phase: index + 1 }));
+  if (set !== 'mixed') return tasks(set);
+  const classic = shuffle(tasks('classic'), random).slice(0, 5);
+  const chosen = new Set(classic.map(taskKey));
+  const extreme = shuffle(tasks('extreme').filter(task => !chosen.has(taskKey(task))), random).slice(0, 5);
+  return shuffle([...classic, ...extreme], random);
+}
+
+export function assertPhaseOrder(value: unknown, set: PhaseSet): asserts value is PhaseTask[] {
+  const invalid = (): never => { throw new Error('Ungültige Phasenfolge.'); };
+  if (!isPhaseSet(set) || !Array.isArray(value) || value.length !== 10) invalid();
+  const order = value as unknown[];
+  for (const [index, task] of order.entries()) {
+    if (!task || typeof task !== 'object' || Array.isArray(task) || !('set' in task) || !('phase' in task) || !isBasePhaseSet(task.set) ||
+        !Number.isInteger(task.phase) || (task.phase as number) < 1 || (task.phase as number) > 10 ||
+        (set !== 'mixed' && (task.set !== set || task.phase !== index + 1))) invalid();
+  }
+  const tasks = order as PhaseTask[];
+  if (set === 'mixed' && (tasks.filter(task => task.set === 'classic').length !== 5 || new Set(tasks.map(taskKey)).size !== 10)) invalid();
 }
 
 export interface PhaseDefinition { id: number; title: string; hint: string }
-export type PhaseDefinitions = Record<PhaseSet, PhaseDefinition[]>;
+export type PhaseDefinitions = Record<BasePhaseSet, PhaseDefinition[]>;
 
-export function readPhaseDefinitions(value: unknown, set: PhaseSet = 'classic'): PhaseDefinition[] {
+export function readPhaseDefinitions(value: unknown, set: BasePhaseSet = 'classic'): PhaseDefinition[] {
   if (!Array.isArray(value) || value.length !== 10 || value.some((phase, index) =>
     !phase || phase.id !== index + 1 || typeof phase.title !== 'string' || typeof phase.hint !== 'string' ||
     !Array.isArray(phase.groups) || JSON.stringify(phase.groups.map((group: { kind: unknown; size: unknown }) =>
@@ -79,8 +115,8 @@ function* combinations(ids: string[], size: number, offset = 0, prefix: string[]
 }
 
 /** Partition the entire selection; a physical card is never used in two groups. */
-export function matchPhase(ids: readonly string[], phase: number, catalog: Catalog, set: PhaseSet = 'classic'): Meld[] | null {
-  const requirements = phaseGroups(phase, set);
+export function matchPhase(ids: readonly string[], phase: number, catalog: Catalog, set: PhaseSet = 'classic', order?: readonly PhaseTask[]): Meld[] | null {
+  const requirements = phaseGroups(phase, set, order);
   if (!requirements || new Set(ids).size !== ids.length || ids.some(id => !catalog.has(id) || catalog.get(id)!.type === 'skip') ||
       !ids.some(id => catalog.get(id)!.type === 'number')) return null;
   function partition(remaining: string[], index: number): Meld[] | null {
@@ -102,15 +138,15 @@ export function matchPhase(ids: readonly string[], phase: number, catalog: Catal
 }
 
 /** Search a hand for a complete phase, preferring fewer Jokers. */
-export function findPhase(hand: readonly string[], phase: number, catalog: Catalog, set: PhaseSet = 'classic'): string[] | null {
-  const count = phaseGroups(phase, set)?.reduce((total, group) => total + group.size, 0);
+export function findPhase(hand: readonly string[], phase: number, catalog: Catalog, set: PhaseSet = 'classic', order?: readonly PhaseTask[]): string[] | null {
+  const count = phaseGroups(phase, set, order)?.reduce((total, group) => total + group.size, 0);
   if (!count) return null;
   const usable = hand.filter(id => catalog.get(id)!.type !== 'skip');
   let best: string[] | null = null;
   let wildCount = Infinity;
   for (const selected of combinations(usable, count)) {
     const wilds = selected.filter(id => catalog.get(id)!.type === 'wild').length;
-    if (wilds >= wildCount || !matchPhase(selected, phase, catalog, set)) continue;
+    if (wilds >= wildCount || !matchPhase(selected, phase, catalog, set, order)) continue;
     best = selected;
     wildCount = wilds;
     if (wilds === 0) break;

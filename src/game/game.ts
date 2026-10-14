@@ -1,4 +1,4 @@
-import { assertMeld, extendMeld, matchPhase, phaseGroups, isPhaseSet } from './phases.js';
+import { assertMeld, assertPhaseOrder, createPhaseOrder, extendMeld, matchPhase, phaseGroups, isPhaseSet } from './phases.js';
 import { shuffle } from './shuffle.js';
 import type { Card, Catalog, Color, GameState, Player, Random, BotSetup, PhaseSet } from './types.js';
 
@@ -45,13 +45,15 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 /** Validate saved data as well as card ownership after each transition. */
 export function assertGameState(value: unknown, catalog: Catalog): asserts value is GameState {
-  if (!isObject(value) || value.version !== 4 || !isPhaseSet(value.phaseSet) || !Array.isArray(value.players) || value.players.length < 2 || value.players.length > 6 ||
+  if (!isObject(value) || value.version !== 5 || !isPhaseSet(value.phaseSet) || !Array.isArray(value.players) || value.players.length < 2 || value.players.length > 6 ||
       !Number.isInteger(value.round) || (value.round as number) < 1 || !Number.isInteger(value.turn) || (value.turn as number) < 1 ||
       !Number.isInteger(value.currentPlayer) || (value.currentPlayer as number) < 0 || (value.currentPlayer as number) >= value.players.length ||
       (value.stage !== 'draw' && value.stage !== 'discard') || !['playing', 'round-over', 'finished'].includes(value.status as string) || typeof value.tieBreak !== 'boolean' || !Array.isArray(value.stock) || !Array.isArray(value.discard) ||
       !Array.isArray(value.history) || value.history.length > 6 || !value.history.every(entry => typeof entry === 'string' && entry.length <= 250)) {
     throw new Error('Der Spielstand hat ein ungültiges Format.');
   }
+  assertPhaseOrder(value.phaseOrder, value.phaseSet);
+  const phaseOrder = value.phaseOrder;
   const ids = new Set<string>();
   let humans = 0;
   const owned: unknown[] = [...value.stock, ...value.discard];
@@ -70,7 +72,7 @@ export function assertGameState(value: unknown, catalog: Catalog): asserts value
     if (inactive ? player.hand.length !== 0 : player.melds.length === 0 ? player.hand.length !== maximum : player.hand.length > maximum) {
       throw new Error('Die Handkartenzahl passt nicht zum Zugzustand.');
     }
-    const requirements = phaseGroups(player.phase as number, value.phaseSet as PhaseSet)!;
+    const requirements = phaseGroups(player.phase as number, value.phaseSet as PhaseSet, phaseOrder)!;
     if (player.melds.length && (player.melds.length !== requirements.length || inactive)) throw new Error('Die ausgelegte Phase ist unvollständig.');
     player.melds.forEach((meld: unknown, groupIndex: number) => {
       assertMeld(meld, catalog);
@@ -144,7 +146,7 @@ function beginNextTurn(state: GameState): void {
 export function createGame(catalog: Catalog, computerCount = 2, random: Random = Math.random, difficulty: BotSetup = 'easy', phaseSet: PhaseSet = 'classic'): GameState {
   if (!Number.isInteger(computerCount) || computerCount < 1 || computerCount > 5) throw new Error('Wähle ein bis fünf Computergegner.');
   if (!['easy', 'strong', 'mixed'].includes(difficulty)) throw new Error('Wähle eine gültige Spielstärke.');
-  if (!isPhaseSet(phaseSet)) throw new Error('Wähle Klassisch oder Extrem.');
+  if (!isPhaseSet(phaseSet)) throw new Error('Wähle Klassisch, Extrem oder Gemischt.');
   const stock = shuffle([...catalog.keys()], random);
   const players: Player[] = Array.from({ length: computerCount + 1 }, (_, i) => ({
     id: `player-${i}`, name: i === 0 ? 'Du' : `Computer ${i}`, controller: i === 0 ? 'human' : 'computer',
@@ -155,7 +157,7 @@ export function createGame(catalog: Catalog, computerCount = 2, random: Random =
     for (const player of players) player.hand.push(stock.pop()!);
   }
   const firstDiscard = stock.pop()!;
-  const state: GameState = { version: 4, phaseSet, status: 'playing', roundWinner: null, winner: null, tieBreak: false, finalists: null, round: 1, players, currentPlayer: 0, stage: 'draw', stock, discard: [firstDiscard], drawnCard: null, turn: 1, history: ['Karten gemischt. Jeder Spieler hat zehn Karten.'] };
+  const state: GameState = { version: 5, phaseSet, phaseOrder: createPhaseOrder(phaseSet, random), status: 'playing', roundWinner: null, winner: null, tieBreak: false, finalists: null, round: 1, players, currentPlayer: 0, stage: 'draw', stock, discard: [firstDiscard], drawnCard: null, turn: 1, history: ['Karten gemischt. Jeder Spieler hat zehn Karten.'] };
   if (catalog.get(firstDiscard)!.type === 'skip') {
     players[0]!.skipProtected = true;
     log(state, 'Aussetzen liegt zu Beginn offen. Dein erster Zug entfällt.');
@@ -236,7 +238,7 @@ export function layPhase(state: GameState, catalog: Catalog, playerId: string, i
   const active = activePlayer(state, playerId, 'discard');
   if (active.melds.length) throw new Error('Du hast deine Phase in dieser Runde bereits ausgelegt.');
   checkSelection(active, ids);
-  const melds = matchPhase(ids, active.phase, catalog, state.phaseSet);
+  const melds = matchPhase(ids, active.phase, catalog, state.phaseSet, state.phaseOrder);
   if (!melds) throw new Error('Diese Auswahl bildet deine vollständige Phase nicht. Prüfe die Zahlen, Farben und Joker.');
   const next = clone(state);
   const player = next.players[next.currentPlayer]!;

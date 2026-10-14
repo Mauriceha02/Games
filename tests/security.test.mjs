@@ -32,7 +32,7 @@ test('oversized saves are rejected without replacing the stored game', () => {
   assert.equal(writes, 0);
 });
 
-for (const phaseSet of ['classic', 'extreme']) test(`${phaseSet}: malicious text in an otherwise valid save remains text when the table renders`, () => {
+for (const phaseSet of ['classic', 'extreme', 'mixed']) test(`${phaseSet}: malicious text in an otherwise valid save remains text when the table renders`, () => {
   const initial = createGame(catalog, 1, () => 0.999999, 'easy', phaseSet);
   const state = drawCard(initial, catalog, initial.players[0].id, 'stock');
   const skip = state.players[0].hand.find(id => catalog.get(id).type === 'skip');

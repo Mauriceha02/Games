@@ -1,6 +1,6 @@
 # Spiele
 
-Phase10 (Klassisch und Extrem) und Gruselino für das iPhone: solo gegen Computer oder zu zweit. Solospielstände bleiben auf dem Gerät; die installierte App läuft offline.
+Phase10 (Klassisch, Extrem und Gemischt) und Gruselino für das iPhone: solo gegen Computer oder zu zweit. Gemischt kombiniert fünf klassische und fünf Extrem-Aufgaben in zufälliger Reihenfolge. Solospielstände bleiben auf dem Gerät; die installierte App läuft offline.
 
 `Phase10`, `Gruselino` und `Game-Multiplayer` nebeneinander auschecken und jeweils `npm ci` ausführen.
 

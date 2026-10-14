@@ -335,3 +335,10 @@ body.is-gruselino .install-guide[open] { position:absolute; bottom:100%; left:12
   body.is-gruselino .g-local .g-answer-heading { margin-bottom:4px; }
   body.is-gruselino .g-local .g-answers { padding-block:6px; }
 }
+.phase-order { margin-block:12px; font-size:12px; }
+.phase-order > summary { cursor:pointer; color:#f5deb5; }
+.phase-order-list { margin:10px 0; padding-left:24px; }
+.phase-order-list li { padding:6px; line-height:1.4; }
+.phase-order-list li::marker { color:#d9b579; }
+.phase-order-list small { display:block; margin-top:2px; color:#cfd8ca; font-size:10px; }
+.phase-order-list .is-current { background:#faf5e90d; border-radius:6px; }

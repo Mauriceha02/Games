@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createCatalog, createGame, createHumanGame, assertGameState, layPhase, hitMeld, discardCard, nextRound } from '../public/app/game/game.js';
-import { PHASE_GROUPS, EXTREME_PHASE_GROUPS, readPhaseDefinitions, matchPhase, findPhase } from '../public/app/game/phases.js';
+import { PHASE_GROUPS, EXTREME_PHASE_GROUPS, readPhaseDefinitions, createPhaseOrder, matchPhase, findPhase } from '../public/app/game/phases.js';
 import { createBotView, chooseBotMove, phaseProgress } from '../public/app/ai/strategy.js';
 import { loadGame, saveGame, STORAGE_KEY } from '../public/app/storage/local-game.js';
 import { LocalMatch, readSnapshot } from '../public/app/game/local-match.js';
@@ -110,7 +110,7 @@ test('Extrem saves keep their variant and interrupted turn; version 3 saves migr
   assert.equal(saveGame(storage, state, catalog), null);
   assert.deepEqual(loadGame(storage, catalog).state, state);
   const classicHand = [...ids(7).slice(0, 3), ...ids(9).slice(0, 3)];
-  const classicState = fixture(classicHand); classicState.phaseSet = 'classic';
+  const classicState = fixture(classicHand); classicState.phaseSet = 'classic'; classicState.phaseOrder = createPhaseOrder('classic');
   const current = layPhase(classicState, catalog, 'player-0', classicHand);
   const { phaseSet, ...legacy } = current; legacy.version = 3;
   const raw = JSON.stringify(legacy);
@@ -120,7 +120,7 @@ test('Extrem saves keep their variant and interrupted turn; version 3 saves migr
     const bad = copy(current); change(bad);
     assert.equal(loadGame({ getItem: () => JSON.stringify(bad) }, catalog).state, null);
   }
-  assert.throws(() => assertGameState({ ...current, phaseSet: 'extreme' }, catalog), /Gruppe passt nicht/);
+  assert.throws(() => assertGameState({ ...current, phaseSet: 'extreme', phaseOrder: createPhaseOrder('extreme') }, catalog), /Gruppe passt nicht/);
   assert.throws(() => createGame(catalog, 1, Math.random, 'easy', 'unknown'));
 });
 

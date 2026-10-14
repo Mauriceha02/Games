@@ -1,4 +1,5 @@
 import { assertGameState } from '../game/game.js';
+import { createPhaseOrder, isBasePhaseSet } from '../game/phases.js';
 import type { Catalog, GameState } from '../game/types.js';
 
 export const STORAGE_KEY = 'phase10.game.v1';
@@ -28,6 +29,11 @@ export function loadGame(storage: StorageAccess, catalog: Catalog): { state: Gam
     }
     if (state && typeof state === 'object' && 'version' in state && state.version === 3) {
       state = { ...state, version: 4, phaseSet: 'classic' };
+    }
+    if (state && typeof state === 'object' && 'version' in state && state.version === 4) {
+      const legacy = state as Record<string, unknown>;
+      if (!isBasePhaseSet(legacy.phaseSet)) throw new Error('Ungültiger alter Phasenmodus.');
+      state = { ...legacy, version: 5, phaseOrder: createPhaseOrder(legacy.phaseSet) };
     }
     assertGameState(state, catalog);
     if (state.players.filter(player => player.controller === 'human').length !== 1) throw new Error('Ungültiger Solo-Spielstand.');
